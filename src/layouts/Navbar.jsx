@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useApp } from 'hooks'
 import { Link, NavLink } from 'react-router-dom'
 import { stylesNavbar } from 'styles'
-import mainLogo from 'images/logo.svg'
+import { srcSvgLogo } from 'images'
 import { CiSearch } from 'react-icons/ci'
 
 /**
@@ -84,7 +84,7 @@ const Navbar = () => {
           className={stylesNavbar['logo-wrap']}
         >
           <img
-           src={mainLogo}
+           src={srcSvgLogo}
            alt="logo"
            className={stylesNavbar['logo']}
           />

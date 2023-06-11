@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import { Link, NavLink } from 'react-router-dom'
 import { stylesFooter } from 'styles'
-import mainLogo from 'images/logo.svg'
+import { srcSvgLogo } from 'images'
 import { AiFillBehanceCircle, AiFillGithub, AiOutlineLink, AiTwotoneMail } from 'react-icons/ai'
 
 /**
@@ -112,7 +112,7 @@ const Footer = () => {
               className={stylesFooter['logo']}
             >
               <img
-                src={mainLogo}
+                src={srcSvgLogo}
                 alt="logo"
               />
             </Link>
