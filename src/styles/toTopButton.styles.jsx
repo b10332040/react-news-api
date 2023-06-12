@@ -19,9 +19,9 @@ const stylesToTopButton = {
     'transition-all',
     'duration-300',
     'shadow',
-    'hover:bg-[--theme-gray]',
+    'hover:bg-[--theme-gray-400]',
     'focus:outline-none',
-    'focus:bg-[--theme-gray]'
+    'focus:bg-[--theme-gray-400]'
   ),
   'to-top--hidden': clsx(
     'opacity-0',
@@ -41,6 +41,7 @@ const stylesToTopButton = {
     'top-1/2',
     'left-1/2',
     'text-white',
+    'text-xs',
     '-translate-x-1/2',
     '-translate-y-1/2',
     'transition-all',

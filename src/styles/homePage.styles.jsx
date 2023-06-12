@@ -1,5 +1,8 @@
 import clsx from 'clsx'
 
+/**
+ * HomePage 樣式
+ */
 const stylesHomePage = {
   'main-banner': clsx(
     'main-banner',
@@ -31,25 +34,25 @@ const stylesHomePage = {
     '[&>*]:w-full',
     '[&>*]:h-full'
   ),
-  'main-banner-slide-button': clsx(
+  'main-banner-slider-button': clsx(
+    'absolute',
+    'z-[2]',
+    'bottom-[calc(50%-137px)]',
+    'xl:bottom-[calc(50%-160px)]',
     'group',
     'w-[48px]',
     'h-[48px]',
     'rounded-full',
     'border-[1px]',
-    'border-[--theme-gray]',
+    'border-[--theme-gray-400]',
     'text-center',
     'focus:outline-none',
     'focus:bg-white',
     'hover:bg-white',
     'transition-color',
-    'duration-300',
-    'absolute',
-    'z-[2]',
-    'bottom-[calc(50%-137px)]',
-    'xl:bottom-[calc(50%-160px)]'
+    'duration-300'
   ),
-  'main-banner-slide-prev-button': clsx(
+  'main-banner-slider-prev-button': clsx(
     'left-[12px]',
     'sm:left-[calc(50%-270px+12px)]',
     'md:left-[calc(50%-360px+12px)]',
@@ -57,7 +60,7 @@ const stylesHomePage = {
     'xl:left-[calc(50%-570px+12px)]',
     '2xl:left-[calc(50%-660px+12px)]'
   ),
-  'main-banner-slide-next-button': clsx(
+  'main-banner-slider-next-button': clsx(
     'left-[72px]',
     'sm:left-[calc(50%-270px+24px+48px)]',
     'md:left-[calc(50%-360px+24px+48px)]',
@@ -65,12 +68,22 @@ const stylesHomePage = {
     'xl:left-[calc(50%-570px+24px+48px)]',
     '2xl:left-[calc(50%-660px+24px+48px)]'
   ),
-  'main-banner-slide-arrow': clsx(
-    'transition-color',
+  'main-banner-slider-arrow': clsx(
+    'absolute',
+    'top-1/2',
+    'left-1/2',
+    '-translate-x-1/2',
+    '-translate-y-1/2',
+    'transition-all',
     'duration-300',
     'group-hover:text-[--theme-black]',
-    'group-focus:text-[--theme-black]',
-    'inline-block'
+    'group-focus:text-[--theme-black]'
+  ),
+  'main-banner-slider-left-arrow': clsx(
+    'group-hover:left-[calc(50%-2px)]'
+  ),
+  'main-banner-slider-right-arrow': clsx(
+    'group-hover:left-[calc(50%+2px)]'
   ),
   'main-banner-slide': clsx(
     'absolute',
@@ -102,6 +115,13 @@ const stylesHomePage = {
     'line-clamp-3',
     'xl:text-[2rem]',
     'xl:leading-snug'
+  ),
+  'about-content': clsx(
+    'text-sm',
+    'text-[--theme-gray-400]',
+    'leading-loose',
+    'px-3',
+    'py-4'
   )
 }
 

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import { Link, NavLink } from 'react-router-dom'
-import { stylesFooter } from 'styles'
-import { srcSvgLogo } from 'images'
+import { stylesFooter } from '/styles'
+import { srcSvgLogo } from '/assets/images'
 import { AiFillBehanceCircle, AiFillGithub, AiOutlineLink, AiTwotoneMail } from 'react-icons/ai'
 
 /**
@@ -42,7 +42,7 @@ FooterPageNavLink.propTypes = {
  * 聯絡連結
  * @param {string} to - 連結
  * @param {string} title - 連結文字
- * @param {string} icon - Icon
+ * @param {string} icon - 連結 icon
  * @param {node} children - 內容
  * @returns 
  */

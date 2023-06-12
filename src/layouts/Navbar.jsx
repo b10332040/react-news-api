@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
-import { useApp } from 'hooks'
+import { useApp } from '/hooks'
 import { Link, NavLink } from 'react-router-dom'
-import { stylesNavbar } from 'styles'
-import { srcSvgLogo } from 'images'
+import { stylesNavbar } from '/styles'
+import { srcSvgLogo } from '/assets/images'
 import { CiSearch } from 'react-icons/ci'
 
 /**

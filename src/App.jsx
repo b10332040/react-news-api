@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
-import { HomePage, SearchPage,SourcesPage, WorldPage } from 'pages'
-import { Footer, Navbar } from 'layouts'
-import { ToTopButton } from 'components'
-import { AppProvider } from 'contexts/AppContext'
+import { HomePage, SearchPage,SourcesPage, WorldPage } from '/pages'
+import { Footer, Navbar } from '/layouts'
+import { ToTopButton } from '/components'
+import { AppProvider } from '/contexts'
 
 /**
  * 共用佈局
@@ -12,7 +12,7 @@ const BasicLayout = () => {
   return (
     <>
       <Navbar />
-        <div className='min-h-[200vh]'>
+        <div className='min-h-[100vh]'>
           <Outlet />
         </div>
       <Footer />

@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 
 /**
- * NavBar (Component) 樣式
+ * NavBar 樣式
  */
 const stylesNavbar = {
   'navbar': clsx(
@@ -161,7 +161,7 @@ const stylesNavbar = {
     'text-white',
   ),
   'link--inactive': clsx(
-    'text-[--theme-gray]',
+    'text-[--theme-gray-400]',
     'hover:text-white'
   ),
   'search': clsx(
@@ -180,7 +180,7 @@ const stylesNavbar = {
     'md:after:w-[12px]',
     'md:after:h-[2px]',
     'md:after:rounded-[1px]',
-    'md:after:bg-[--theme-gray]',
+    'md:after:bg-[--theme-gray-400]',
     'md:after:rotate-45',
     'md:after:transition-all',
     'md:after:duration-500',
@@ -196,7 +196,7 @@ const stylesNavbar = {
     'block',
     'rounded-3xl',
     'border-2',
-    'border-[--theme-gray]',
+    'border-[--theme-gray-400]',
     'px-4',
     'py-2',
     'w-full',

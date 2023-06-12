@@ -5,11 +5,12 @@
 @layer base {
   :root {
     --theme-black: #1f1f1f;
-    --theme-gray: #8d8d8d;
+    --theme-gray-400: #8d8d8d;
+    --theme-gray-200: #EDEDED;
   }
 
   body {
-    @apply overflow-x-hidden;
+    @apply overflow-x-hidden bg-[#f7f7f7];
   }
 }
 
@@ -34,6 +35,20 @@
   }
   .ratio-3x2 {
     @apply before:pt-[66.6666666667%];
+  }
+
+  .text-link {
+    @apply underline hover:text-[--theme-black] transition-colors duration-300;
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    @apply hidden;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   /* START - HomePage */

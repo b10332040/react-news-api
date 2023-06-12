@@ -1,7 +1,7 @@
-import HomePage from "./HomePage"
-import SearchPage from "./SearchPage"
-import SourcesPage from "./SourcesPage"
-import WorldPage from "./WorldPage"
+import HomePage from './HomePage'
+import SearchPage from './SearchPage'
+import SourcesPage from './SourcesPage'
+import WorldPage from './WorldPage'
 
 export {
   HomePage,

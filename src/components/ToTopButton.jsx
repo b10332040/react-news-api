@@ -1,5 +1,5 @@
-import { useApp } from 'hooks'
-import { stylesToTopButton } from 'styles'
+import { useApp } from '/hooks'
+import { stylesToTopButton } from '/styles'
 import { SlArrowUp } from 'react-icons/sl'
 
 /**

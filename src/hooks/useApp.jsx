@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { AppContext } from "contexts/AppContext";
+import { useContext } from 'react'
+import { AppContext } from '/contexts'
 
 /**
  * 取得基本邏輯（頁面是否滑動到頂端……）

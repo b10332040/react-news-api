@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import moment from 'moment'
 import PropTypes from 'prop-types'
-import { stylesHomePage } from 'styles'
+import { stylesHomePage } from '/styles'
 import { 
   srcJpgHomeBanner1x,
   srcJpgHomeBanner2x,
@@ -14,51 +15,52 @@ import {
   srcWebpHomeBannerLg2x,
   srcWebpHomeBannerMd1x,
   srcWebpHomeBannerMd2x
-} from 'images'
+} from '/assets/images'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import { dummyNewsList } from 'data'
+import { categories, dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
+import { Main, MainLeftSide, MainRightSide } from '/layouts'
+import { Header, RadioTabList } from '/components'
 
-const MainBannerPrevArrow = ({ onClick }) => {
+
+/**
+ * 主 Banner 輪播前後箭頭按鈕
+ * @param {func} onClick
+ * @param {string} arrowDirection
+ * @returns 
+ */
+const MainBannerSliderArrowButton = ({ onClick, arrowDirection }) => {
+  let buttonClassName = stylesHomePage['main-banner-slider-prev-button']
+  let arrowClassName = stylesHomePage['main-banner-slider-arrow']
+  let arrowIcon = <AiOutlineLeft className={`${arrowClassName} ${stylesHomePage['main-banner-slider-left-arrow']}`} />
+  let title = 'Prev article'
+
+  if (arrowDirection === 'right') {
+    buttonClassName = stylesHomePage['main-banner-slider-next-button']
+    arrowIcon = <AiOutlineRight className={`${arrowClassName} ${stylesHomePage['main-banner-slider-right-arrow']}`} />
+    title = 'Next article'
+  }
+
   return (
     <button
       type='button'
-      aria-label='Prev article'
-      title='Prev article'
+      aria-label={title}
+      title={title}
       onClick={onClick}
       className={`
-        ${stylesHomePage['main-banner-slide-button']}
-        ${stylesHomePage['main-banner-slide-prev-button']}
+        ${stylesHomePage['main-banner-slider-button']}
+        ${buttonClassName}
       `}
     >
-      <AiOutlineLeft className={stylesHomePage['main-banner-slide-arrow']} />
+      {arrowIcon}
     </button>
   )
 }
-MainBannerPrevArrow.propTypes = {
-  onClick: PropTypes.func
-}
-
-const MainBannerNextArrow = ({ onClick }) => {
-  return (
-    <button
-      type='button'
-      aria-label='Prev article'
-      title='Prev article'
-      onClick={onClick}
-      className={`
-        ${stylesHomePage['main-banner-slide-button']}
-        ${stylesHomePage['main-banner-slide-next-button']}
-      `}
-    >
-      <AiOutlineRight className={stylesHomePage['main-banner-slide-arrow']} />
-    </button>
-  )
-}
-MainBannerNextArrow.propTypes = {
-  onClick: PropTypes.func
+MainBannerSliderArrowButton.propTypes = {
+  onClick: PropTypes.func,
+  arrowDirection:PropTypes.string.isRequired
 }
 
 
@@ -70,7 +72,8 @@ MainBannerNextArrow.propTypes = {
  */
 const MainBannerSlider = ({ showSlider, articles }) => {
   if (showSlider) {
-    let MainBannerSlides = <></>
+    articles = articles.slice(0,3)
+
     const sliderSettings = {
       infinite: true,
       speed: 500,
@@ -79,13 +82,11 @@ const MainBannerSlider = ({ showSlider, articles }) => {
       autoplay: true,
       autoplaySpeed: 3500,
       pauseOnHover: true,
-      prevArrow: <MainBannerPrevArrow />,
-      nextArrow: <MainBannerNextArrow />
+      prevArrow: <MainBannerSliderArrowButton arrowDirection='left' />,
+      nextArrow: <MainBannerSliderArrowButton arrowDirection='right' />
     }
 
-    articles = articles.slice(0,3)
-
-    MainBannerSlides = articles.map((article, index) => {
+    const MainBannerSlides = articles.map((article, index) => {
       return (
         <section
           key={`main-banner-article-${index}`}
@@ -136,7 +137,7 @@ MainBannerSlider.propTypes = {
  */
 const MainBanner = () => {
   let articles = dummyNewsList.articles
-  const showSlider = Array.isArray(articles) ? true : false
+  const showSlider = (Array.isArray(articles) && articles.length !== 0) ? true : false
   
   return (
     <div className={stylesHomePage['main-banner']}>
@@ -202,9 +203,49 @@ const MainBanner = () => {
  * @returns 
  */
 const HomePage = () => {
+  const [category, setCategory] = useState('all')
+
+  const handleCategoryRadioChange = (radioValue) => {
+    setCategory(radioValue)
+  }
+
   return (
     <>
       <MainBanner />
+      <Main>
+        <MainLeftSide>
+          <article>
+            <Header title={`Don't Miss`}>
+              <RadioTabList
+                name='category'
+                tabs={categories}
+                checkedValue={category}
+                onChange={handleCategoryRadioChange}
+              />
+            </Header>
+          </article>
+        </MainLeftSide>
+        <MainRightSide>
+          <section>
+            <Header title='About' />
+            <p className={stylesHomePage['about-content']} >
+              HI! 我是 Anna。此新聞網站使用 React 框架以及串接
+              <a
+                target='_blank'
+                rel='noreferrer noopener'
+                className='text-link'
+                href='https://newsapi.org/'
+              >
+                News API
+              </a>
+              製作而成，感謝您的閱覽。
+            </p>
+          </section>
+          <section className='border-t-2 border-[--theme-gray-200]'>
+            <Header title='Stay Connected' />
+          </section>
+        </MainRightSide>
+      </Main>
     </>
   )
 }

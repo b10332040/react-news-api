@@ -21,7 +21,7 @@ const stylesFooter = {
   'copyright': clsx(
     'mt-1',
     'text-sm',
-    'text-[--theme-gray]'
+    'text-[--theme-gray-400]'
   ),
   'col-1/4': clsx(
     'col',
@@ -55,13 +55,13 @@ const stylesFooter = {
     'text-white'
   ),
   'link--inactive': clsx(
-    'text-[--theme-gray]'
+    'text-[--theme-gray-400]'
   ),
   'contact-link': clsx(
     'relative',
     'pl-6',
     'pr-3',
-    'text-[--theme-gray]'
+    'text-[--theme-gray-400]'
   ),
   'link-icon': clsx(
     'absolute',
