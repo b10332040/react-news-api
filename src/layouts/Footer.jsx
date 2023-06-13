@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom'
 import { stylesFooter } from '/styles'
 import { srcSvgLogo } from '/assets/images'
 import { AiFillBehanceCircle, AiFillGithub, AiOutlineLink, AiTwotoneMail } from 'react-icons/ai'
+import { contact } from '/data'
 
 /**
  * 頁面連結
@@ -101,7 +102,7 @@ FooterContactLink.propTypes = {
  */
 const Footer = () => {
   return (
-    <footer className={stylesFooter['footer']}>
+    <footer className={stylesFooter['self']}>
       <article className="container">
         <div className="row">
           <div className={stylesFooter['col-2/4']}>
@@ -147,23 +148,23 @@ const Footer = () => {
             <h2 className={stylesFooter['link-list-title']}>Contact</h2>
             <ul>
               <FooterContactLink
-                to='mailto:b10332040@gmail.com'
-                title='mail'
-                icon='mail'
+                to={contact.mail.to}
+                title={contact.mail.title}
+                icon={contact.mail.icon}
               >
                 b10332040@gmail.com
               </FooterContactLink>
               <FooterContactLink
-                to='https://github.com/b10332040'
-                title='GitHub'
-                icon='github'
+                to={contact.github.to}
+                title={contact.github.title}
+                icon={contact.github.icon}
               >
                 b10332040
               </FooterContactLink>
               <FooterContactLink
-                to='https://www.behance.net/ba1013245e684'
-                title='Behance'
-                icon='behance'
+                to={contact.behance.to}
+                title={contact.behance.title}
+                icon={contact.behance.icon}
               >
                 Anna Lai
               </FooterContactLink>

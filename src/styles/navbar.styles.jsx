@@ -4,7 +4,7 @@ import clsx from 'clsx'
  * NavBar 樣式
  */
 const stylesNavbar = {
-  'navbar': clsx(
+  'self': clsx(
     'fixed',
     'z-40',
     't-0',
@@ -13,11 +13,11 @@ const stylesNavbar = {
     'transition-all',
     'duration-300'
   ),
-  'navbar--top': clsx(
+  'self--top': clsx(
     'bg-transparent',
     'md:pt-4'
   ),
-  'navbar--non-top': clsx(
+  'self--non-top': clsx(
     'bg-[--theme-black]',
     'md:pt-0'
   ),
@@ -100,11 +100,11 @@ const stylesNavbar = {
     'after:transition-all',
     'after:duration-300'
   ),
-  'hamburger-icon--active': clsx(
+  'hamburger-icon--inactive': clsx(
     'before:top-0',
     'after:top-0'
   ),
-  'hamburger-icon--inactive': clsx(
+  'hamburger-icon--active': clsx(
     'before:-top-2',
     'after:top-2'
   ),
@@ -206,7 +206,7 @@ const stylesNavbar = {
     'placeholder:text-base',
     'transition-all',
     'duration-300',
-    'delay-500',
+    'md:delay-500',
     'focus-shadow-white',
     'md:placeholder:text-sm'
   ),
@@ -235,7 +235,6 @@ const stylesNavbar = {
     'opacity-60',
     'hover:opacity-100',
     'focus:opacity-100', 
-    'focus:outline-none',
     'before:content-[""]',
     'before:block',
     'before:absolute',

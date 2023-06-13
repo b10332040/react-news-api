@@ -1,11 +1,17 @@
+import ArticleCard from './ArticleCard'
 import Header from './Header'
 import RadioTabList from './RadioTabList'
-import ToTopButton from './ToTopButton'
+import ResultsText from './ResultsText'
+import Search from './Search'
 import SocialCircleLink from './SocialCircleLink'
+import ToTopButton from './ToTopButton'
 
 export {
+  ArticleCard,
   Header,
   RadioTabList,
-  ToTopButton,
-  SocialCircleLink
+  ResultsText,
+  Search,
+  SocialCircleLink,
+  ToTopButton
 }

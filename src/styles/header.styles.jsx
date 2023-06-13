@@ -4,7 +4,7 @@ import clsx from 'clsx'
  * Header 樣式
  */
 const stylesHeader = {
-  'header': clsx(
+  'self': clsx(
     'relative',
     'flex',
     'flex-wrap',

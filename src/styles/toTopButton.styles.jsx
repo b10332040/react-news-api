@@ -4,7 +4,7 @@ import clsx from 'clsx'
  * ToTopButton 樣式
  */
 const stylesToTopButton = {
-  'to-top': clsx(
+  'self': clsx(
     'group',
     'fixed',
     'z-30',
@@ -20,14 +20,13 @@ const stylesToTopButton = {
     'duration-300',
     'shadow',
     'hover:bg-[--theme-gray-400]',
-    'focus:outline-none',
     'focus:bg-[--theme-gray-400]'
   ),
-  'to-top--hidden': clsx(
+  'self--hidden': clsx(
     'opacity-0',
     'invisible'
   ),
-  'to-top--show': clsx(
+  'self--show': clsx(
     'opacity-100',
     'visible'
   ),

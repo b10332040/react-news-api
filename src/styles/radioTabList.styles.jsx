@@ -4,7 +4,7 @@ import clsx from 'clsx'
  * RadioTabList 樣式
  */
 const stylesRadioTabList = {
-  'list': clsx(
+  'self': clsx(
     'whitespace-nowrap',
     'overflow-x-auto',
     'overflow-y-hidden',

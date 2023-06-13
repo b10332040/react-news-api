@@ -7,14 +7,16 @@ import { stylesHeader } from '/styles'
  * @param {node} children 內容
  */
 const Header = ({ title, children }) => {
+  const headerClassName = stylesHeader['self']
+  const titleClassName = stylesHeader['title']
   const hasChildren = typeof(children) === 'undefined' ? false : true
 
   if (hasChildren) {
     return (
-      <header className={stylesHeader['header']}>
+      <header className={headerClassName}>
         <h3
           className={`
-            ${stylesHeader['title']}
+            ${titleClassName}
             ${stylesHeader['title--has-children']}
           `}
         >
@@ -28,8 +30,8 @@ const Header = ({ title, children }) => {
   }
   
   return (
-    <header className={stylesHeader['header']}>
-      <h3 className={stylesHeader['title']}>
+    <header className={headerClassName}>
+      <h3 className={titleClassName}>
         { title }
       </h3>
     </header>

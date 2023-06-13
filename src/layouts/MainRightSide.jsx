@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import { stylesMainRightSide } from '/styles'
 
 /**
  * 主要內容右側
@@ -7,8 +8,8 @@ import PropTypes from 'prop-types'
  */
 const MainRightSide = ({ children }) => {
   return (
-    <div className='col w-full lg:w-4/12'>
-      <div className='md:border-l-2 md:border-[--theme-gray-200] h-full'>
+    <div className={stylesMainRightSide['self']}>
+      <div className={stylesMainRightSide['container']}>
         { children }
       </div>
     </div>

@@ -44,7 +44,7 @@ const RadioTabList = ({ name, tabs, checkedValue, onChange }) => {
     })
 
     return (
-      <ul className={stylesRadioTabList['list']}>
+      <ul className={stylesRadioTabList['self']}>
         { RadioTabItems }
       </ul>
     )

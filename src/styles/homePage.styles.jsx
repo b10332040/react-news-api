@@ -46,7 +46,6 @@ const stylesHomePage = {
     'border-[1px]',
     'border-[--theme-gray-400]',
     'text-center',
-    'focus:outline-none',
     'focus:bg-white',
     'hover:bg-white',
     'transition-color',
@@ -119,9 +118,7 @@ const stylesHomePage = {
   'about-content': clsx(
     'text-sm',
     'text-[--theme-gray-400]',
-    'leading-loose',
-    'px-3',
-    'py-4'
+    'leading-loose'
   )
 }
 

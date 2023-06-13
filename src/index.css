@@ -7,10 +7,15 @@
     --theme-black: #1f1f1f;
     --theme-gray-400: #8d8d8d;
     --theme-gray-200: #EDEDED;
+    --theme-gray-50: #f7f7f7;
+  }
+
+  * {
+    @apply focus:outline-none;
   }
 
   body {
-    @apply overflow-x-hidden bg-[#f7f7f7];
+    @apply overflow-x-hidden bg-[--theme-gray-50];
   }
 }
 
@@ -28,6 +33,9 @@
 
   .focus-shadow-white {
     @apply focus:outline-none focus:shadow-[0_0_0_4px_rgba(255,255,255,.28)];
+  }
+  .focus-shadow-gray {
+    @apply focus:outline-none focus:shadow-[0_0_0_4px_rgba(0,0,0,.08)];
   }
 
   .ratio {

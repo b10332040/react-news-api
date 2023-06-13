@@ -21,8 +21,8 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { categories, dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
-import { Main, MainLeftSide, MainRightSide } from '/layouts'
-import { Header, RadioTabList } from '/components'
+import { Main, MainLeftSide, MainRightSide, MainRightSideSection } from '/layouts'
+import { ArticleCard, Header, RadioTabList, ResultsText, Search } from '/components'
 
 
 /**
@@ -204,10 +204,20 @@ const MainBanner = () => {
  */
 const HomePage = () => {
   const [category, setCategory] = useState('all')
+  const articles = dummyNewsList.articles
 
   const handleCategoryRadioChange = (radioValue) => {
     setCategory(radioValue)
   }
+
+  const ArticleList = articles.map((article, index) => {
+    return (
+      <ArticleCard 
+        key={`article-${index}`}
+        article={article}
+      />
+    )
+  })
 
   return (
     <>
@@ -223,27 +233,33 @@ const HomePage = () => {
                 onChange={handleCategoryRadioChange}
               />
             </Header>
+            <div>
+              <div className='row mt-3 items-center'>
+                <div className='col w-full md:w-1/2'>
+                  <Search
+                    className='ml-auto px-3 md:max-w-[320px]'
+                  />
+                </div>
+                <div className='col w-full mt-2 md:mt-0 md:w-1/2 md:order-first'>
+                  <ResultsText
+                    start='1'
+                    end='12'
+                    total='9800'
+                    className='px-3 text-center md:text-left'
+                  />
+                </div>
+              </div>
+
+              <div className='mt-4 px-3 columns-1 sm:columns-2 md:columns-3 gap-3'>
+                { ArticleList }
+              </div>
+            </div>
           </article>
         </MainLeftSide>
+
         <MainRightSide>
-          <section>
-            <Header title='About' />
-            <p className={stylesHomePage['about-content']} >
-              HI! 我是 Anna。此新聞網站使用 React 框架以及串接
-              <a
-                target='_blank'
-                rel='noreferrer noopener'
-                className='text-link'
-                href='https://newsapi.org/'
-              >
-                News API
-              </a>
-              製作而成，感謝您的閱覽。
-            </p>
-          </section>
-          <section className='border-t-2 border-[--theme-gray-200]'>
-            <Header title='Stay Connected' />
-          </section>
+          <MainRightSideSection contentType='about'/>
+          <MainRightSideSection contentType='connect'/>
         </MainRightSide>
       </Main>
     </>

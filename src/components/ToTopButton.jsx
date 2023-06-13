@@ -20,8 +20,8 @@ const ToTopButton = () => {
       title='To top'
       aria-label='To top'
       className={`
-        ${stylesToTopButton['to-top']}
-        ${(pageTop) ? stylesToTopButton['to-top--hidden'] : stylesToTopButton['to-top--show']}
+        ${stylesToTopButton['self']}
+        ${(pageTop) ? stylesToTopButton['self--hidden'] : stylesToTopButton['self--show']}
       `}
       onClick={handleClick}
     >

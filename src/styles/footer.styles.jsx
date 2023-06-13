@@ -4,7 +4,7 @@ import clsx from 'clsx'
  * Footer 樣式
  */
 const stylesFooter = {
-  'footer': clsx(
+  'self': clsx(
     'bg-[--theme-black]',
     'py-10'
   ),

@@ -67,8 +67,8 @@ const Navbar = () => {
   return (
     <header
       className={`
-        ${stylesNavbar['navbar']}
-        ${(pageTop) ? stylesNavbar['navbar--top'] : stylesNavbar['navbar--non-top']}
+        ${stylesNavbar['self']}
+        ${(pageTop) ? stylesNavbar['self--top'] : stylesNavbar['self--non-top']}
       `}
     >
       <nav
