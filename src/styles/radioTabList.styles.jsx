@@ -33,9 +33,12 @@ const stylesRadioTabList = {
     'cursor-pointer',
     'transition-colors',
     'duration-300',
-    'hover:text-[--theme-black]',
+    'hover:enabled:text-[--theme-black]',
     'peer-checked:text-[--theme-black]',
-    'peer-checked:[&>span]:after:border-[--theme-black]'
+    'peer-checked:[&>span]:after:border-[--theme-black]',
+    'peer-disabled:cursor-default',
+    'peer-disabled:opacity-50',
+    'peer-checked:peer-disabled:[&>span]:after:opacity-50'
   ),
   'label-text': clsx(
     'relative',

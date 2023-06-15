@@ -1,8 +1,8 @@
 const categories = [
   {
-    "id": "all",
-    "value": "all",
-    "displayName": "All"
+    "id": "general",
+    "value": "general",
+    "displayName": "General"
   },
   {
     "id": "business",
@@ -13,11 +13,6 @@ const categories = [
     "id": "entertainment",
     "value": "entertainment",
     "displayName": "Entertainment"
-  },
-  {
-    "id": "general",
-    "value": "general",
-    "displayName": "General"
   },
   {
     "id": "health",

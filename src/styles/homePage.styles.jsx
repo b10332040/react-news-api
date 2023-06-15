@@ -12,7 +12,6 @@ const stylesHomePage = {
     'lg:before:pt-[56.25%]'
   ),
   'main-banner-picture': clsx(
-    'h-full',
     'overflow-hidden'
   ),
   'main-banner-img': clsx(
@@ -23,13 +22,11 @@ const stylesHomePage = {
   ),
   'main-banner-mask': clsx(
     'z-[2]',
-    'h-full',
     'bg-black',
     'bg-opacity-30'
   ),
   'main-banner-slider': clsx(
     'z-[3]',
-    'h-full',
     'text-white',
     '[&>*]:w-full',
     '[&>*]:h-full'

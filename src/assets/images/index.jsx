@@ -1,3 +1,4 @@
+import srcDefaultImage from './default-image.png'
 import srcJpgHomeBanner1x from './home-banner-1x.jpg'
 import srcJpgHomeBanner2x from './home-banner-2x.jpg'
 import srcJpgHomeBannerLg1x from './home-banner-lg-1x.jpg'
@@ -13,6 +14,7 @@ import srcWebpHomeBannerMd2x from './home-banner-md-2x.webp'
 import srcSvgLogo from './logo.svg'
 
 export {
+  srcDefaultImage,
   srcJpgHomeBanner1x,
   srcJpgHomeBanner2x,
   srcJpgHomeBannerLg1x,

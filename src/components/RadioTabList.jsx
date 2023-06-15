@@ -8,9 +8,10 @@ import { stylesRadioTabList } from '/styles'
  * @param {array} tabs 資料
  * @param {string} checkedValue 被選到的值
  * @param {func} onChange 處理當選到的值改變
+ * @param {bool} disabled disabled 屬性值，選項是否不可點擊 (預設：false)
  * @returns 
  */
-const RadioTabList = ({ name, tabs, checkedValue, onChange }) => {
+const RadioTabList = ({ name, tabs, checkedValue, onChange, disabled=false }) => {
   const showList = (Array.isArray(tabs) && tabs.length !== 0) ? true : false
 
   if (showList) {
@@ -30,6 +31,7 @@ const RadioTabList = ({ name, tabs, checkedValue, onChange }) => {
               onChange?.(event.target.value)
             }}
             className={stylesRadioTabList['input']}
+            disabled={disabled}
           />
           <label
             htmlFor={tab.id}
@@ -57,7 +59,8 @@ RadioTabList.propTypes = {
   name: PropTypes.string.isRequired,
   tabs: PropTypes.array.isRequired,
   checkedValue: PropTypes.string,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  disabled: PropTypes.bool
 }
 
 export default RadioTabList

@@ -22,7 +22,7 @@ import 'slick-carousel/slick/slick-theme.css'
 import { categories, dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { Main, MainLeftSide, MainRightSide, MainRightSideSection } from '/layouts'
-import { ArticleCard, Header, RadioTabList, ResultsText, Search } from '/components'
+import { ArticleCard, Button, Header, RadioTabList, ResultsText, Search } from '/components'
 
 
 /**
@@ -187,6 +187,7 @@ const MainBanner = () => {
           alt='Main banner'
           aria-label='Main banner'
           className={stylesHomePage['main-banner-img']}
+          loading='true'
         />
       </picture>
       <div className={stylesHomePage['main-banner-mask']}></div>
@@ -203,7 +204,7 @@ const MainBanner = () => {
  * @returns 
  */
 const HomePage = () => {
-  const [category, setCategory] = useState('all')
+  const [category, setCategory] = useState('general')
   const articles = dummyNewsList.articles
 
   const handleCategoryRadioChange = (radioValue) => {
@@ -215,6 +216,7 @@ const HomePage = () => {
       <ArticleCard 
         key={`article-${index}`}
         article={article}
+        className='mb-3'
       />
     )
   })
@@ -253,11 +255,19 @@ const HomePage = () => {
               <div className='mt-4 px-3 columns-1 sm:columns-2 md:columns-3 gap-3'>
                 { ArticleList }
               </div>
+              <Button
+                text='Load More'
+                styled='outlined'
+                display='block'
+                className='mx-auto mt-6 max-w-[160px]'
+              />
             </div>
           </article>
         </MainLeftSide>
 
-        <MainRightSide>
+        <MainRightSide
+          isContentSticky={true}
+        >
           <MainRightSideSection contentType='about'/>
           <MainRightSideSection contentType='connect'/>
         </MainRightSide>

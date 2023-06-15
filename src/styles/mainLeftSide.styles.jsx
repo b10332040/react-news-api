@@ -6,6 +6,9 @@ import clsx from 'clsx'
 const stylesMainLeftSide = {
   'self': clsx(
     'col',
+    'mb-[60px]',
+    'md:mb-[80px]',
+    'lg:mb-0',
     'w-full',
     'lg:w-8/12'
   ),

@@ -6,6 +6,7 @@
   :root {
     --theme-black: #1f1f1f;
     --theme-gray-400: #8d8d8d;
+    --theme-gray-300: #d9d9d9;
     --theme-gray-200: #EDEDED;
     --theme-gray-50: #f7f7f7;
   }
@@ -39,10 +40,13 @@
   }
 
   .ratio {
-    @apply relative z-[1] w-full overflow-hidden before:block before:content-[""] [&>*]:absolute [&>*]:top-0 [&>*]:left-0 [&>*]:w-full
+    @apply relative z-[1] w-full overflow-hidden before:block before:content-[""] [&>*]:absolute [&>*]:top-0 [&>*]:left-0 [&>*]:w-full [&>*]:h-full;
   }
   .ratio-3x2 {
     @apply before:pt-[66.6666666667%];
+  }
+  .ratio-16x9 {
+    @apply before:pt-[56.25%];
   }
 
   .text-link {

@@ -1,3 +1,5 @@
+import stylesArticleCard from './articleCard.styles'
+import stylesButton from './button.styles'
 import stylesFooter from './footer.styles'
 import stylesHeader from './header.styles'
 import stylesHomePage from './homePage.styles'
@@ -11,6 +13,8 @@ import stylesSocialCircleLink from './socialCircleLink.styles'
 import stylesToTopButton from './toTopButton.styles'
 
 export {
+  stylesArticleCard,
+  stylesButton,
   stylesFooter,
   stylesHeader,
   stylesHomePage,

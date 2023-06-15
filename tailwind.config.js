@@ -15,7 +15,22 @@ export default {
     container: {
       center: true
     },
-    extend: {},
+    extend: {
+      keyframes: {
+        loadingDot1: {
+          '0%, 44%': { bottom: '0px' },
+          '22%': { bottom: '3px' }
+        },
+        loadingDot2: {
+          '0%, 66%': { bottom: '0px' },
+          '44%': { bottom: '3px' }
+        },
+        loadingDot3: {
+          '0%, 88%': { bottom: '0px' },
+          '66%': { bottom: '3px' }
+        }
+      }
+    },
   },
   plugins: [],
 }
