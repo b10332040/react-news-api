@@ -2,9 +2,9 @@
 專案：https://react-news-api-puce.vercel.app/
 
 
-目前只是靜態網站，屆時會串接 [News API]()，UI 有參考以下網址：
-1.　https://preview.colorlib.com/#world
-2.　https://preview.colorlib.com/#avision
+目前只是靜態網站，屆時會串接 [News API](https://newsapi.org/)，UI 有參考以下網址：
+- https://preview.colorlib.com/#world
+- https://preview.colorlib.com/#avision
 
 ---
 ### Environment - 環境建置
@@ -26,22 +26,22 @@ nvm use 14.18.1
 
 ---
 ### Installing - 專案建置
-1. 開啟終端機(Terminal)，Clone 此專案至本機電腦。
+1.開啟終端機(Terminal)，Clone 此專案至本機電腦。
 ```
 git clone https://github.com/b10332040/react-news-api.git
 ```
 
-2. 進入專案資料夾。
+2.進入專案資料夾。
 ```
 cd [專案資料夾]
 ```
 
-3. 下載相關套件。
+3.下載相關套件。
 ```
 npm install
 ```
 
-4. 啟動專案
+4.啟動專案
 ```
 npm run dev
 ```
