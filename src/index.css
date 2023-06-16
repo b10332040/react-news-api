@@ -53,6 +53,20 @@
     @apply underline hover:text-[--theme-black] transition-colors duration-300;
   }
 
+
+  .my-masonry-grid {
+    @apply flex -ml-3 w-auto;
+  }
+
+  .my-masonry-grid_column {
+    @apply pl-3 bg-clip-padding
+  }
+
+  /* Style your items */
+  .my-masonry-grid_column > * {
+    @apply mb-3
+  }
+
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     @apply hidden;

@@ -8,12 +8,13 @@ import { CiSearch } from 'react-icons/ci'
 
 /**
  * 頁面連結
- * @param {string} to - 連結
- * @param {string} title - 連結文字
- * @param {node} children - 內容
+ * @param {string} to 連結
+ * @param {string} title 連結文字
+ * @param {node} children 內容
+ * @param {func} onClick 處理連結點擊
  * @returns 
  */
-const NavbarPageNavLink = ({ to, title, children }) => {
+const NavbarPageNavLink = ({ to, title, children, onClick }) => {
   return (
     <li
      key={`nav-page-link-${title}`}
@@ -28,6 +29,9 @@ const NavbarPageNavLink = ({ to, title, children }) => {
           ${(isActive) ? stylesNavbar['link--active'] : stylesNavbar['link--inactive']}
         `}
         end={(to === '/') ? true : false}
+        onClick={() => {
+          onClick?.()
+        }}
       >
         {children}
       </NavLink>
@@ -37,7 +41,8 @@ const NavbarPageNavLink = ({ to, title, children }) => {
 NavbarPageNavLink.propTypes = {
   to: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  onClick: PropTypes.func
 };
 
 /**
@@ -45,7 +50,7 @@ NavbarPageNavLink.propTypes = {
  * @returns
  */
 const Navbar = () => {
-  const [navbarMenuOpen, setNavbarMenuOpen] = useState(true)
+  const [navbarMenuOpen, setNavbarMenuOpen] = useState(false)
   const [searchInputOpen, setSearchInputOpen] = useState(false)
   const { pageTop } = useApp()
 
@@ -118,18 +123,27 @@ const Navbar = () => {
             <NavbarPageNavLink
               to='/'
               title='home'
+              onClick={() => {
+                setNavbarMenuOpen(false)
+              }}
             >
               Home
             </NavbarPageNavLink>
             <NavbarPageNavLink
               to='/world'
               title='world'
+              onClick={() => {
+                setNavbarMenuOpen(false)
+              }}
             >
               World
             </NavbarPageNavLink>
             <NavbarPageNavLink
               to='/sources'
               title='sources'
+              onClick={() => {
+                setNavbarMenuOpen(false)
+              }}
             >
               Sources
             </NavbarPageNavLink>

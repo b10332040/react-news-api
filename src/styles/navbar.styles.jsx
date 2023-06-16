@@ -100,11 +100,11 @@ const stylesNavbar = {
     'after:transition-all',
     'after:duration-300'
   ),
-  'hamburger-icon--inactive': clsx(
+  'hamburger-icon--active': clsx(
     'before:top-0',
     'after:top-0'
   ),
-  'hamburger-icon--active': clsx(
+  'hamburger-icon--inactive': clsx(
     'before:-top-2',
     'after:top-2'
   ),
@@ -137,10 +137,10 @@ const stylesNavbar = {
     'md:overflow-y-visible'
   ),
   'menu--open': clsx(
-    '-right-full',
+    'right-0',
   ),
   'menu--close': clsx(
-    'right-0',
+    '-right-full',
   ),
   'item': clsx(
     'md:inline-block'

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Masonry from 'react-masonry-css'
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import { stylesHomePage } from '/styles'
@@ -206,6 +207,11 @@ const MainBanner = () => {
 const HomePage = () => {
   const [category, setCategory] = useState('general')
   const articles = dummyNewsList.articles
+  const breakpointColumnsObj = {
+    default: 3,
+    575: 1,
+    767: 2
+  };
 
   const handleCategoryRadioChange = (radioValue) => {
     setCategory(radioValue)
@@ -216,7 +222,6 @@ const HomePage = () => {
       <ArticleCard 
         key={`article-${index}`}
         article={article}
-        className='mb-3'
       />
     )
   })
@@ -252,9 +257,16 @@ const HomePage = () => {
                 </div>
               </div>
 
-              <div className='mt-4 px-3 columns-1 sm:columns-2 md:columns-3 gap-3'>
-                { ArticleList }
+              <div className="px-3 mt-3">
+                <Masonry
+                  breakpointCols={breakpointColumnsObj}
+                  className='my-masonry-grid'
+                  columnClassName='my-masonry-grid_column'
+                >
+                  { ArticleList }
+                </Masonry>
               </div>
+
               <Button
                 text='Load More'
                 styled='outlined'
