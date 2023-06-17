@@ -5,9 +5,10 @@ import { stylesMainRightSideSection } from '/styles'
 
 /**
  * 右側 Section
- * @param {string} contentType 內容類型
- * @param {title} title 標題
- * @param {node} children 內容
+ * @param {object} props - 屬性
+ * @param {string} props.contentType - 內容類型
+ * @param {title} props.title - 標題
+ * @param {node} props.children - 內容
  */
 const MainRightSideSection = ({contentType, title, children}) => {
   if (typeof contentType !== 'undefined') {
@@ -16,7 +17,7 @@ const MainRightSideSection = ({contentType, title, children}) => {
         title = (typeof title !== 'undefined') ? title : 'About'
         children = (
           <p className='text-sm text-[--theme-gray-400] leading-loose'>
-            此新聞網站使用 React 框架以及串接
+            {/* 此新聞網站使用 React 框架以及串接
             <a
               target='_blank'
               rel='noreferrer noopener'
@@ -25,7 +26,17 @@ const MainRightSideSection = ({contentType, title, children}) => {
             >
               News API
             </a>
-            製作而成，感謝您的閱覽。
+            製作而成，感謝您的閱覽。 */}
+            此新聞網站使用 React 框架建置，
+            待串接
+            <a
+              target='_blank'
+              rel='noreferrer noopener'
+              className='text-link'
+              href='https://newsapi.org/'
+            >
+              News API
+            </a>。
           </p>
         )
         break

@@ -1,3 +1,4 @@
+import ArticleFilterStickyBar from './ArticleFilterStickyBar'
 import Footer from './Footer'
 import Main from './Main'
 import MainLeftSide from './MainLeftSide'
@@ -6,6 +7,7 @@ import MainRightSideSection from './MainRightSideSection'
 import Navbar from './Navbar'
 
 export {
+  ArticleFilterStickyBar,
   Footer,
   Main,
   MainLeftSide,

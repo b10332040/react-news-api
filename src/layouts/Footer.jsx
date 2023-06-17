@@ -7,9 +7,10 @@ import { contact } from '/data'
 
 /**
  * 頁面連結
- * @param {string} to - 連結
- * @param {string} title - 連結文字
- * @param {node} children - 內容
+ * @param {object} props - 屬性
+ * @param {string} props.to - 連結
+ * @param {string} props.title - 連結文字
+ * @param {node} props.children - 內容
  * @returns 
  */
 const FooterPageNavLink = ({ to, title, children }) => {
@@ -41,10 +42,11 @@ FooterPageNavLink.propTypes = {
 
 /**
  * 聯絡連結
- * @param {string} to - 連結
- * @param {string} title - 連結文字
- * @param {string} icon - 連結 icon
- * @param {node} children - 內容
+ * @param {object} props - 屬性
+ * @param {string} props.to - 連結
+ * @param {string} props.title - 連結文字
+ * @param {string} props.icon - 連結 icon
+ * @param {node} props.children - 內容
  * @returns 
  */
 const FooterContactLink = ({ to, title, icon='', children }) => {
@@ -135,12 +137,6 @@ const Footer = () => {
                 title='world'
               >
                 World
-              </FooterPageNavLink>
-              <FooterPageNavLink
-                to='/sources'
-                title='sources'
-              >
-                Sources
               </FooterPageNavLink>
             </ul>
           </section>

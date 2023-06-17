@@ -5,9 +5,11 @@ import { srcDefaultImage } from '/assets/images'
 
 /**
  * 文章卡片
- * @param {string} type 類型 ※未提供則隨機顯示
- * @param {object} article 文章資料
- * @param {string} className 樣式
+ * @param {object} props - 屬性
+ * @param {string} props.type - 類型 ※未提供則隨機顯示
+ * @param {object} props.article - 文章資料
+ * @param {string} props.className - 樣式
+ * @returns
  */
 const ArticleCard = ({ type, article, className='' }) => {
   const typeList = ['base', 'cover', 'text'] // （base：圖＋文 / cover：文壓圖 / text：純文字)

@@ -1,5 +1,3 @@
-import { useState } from 'react'
-import Masonry from 'react-masonry-css'
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import { stylesHomePage } from '/styles'
@@ -22,14 +20,16 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { categories, dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
-import { Main, MainLeftSide, MainRightSide, MainRightSideSection } from '/layouts'
-import { ArticleCard, Button, Header, RadioTabList, ResultsText, Search } from '/components'
+import { ArticleFilterStickyBar, Main, MainLeftSide, MainRightSide, MainRightSideSection } from '/layouts'
+import { ArticleCard , Button, Header, RadioTabList, ResultsText, Search, Waterfall } from '/components'
+import { useNews } from '/hooks'
 
 
 /**
  * 主 Banner 輪播前後箭頭按鈕
- * @param {func} onClick
- * @param {string} arrowDirection
+ * @param {object} props - 屬性
+ * @param {func} props.onClick - 處理點擊
+ * @param {string} props.arrowDirection - 箭頭方向
  * @returns 
  */
 const MainBannerSliderArrowButton = ({ onClick, arrowDirection }) => {
@@ -67,9 +67,10 @@ MainBannerSliderArrowButton.propTypes = {
 
 /**
  * 主 Banner 輪播
- * @param {bool} showSlider 是否顯示 Slider
- * @param {array} articles  文章資料
- * @returns 
+ * @param {object} props - 屬性
+ * @param {bool} props.showSlider - 使否顯示輪播
+ * @param {array} props.articles - 文章資料
+ * @returns
  */
 const MainBannerSlider = ({ showSlider, articles }) => {
   if (showSlider) {
@@ -205,13 +206,8 @@ const MainBanner = () => {
  * @returns 
  */
 const HomePage = () => {
-  const [category, setCategory] = useState('general')
+  const { category, setCategory, page, pageSize, totalResults } = useNews()
   const articles = dummyNewsList.articles
-  const breakpointColumnsObj = {
-    default: 3,
-    575: 1,
-    767: 2
-  };
 
   const handleCategoryRadioChange = (radioValue) => {
     setCategory(radioValue)
@@ -249,23 +245,26 @@ const HomePage = () => {
                 </div>
                 <div className='col w-full mt-2 md:mt-0 md:w-1/2 md:order-first'>
                   <ResultsText
-                    start='1'
-                    end='12'
-                    total='9800'
+                    page={page}
+                    pageSize={pageSize}
+                    total={totalResults}
                     className='px-3 text-center md:text-left'
                   />
                 </div>
               </div>
 
-              <div className="px-3 mt-3">
-                <Masonry
-                  breakpointCols={breakpointColumnsObj}
-                  className='my-masonry-grid'
-                  columnClassName='my-masonry-grid_column'
-                >
+              {/* <ArticleFilterStickyBar
+                page={page}
+                pageSize={pageSize}
+                total={totalResults}
+              >
+                <Waterfall className='px-3 mt-3'>
                   { ArticleList }
-                </Masonry>
-              </div>
+                </Waterfall>
+              </ArticleFilterStickyBar> */}
+              <Waterfall className='px-3 mt-3'>
+                { ArticleList }
+              </Waterfall>
 
               <Button
                 text='Load More'

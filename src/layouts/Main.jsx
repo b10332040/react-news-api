@@ -2,7 +2,8 @@ import PropTypes from 'prop-types'
 
 /**
  * 主要內容
- * @param {node} children 內容 
+ * @param {object} props - 屬性
+ * @param {node} props.children - 內容 
  * @returns 
  */
 const Main = ({ children }) => {

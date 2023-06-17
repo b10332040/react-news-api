@@ -3,16 +3,17 @@ import { stylesButton } from '/styles'
 
 /**
  * 按鈕
- * @param {string} type 按鈕類型 (預設：button)
- * @param {string} display 按鈕滿版或不是滿版 (預設：inline-block)
- * @param {string} size 按鈕大小 (預設：base)
- * @param {string} styled 按鈕樣式 (預設：filled)
- * @param {bool} disabled disabled 屬性值，按鈕是否不可點擊 (預設：false)
- * @param {bool} processing 是否在處理中 (預設：false)
- * @param {func} onClick 處理 click 事件
- * @param {string} text 按鈕文字 (預設：'')
- * @param {string} className 樣式 (預設：'')
- * @returns 
+ * @param {object} props - 屬性
+ * @param {string} props.type - 按鈕類型 (預設：button)
+ * @param {string} props.display - 按鈕滿版或不是滿版 (預設：inline-block)
+ * @param {string} props.size - 按鈕大小 (預設：base)
+ * @param {string} props.styled - 按鈕樣式 (預設：filled)
+ * @param {bool} props.disabled - disabled 屬性值，按鈕是否不可點擊 (預設：false)
+ * @param {bool} props.processing - 是否在處理中 (預設：false)
+ * @param {func} props.onClick - 處理 click 事件
+ * @param {string} props.text - 按鈕文字 (預設：'')
+ * @param {string} props.className - 樣式 (預設：'')
+ * @returns
  */
 const Button = ({type='button', display='inline-block', size='base', styled='filled', disabled=false, processing=false, onClick, text='', className=''}) => {
   return (

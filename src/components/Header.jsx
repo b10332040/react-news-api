@@ -3,8 +3,10 @@ import { stylesHeader } from '/styles'
 
 /**
  * 標題
- * @param {string} title 標題 
- * @param {node} children 內容
+ * @param {object} props - 屬性
+ * @param {string} props.title - 標題 
+ * @param {node} props.children - 內容
+ * @returns
  */
 const Header = ({ title, children }) => {
   const headerClassName = stylesHeader['self']

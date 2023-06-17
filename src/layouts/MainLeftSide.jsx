@@ -3,7 +3,8 @@ import { stylesMainLeftSide } from '/styles'
 
 /**
  * 主要內容左側
- * @param {node} children 內容 
+ * @param {object} props - 屬性
+ * @param {node} props.children - 內容 
  * @returns 
  */
 const MainLeftSide = ({ children }) => {

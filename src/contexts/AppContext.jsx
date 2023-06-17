@@ -1,24 +1,34 @@
 import PropTypes from 'prop-types'
-import { useState, useEffect } from 'react'
-import { createContext } from 'react'
+import { useLocation } from 'react-router-dom'
+import { useState, useEffect, createContext } from 'react'
 
 const defaultAppContext = {
-  pageTop: true
+  pageTop: true,
+  navbarMenuOpen: false,
+  setNavbarMenuOpen: null
 }
 const AppContext = createContext(defaultAppContext)
 
 /**
  * 提供基本邏輯（頁面是否滑動到頂端……）
- * @param {node} children - 內容
+ * @param {object} props - 屬性
+ * @param {node} props.children - 內容
  * @returns 
  */
 const AppProvider = ({ children }) => {
   const [pageTop, setPageTop] = useState(true)
+  const [navbarMenuOpen, setNavbarMenuOpen] = useState(false)
+  const { pathname } = useLocation()
 
   // 處理頁面滑動
   const handleScroll = () => {
-    (window.pageYOffset === 0) ? setPageTop(true) : setPageTop(false)
+    (window.scrollY === 0) ? setPageTop(true) : setPageTop(false)
   }
+
+  // 當 path name 改變
+  useEffect(() => {
+    setNavbarMenuOpen(false)
+  }, [pathname])
 
   // 偵測頁面滑動
   useEffect(() => {
@@ -32,7 +42,9 @@ const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        pageTop
+        pageTop,
+        navbarMenuOpen,
+        setNavbarMenuOpen
       }}
     >
       { children }

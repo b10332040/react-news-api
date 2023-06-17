@@ -8,13 +8,13 @@ import { CiSearch } from 'react-icons/ci'
 
 /**
  * 頁面連結
- * @param {string} to 連結
- * @param {string} title 連結文字
- * @param {node} children 內容
- * @param {func} onClick 處理連結點擊
+ * @param {object} props - 屬性
+ * @param {string} props.to - 連結
+ * @param {string} props.title - 連結文字
+ * @param {node} props.children - 內容
  * @returns 
  */
-const NavbarPageNavLink = ({ to, title, children, onClick }) => {
+const NavbarPageNavLink = ({ to, title, children }) => {
   return (
     <li
      key={`nav-page-link-${title}`}
@@ -29,9 +29,6 @@ const NavbarPageNavLink = ({ to, title, children, onClick }) => {
           ${(isActive) ? stylesNavbar['link--active'] : stylesNavbar['link--inactive']}
         `}
         end={(to === '/') ? true : false}
-        onClick={() => {
-          onClick?.()
-        }}
       >
         {children}
       </NavLink>
@@ -41,8 +38,7 @@ const NavbarPageNavLink = ({ to, title, children, onClick }) => {
 NavbarPageNavLink.propTypes = {
   to: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-  onClick: PropTypes.func
+  children: PropTypes.node.isRequired
 };
 
 /**
@@ -50,9 +46,8 @@ NavbarPageNavLink.propTypes = {
  * @returns
  */
 const Navbar = () => {
-  const [navbarMenuOpen, setNavbarMenuOpen] = useState(false)
   const [searchInputOpen, setSearchInputOpen] = useState(false)
-  const { pageTop } = useApp()
+  const { pageTop, navbarMenuOpen, setNavbarMenuOpen } = useApp()
 
   // 處理漢堡選單按鈕點擊
   const handleNavbarTogglerClick = () => {
@@ -123,29 +118,14 @@ const Navbar = () => {
             <NavbarPageNavLink
               to='/'
               title='home'
-              onClick={() => {
-                setNavbarMenuOpen(false)
-              }}
             >
               Home
             </NavbarPageNavLink>
             <NavbarPageNavLink
               to='/world'
               title='world'
-              onClick={() => {
-                setNavbarMenuOpen(false)
-              }}
             >
               World
-            </NavbarPageNavLink>
-            <NavbarPageNavLink
-              to='/sources'
-              title='sources'
-              onClick={() => {
-                setNavbarMenuOpen(false)
-              }}
-            >
-              Sources
             </NavbarPageNavLink>
           </ul>
           <div
@@ -166,6 +146,7 @@ const Navbar = () => {
                   ${stylesNavbar['search-input']}
                   ${(searchInputOpen) ? stylesNavbar['search-input--open'] : stylesNavbar['search-input--close']}
                 `}
+                autoComplete='off'
               />
               <button
                 type='button'

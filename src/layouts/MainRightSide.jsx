@@ -3,8 +3,9 @@ import { stylesMainRightSide } from '/styles'
 
 /**
  * 主要內容右側
- * @param {node} children 內容 
- * @param {bool} isContentSticky 內容是否 sticky（預設：false）
+ * @param {object} props - 屬性
+ * @param {node} props.children - 內容 
+ * @param {bool} props.isContentSticky - 內容是否 sticky（預設：false）
  * @returns 
  */
 const MainRightSide = ({ children, isContentSticky=false }) => {

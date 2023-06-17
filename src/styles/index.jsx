@@ -1,4 +1,5 @@
 import stylesArticleCard from './articleCard.styles'
+import stylesArticleFilterStickyBar from './articleFilterStickyBar.styles'
 import stylesButton from './button.styles'
 import stylesFooter from './footer.styles'
 import stylesHeader from './header.styles'
@@ -14,6 +15,7 @@ import stylesToTopButton from './toTopButton.styles'
 
 export {
   stylesArticleCard,
+  stylesArticleFilterStickyBar,
   stylesButton,
   stylesFooter,
   stylesHeader,

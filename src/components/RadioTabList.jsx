@@ -4,12 +4,13 @@ import { stylesRadioTabList } from '/styles'
 
 /**
  * 單選頁籤
- * @param {string} name 單選 name 屬性值
- * @param {array} tabs 資料
- * @param {string} checkedValue 被選到的值
- * @param {func} onChange 處理當選到的值改變
- * @param {bool} disabled disabled 屬性值，選項是否不可點擊 (預設：false)
- * @returns 
+ * @param {object} props - 屬性
+ * @param {string} props.name - 單選 name 屬性值
+ * @param {array} props.tabs - 資料
+ * @param {string} props.checkedValue - 被選到的值
+ * @param {func} props.onChange - 處理當選到的值改變
+ * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
+ * @returns
  */
 const RadioTabList = ({ name, tabs, checkedValue, onChange, disabled=false }) => {
   const showList = (Array.isArray(tabs) && tabs.length !== 0) ? true : false

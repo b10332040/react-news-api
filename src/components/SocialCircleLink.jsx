@@ -4,9 +4,11 @@ import { stylesSocialCircleLink } from '/styles'
 
 /**
  * 圓圈聯絡連結
- * @param {string} to 連結
- * @param {string} title - 連結文字
- * @param {string} icon 連結 icon
+ * @param {object} props - 屬性
+ * @param {string} props.to - 連結
+ * @param {string} props.title - 連結文字
+ * @param {string} props.icon - 連結 icon
+ * @returns
  */
 const SocialCircleLink = ({to, title, icon}) => {
   const iconClassName = stylesSocialCircleLink['icon']
