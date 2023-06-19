@@ -9,8 +9,7 @@ const stylesRadioTabList = {
     'overflow-x-auto',
     'overflow-y-hidden',
     'text-[0rem]',
-    'no-scrollbar',
-    'no-scrollbar::-webkit-scrollbar'
+    'has-scrollbar'
   ),
   'item': clsx(
     'relative',

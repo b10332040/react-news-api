@@ -21,7 +21,7 @@ const stylesMainRightSide = {
   ),
   'stickyWrap--sticky': clsx(
     'lg:sticky',
-    'lg:top-[75px]'
+    'lg:top-[105px]'
   )
 }
 

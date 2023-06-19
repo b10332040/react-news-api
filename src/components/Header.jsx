@@ -19,12 +19,12 @@ const Header = ({ title, children }) => {
         <h3
           className={`
             ${titleClassName}
-            ${stylesHeader['title--has-children']}
+            ${stylesHeader['title--has-right']}
           `}
         >
           { title }
         </h3>
-        <div className={stylesHeader['children-wrap']}>
+        <div className={stylesHeader['right-side']}>
           { children }
         </div>
       </header>

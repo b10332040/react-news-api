@@ -8,7 +8,7 @@ import { formatNumber } from '/utils'
  * @param {number} props.page - 第幾頁
  * @param {number} props.pageSize - 一頁有幾筆資料
  * @param {number} props.total - 共幾筆
- * @param {number} props.className - 樣式（預設：''）
+ * @param {string} props.className - 樣式（預設：''）
  * @returns
  */
 const ResultsText = ({ startWith='first', page, pageSize, total, className=''}) => {
@@ -41,7 +41,7 @@ ResultsText.propTypes = {
   page: PropTypes.number,
   pageSize: PropTypes.number,
   total: PropTypes.number.isRequired,
-  className: PropTypes.number
+  className: PropTypes.string
 }
 
 export default ResultsText

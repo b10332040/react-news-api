@@ -53,6 +53,30 @@
     @apply underline hover:text-[--theme-black] transition-colors duration-300;
   }
 
+  /* width */
+  ::-webkit-scrollbar {
+    @apply w-3 h-2;
+  }
+  .has-scrollbar::-webkit-scrollbar {
+    @apply w-3 h-2;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    @apply bg-[--theme-gray-200];
+  }
+  .has-scrollbar::-webkit-scrollbar-track {
+    @apply bg-[--theme-gray-200];
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    @apply bg-[--theme-black];
+  }
+  .has-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-[--theme-gray-300];
+  }
+
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     @apply hidden;

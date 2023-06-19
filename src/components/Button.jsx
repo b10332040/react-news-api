@@ -4,10 +4,10 @@ import { stylesButton } from '/styles'
 /**
  * 按鈕
  * @param {object} props - 屬性
- * @param {string} props.type - 按鈕類型 (預設：button)
- * @param {string} props.display - 按鈕滿版或不是滿版 (預設：inline-block)
- * @param {string} props.size - 按鈕大小 (預設：base)
- * @param {string} props.styled - 按鈕樣式 (預設：filled)
+ * @param {string} props.type - 按鈕類型 (預設：'button')
+ * @param {string} props.display - 按鈕滿版或不是滿版 (預設：'inline-block')
+ * @param {string} props.size - 按鈕大小 (預設：'base')
+ * @param {string} props.styled - 按鈕樣式 (預設：'filled')
  * @param {bool} props.disabled - disabled 屬性值，按鈕是否不可點擊 (預設：false)
  * @param {bool} props.processing - 是否在處理中 (預設：false)
  * @param {func} props.onClick - 處理 click 事件

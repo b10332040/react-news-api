@@ -11,7 +11,7 @@ const world = {
   'continentsMap': {
     'asia': {
       'displayName': 'Asia',
-      'countryIDList': [
+      'countryIdList': [
         'cn',
         'hk',
         'in',
@@ -31,7 +31,7 @@ const world = {
     },
     'europe': {
       'displayName': 'Europe',
-      'countryIDList': [
+      'countryIdList': [
         'at',
         'be',
         'bg',
@@ -61,7 +61,7 @@ const world = {
     },
     'africa': {
       'displayName': 'Africa',
-      'countryIDList': [
+      'countryIdList': [
         'eg',
         'ma',
         'ng',
@@ -70,7 +70,7 @@ const world = {
     },
     'northAmerica': {
       'displayName': 'North America',
-      'countryIDList': [
+      'countryIdList': [
         'ca',
         'cu',
         'mx',
@@ -79,7 +79,7 @@ const world = {
     },
     'southAmerica': {
       'displayName': 'South America',
-      'countryIDList': [
+      'countryIdList': [
         'ar',
         'br',
         'co',
@@ -87,19 +87,19 @@ const world = {
     },
     'oceania': {
       'displayName': 'Oceania',
-      'countryIDList': [
+      'countryIdList': [
         'au',
         'nz'
       ]
     },
     'antarctica': {
       'displayName': 'Antarctica',
-      'countryIDList': [
+      'countryIdList': [
         
       ]
     },
   },
-  'countryIDList': [
+  'countryIdList': [
     'ar',
     'au',
     'at',
@@ -158,219 +158,219 @@ const world = {
   'countryMap': {
     'ar': {
       'displayName': 'Argentina',
-      'continentsID': 'southAmerica'
+      'continentsId': 'southAmerica'
     },
     'au': {
       'displayName': 'Australia',
-      'continentsID': 'oceania'
+      'continentsId': 'oceania'
     },
     'at': {
       'displayName': 'Austria',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'be': {
       'displayName': 'Belgium',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'br': {
       'displayName': 'Brazil',
-      'continentsID': 'southAmerica'
+      'continentsId': 'southAmerica'
     },
     'bg': {
       'displayName': 'Bulgaria',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'ca': {
       'displayName': 'Canada',
-      'continentsID': 'northAmerica'
+      'continentsId': 'northAmerica'
     },
     'cn': {
       'displayName': 'China',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'co': {
       'displayName': 'Colombia',
-      'continentsID': 'southAmerica'
+      'continentsId': 'southAmerica'
     },
     'cu': {
       'displayName': 'Cuba',
-      'continentsID': 'northAmerica'
+      'continentsId': 'northAmerica'
     },
     'cz': {
       'displayName': 'Czech Republic',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'eg': {
       'displayName': 'Egypt',
-      'continentsID': 'africa'
+      'continentsId': 'africa'
     },
     'fr': {
       'displayName': 'France',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'de': {
       'displayName': 'Germany',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'gr': {
       'displayName': 'Greece',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'hk': {
       'displayName': 'Hong Kong',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'hu': {
       'displayName': 'Hungary',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'in': {
       'displayName': 'India',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'id': {
       'displayName': 'Indonesia',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'ie': {
       'displayName': 'Ireland',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'il': {
       'displayName': 'Israel',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'it': {
       'displayName': 'Italy',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'jp': {
       'displayName': 'Japan',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'lv': {
       'displayName': 'Latvia',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'lt': {
       'displayName': 'Lithuania',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'my': {
       'displayName': 'Malaysia',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'mx': {
       'displayName': 'Mexico',
-      'continentsID': 'northAmerica'
+      'continentsId': 'northAmerica'
     },
     'ma': {
       'displayName': 'Morocco',
-      'continentsID': 'africa'
+      'continentsId': 'africa'
     },
     'nl': {
       'displayName': 'Netherlands',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'nz': {
       'displayName': 'New Zealand',
-      'continentsID': 'oceania'
+      'continentsId': 'oceania'
     },
     'ng': {
       'displayName': 'Nigeria',
-      'continentsID': 'africa'
+      'continentsId': 'africa'
     },
     'no': {
       'displayName': 'Norway',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'ph': {
       'displayName': 'Philippines',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'pl': {
       'displayName': 'Poland',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'pt': {
       'displayName': 'Portugal',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'ro': {
       'displayName': 'Romania',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'ru': {
       'displayName': 'Russia',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'sa': {
       'displayName': 'Saudi Arabia',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'rs': {
       'displayName': 'Serbia',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'sg': {
       'displayName': 'Singapore',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'sk': {
       'displayName': 'Slovakia',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'si': {
       'displayName': 'Slovenia',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'za': {
       'displayName': 'South Africa',
-      'continentsID': 'africa'
+      'continentsId': 'africa'
     },
     'kr': {
       'displayName': 'South Korea',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'se': {
       'displayName': 'Sweden',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'ch': {
       'displayName': 'Switzerland',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'tw': {
       'displayName': 'Taiwan',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'th': {
       'displayName': 'Thailand',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'tr': {
       'displayName': 'Turkey',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'ae': {
       'displayName': 'United Arab Emirates',
-      'continentsID': 'asia'
+      'continentsId': 'asia'
     },
     'ua': {
       'displayName': 'Ukraine',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'gb': {
       'displayName': 'United Kingdom',
-      'continentsID': 'europe'
+      'continentsId': 'europe'
     },
     'us': {
       'displayName': 'United States',
-      'continentsID': 'northAmerica'
+      'continentsId': 'northAmerica'
     },
     've': {
       'displayName': 'Venezuela',
-      'continentsID': 'southAmerica'
+      'continentsId': 'southAmerica'
     }
   }
 }

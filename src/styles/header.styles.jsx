@@ -27,11 +27,11 @@ const stylesHeader = {
     'text-lg',
     'text-[--theme-black]'
   ),
-  'title--has-children': clsx(
+  'title--has-right': clsx(
     'md:w-4/12',
     'lg:w-3/12'
   ),
-  'children-wrap': clsx(
+  'right-side': clsx(
     'flex',
     'flex-wrap',
     'md:justify-end',

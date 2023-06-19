@@ -5,7 +5,7 @@ import { stylesSearch } from '/styles'
 /**
  * 搜尋框
  * @param {object} props - 屬性
- * @param {func} props.onChange - 處理當值改變
+ * @param {func} props.onChange - 處理 change 事件
  * @param {string} props.className - 樣式（預設：''）
  * @returns
  */

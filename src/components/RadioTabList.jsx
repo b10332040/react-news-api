@@ -5,29 +5,30 @@ import { stylesRadioTabList } from '/styles'
 /**
  * 單選頁籤
  * @param {object} props - 屬性
+ * @param {object} props.prefix - 前贅詞 (預設：'')
  * @param {string} props.name - 單選 name 屬性值
- * @param {array} props.tabs - 資料
- * @param {string} props.checkedValue - 被選到的值
- * @param {func} props.onChange - 處理當選到的值改變
+ * @param {array} props.radios - 資料
+ * @param {string} props.inputValue - 被選到的值
+ * @param {func} props.onChange - 處理 change 事件
  * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
  * @returns
  */
-const RadioTabList = ({ name, tabs, checkedValue, onChange, disabled=false }) => {
-  const showList = (Array.isArray(tabs) && tabs.length !== 0) ? true : false
+const RadioTabList = ({ prefix='', name, radios, inputValue, onChange, disabled=false }) => {
+  const showList = (Array.isArray(radios) && radios.length !== 0) ? true : false
 
   if (showList) {
-    let RadioTabItems = tabs.map((tab) => {
+    let RadioTabItems = radios.map((radio) => {
       return (
         <li
-          key={`radio-${tab.id}`}
+          key={`radio-${radio.id}`}
           className={stylesRadioTabList['item']}
         >
           <input 
             type='radio'
-            name={name}
-            value={tab.value}
-            id={tab.id}
-            checked={checkedValue === tab.value}
+            name={`${(prefix !== '') ? `${prefix}-` : ''}${name}`}
+            value={radio.value}
+            id={radio.id}
+            checked={inputValue === radio.value}
             onChange={(event) => {
               onChange?.(event.target.value)
             }}
@@ -35,11 +36,11 @@ const RadioTabList = ({ name, tabs, checkedValue, onChange, disabled=false }) =>
             disabled={disabled}
           />
           <label
-            htmlFor={tab.id}
+            htmlFor={radio.id}
             className={stylesRadioTabList['label']}
           >
             <span className={stylesRadioTabList['label-text']}>
-              {tab.displayName}
+              {radio.displayName}
             </span>
           </label>
         </li>
@@ -57,9 +58,10 @@ const RadioTabList = ({ name, tabs, checkedValue, onChange, disabled=false }) =>
   )
 }
 RadioTabList.propTypes = {
+  prefix: PropTypes.string,
   name: PropTypes.string.isRequired,
-  tabs: PropTypes.array.isRequired,
-  checkedValue: PropTypes.string,
+  radios: PropTypes.array.isRequired,
+  inputValue: PropTypes.string,
   onChange: PropTypes.func,
   disabled: PropTypes.bool
 }

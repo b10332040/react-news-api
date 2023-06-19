@@ -1,13 +1,11 @@
 import PropTypes from 'prop-types'
-import { useLocation } from 'react-router-dom'
 import { useState, useEffect, createContext } from 'react'
 
-const defaultAppContext = {
+const defaultContext = {
   pageTop: true,
-  navbarMenuOpen: false,
-  setNavbarMenuOpen: null
+  setBodyScroll: null,
 }
-const AppContext = createContext(defaultAppContext)
+const AppContext = createContext(defaultContext)
 
 /**
  * 提供基本邏輯（頁面是否滑動到頂端……）
@@ -16,35 +14,35 @@ const AppContext = createContext(defaultAppContext)
  * @returns 
  */
 const AppProvider = ({ children }) => {
-  const [pageTop, setPageTop] = useState(true)
-  const [navbarMenuOpen, setNavbarMenuOpen] = useState(false)
-  const { pathname } = useLocation()
+  const [bodyScroll, setBodyScroll] = useState(true)
+  const [pageTop, setPageTop] = useState(defaultContext.pageTop)
 
   // 處理頁面滑動
   const handleScroll = () => {
+    // 是否滾到頁面頂端
     (window.scrollY === 0) ? setPageTop(true) : setPageTop(false)
   }
 
-  // 當 path name 改變
-  useEffect(() => {
-    setNavbarMenuOpen(false)
-  }, [pathname])
-
-  // 偵測頁面滑動
   useEffect(() => {
     window.addEventListener('scroll', handleScroll)
-
     return () => {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [])
 
+  useEffect(() => {
+    if (bodyScroll) {
+      document.body.classList.remove('overflow-y-hidden')
+    } else {
+      document.body.classList.add('overflow-y-hidden')
+    }
+  }, [bodyScroll])
+
   return (
     <AppContext.Provider
       value={{
         pageTop,
-        navbarMenuOpen,
-        setNavbarMenuOpen
+        setBodyScroll
       }}
     >
       { children }

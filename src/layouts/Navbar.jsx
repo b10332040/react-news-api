@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useApp } from '/hooks'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { stylesNavbar } from '/styles'
 import { srcSvgLogo } from '/assets/images'
 import { CiSearch } from 'react-icons/ci'
@@ -46,8 +46,10 @@ NavbarPageNavLink.propTypes = {
  * @returns
  */
 const Navbar = () => {
+  const [navbarMenuOpen, setNavbarMenuOpen] = useState(false)
   const [searchInputOpen, setSearchInputOpen] = useState(false)
-  const { pageTop, navbarMenuOpen, setNavbarMenuOpen } = useApp()
+  const { pageTop } = useApp()
+  const { pathname } = useLocation()
 
   // 處理漢堡選單按鈕點擊
   const handleNavbarTogglerClick = () => {
@@ -63,6 +65,11 @@ const Navbar = () => {
   const handleSearchInputTogglerClick = (open) => {
     setSearchInputOpen(open)
   }
+
+  // 當 path name 改變
+  useEffect(() => {
+    setNavbarMenuOpen(false)
+  }, [pathname])
 
   return (
     <header

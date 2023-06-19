@@ -20,15 +20,16 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { categories, dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
-import { ArticleFilterStickyBar, Main, MainLeftSide, MainRightSide, MainRightSideSection } from '/layouts'
-import { ArticleCard , Button, Header, RadioTabList, ResultsText, Search, Waterfall } from '/components'
+import { Main, MainLeftSide, MainRightSide, MainRightSideSection, StickyBar } from '/layouts'
+import { ArticleCard , Button, Header, PopupMenu, PopupMenuOpenButton, RadioTabList, ResultsText, Search, Waterfall } from '/components'
 import { useNews } from '/hooks'
+import { useRef, useState } from 'react'
 
 
 /**
  * 主 Banner 輪播前後箭頭按鈕
  * @param {object} props - 屬性
- * @param {func} props.onClick - 處理點擊
+ * @param {func} props.onClick - 處理 click 事件
  * @param {string} props.arrowDirection - 箭頭方向
  * @returns 
  */
@@ -206,13 +207,11 @@ const MainBanner = () => {
  * @returns 
  */
 const HomePage = () => {
+  const filterPopupMenuId = 'filterPopupMenu'
+  const showStickyBarRef = useRef()
   const { category, setCategory, page, pageSize, totalResults } = useNews()
+  const [filterPopupMenuOpen, setFilterPopupMenuOpen] = useState(false)
   const articles = dummyNewsList.articles
-
-  const handleCategoryRadioChange = (radioValue) => {
-    setCategory(radioValue)
-  }
-
   const ArticleList = articles.map((article, index) => {
     return (
       <ArticleCard 
@@ -224,16 +223,59 @@ const HomePage = () => {
 
   return (
     <>
+      <StickyBar showStickyBarRef={showStickyBarRef}>
+        <div className='row items-center h-full'>
+          <div className='col w-1/2 md:w-3/12'>
+            <ResultsText
+              page={page}
+              pageSize={pageSize}
+              total={totalResults}
+              className='my-3 lg:my-0'
+            />
+          </div>
+          <div className='col w-1/2 md:w-9/12 flex flex-wrap justify-end'>
+            <div className='hidden md:block md:max-w-[calc(100%-44px)]'>
+              <RadioTabList
+                prefix='sticky-bar'
+                name='category'
+                radios={categories}
+                inputValue={category}
+                onChange={(inputValue) => {
+                  setCategory(inputValue)
+                }}
+              />
+            </div>
+            <PopupMenuOpenButton
+              title='Open filter popup menu'
+              icon='filter'
+              menuId={filterPopupMenuId}
+              open={filterPopupMenuOpen}
+              setOpen={setFilterPopupMenuOpen}
+              className='border-l-2 border-[--theme-gray-200]'
+            />
+          </div>
+        </div>
+      </StickyBar>
+      <PopupMenu
+        open={filterPopupMenuOpen}
+        menuId={filterPopupMenuId}
+        setOpen={setFilterPopupMenuOpen}
+      >
+        filter popup
+      </PopupMenu>
       <MainBanner />
       <Main>
         <MainLeftSide>
           <article>
             <Header title={`Don't Miss`}>
               <RadioTabList
+                prefix='header'
                 name='category'
-                tabs={categories}
-                checkedValue={category}
-                onChange={handleCategoryRadioChange}
+                radios={categories}
+                inputValue={category}
+                onChange={(inputValue) => {
+                  setCategory(inputValue)
+                }}
               />
             </Header>
             <div>
@@ -253,18 +295,11 @@ const HomePage = () => {
                 </div>
               </div>
 
-              {/* <ArticleFilterStickyBar
-                page={page}
-                pageSize={pageSize}
-                total={totalResults}
-              >
+              <div ref={showStickyBarRef}>
                 <Waterfall className='px-3 mt-3'>
                   { ArticleList }
                 </Waterfall>
-              </ArticleFilterStickyBar> */}
-              <Waterfall className='px-3 mt-3'>
-                { ArticleList }
-              </Waterfall>
+              </div>
 
               <Button
                 text='Load More'
