@@ -1,17 +1,17 @@
 import Footer from './Footer'
+import Header from './Header'
 import Main from './Main'
-import MainLeftSide from './MainLeftSide'
-import MainRightSide from './MainRightSide'
-import MainRightSideSection from './MainRightSideSection'
 import Navbar from './Navbar'
+import PopupMenu from './PopupMenu'
 import StickyBar from './StickyBar'
+import Waterfall from './Waterfall'
 
 export {
   Footer,
+  Header,
   Main,
-  MainLeftSide,
-  MainRightSide,
-  MainRightSideSection,
   Navbar,
-  StickyBar
+  PopupMenu,
+  StickyBar,
+  Waterfall
 }

@@ -20,8 +20,8 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { categories, dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
-import { Main, MainLeftSide, MainRightSide, MainRightSideSection, StickyBar } from '/layouts'
-import { ArticleCard , Button, Header, PopupMenu, PopupMenuOpenButton, RadioTabList, ResultsText, Search, Waterfall } from '/components'
+import { Main, Header, StickyBar, PopupMenu, Waterfall } from '/layouts'
+import { ArticleCard , Button, RadioTabList, ResultsText, Search } from '/components'
 import { useNews } from '/hooks'
 import { useRef, useState } from 'react'
 
@@ -245,7 +245,7 @@ const HomePage = () => {
                 }}
               />
             </div>
-            <PopupMenuOpenButton
+            <PopupMenu.OpenButton
               title='Open filter popup menu'
               icon='filter'
               menuId={filterPopupMenuId}
@@ -256,6 +256,7 @@ const HomePage = () => {
           </div>
         </div>
       </StickyBar>
+      
       <PopupMenu
         open={filterPopupMenuOpen}
         menuId={filterPopupMenuId}
@@ -263,9 +264,10 @@ const HomePage = () => {
       >
         filter popup
       </PopupMenu>
+
       <MainBanner />
       <Main>
-        <MainLeftSide>
+        <Main.LeftSide>
           <article>
             <Header title={`Don't Miss`}>
               <RadioTabList
@@ -309,14 +311,14 @@ const HomePage = () => {
               />
             </div>
           </article>
-        </MainLeftSide>
+        </Main.LeftSide>
 
-        <MainRightSide
+        <Main.RightSide
           isContentSticky={true}
         >
-          <MainRightSideSection contentType='about'/>
-          <MainRightSideSection contentType='connect'/>
-        </MainRightSide>
+          <Main.RightSideSection contentType='about'/>
+          <Main.RightSideSection contentType='connect'/>
+        </Main.RightSide>
       </Main>
     </>
   )
