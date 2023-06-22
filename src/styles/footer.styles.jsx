@@ -46,8 +46,6 @@ const stylesFooter = {
     'rounded-lg',
     'text-sm',
     'hover:text-white',
-    'transition',
-    'duration-300',
     'rounded-md',
     'focus-shadow-white'
   ),

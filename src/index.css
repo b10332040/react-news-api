@@ -18,6 +18,23 @@
   body {
     @apply overflow-x-hidden bg-[--theme-gray-50];
   }
+
+  a, 
+  button,
+  input,
+  a > *,
+  button > * ,
+  input > * {
+    @apply transition duration-300;
+  }
+
+  ::-moz-selection {
+    @apply bg-[--theme-gray-200] text-[--theme-black];
+  }
+
+  ::selection {
+    @apply bg-[--theme-gray-200] text-[--theme-black];
+  }
 }
 
 @layer components {
@@ -58,7 +75,7 @@
     @apply w-3 h-2;
   }
   .has-scrollbar::-webkit-scrollbar {
-    @apply w-3 h-2;
+    @apply hidden md:block md:w-3 md:h-2;
   }
 
   /* Track */
@@ -66,7 +83,7 @@
     @apply bg-[--theme-gray-200];
   }
   .has-scrollbar::-webkit-scrollbar-track {
-    @apply bg-[--theme-gray-200];
+    @apply md:bg-[--theme-gray-200];
   }
 
   /* Handle */
@@ -74,7 +91,7 @@
     @apply bg-[--theme-black];
   }
   .has-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-[--theme-gray-300];
+    @apply md:bg-[--theme-gray-300];
   }
 
   /* Hide scrollbar for Chrome, Safari and Opera */

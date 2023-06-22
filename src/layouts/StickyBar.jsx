@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import { stylesStickyBar } from '/styles'
+import { BsFilter } from 'react-icons/bs'
+import { TiFilter } from 'react-icons/ti'
 
 /**
  * 黏著 bar
@@ -38,11 +40,11 @@ const StickyBar = ({ showStickyBarRef, children }) => {
   return (
     <div
       className={`
-        ${stylesStickyBar['self']}
+        ${stylesStickyBar['sticky-bar']['self']}
         ${(showBar) ? 'top-[55px]' : '-top-[55px]'}
       `}
     >
-      <div className={stylesStickyBar['children-wrap']}>
+      <div className={stylesStickyBar['sticky-bar']['container']}>
         { children }
       </div>
     </div>
@@ -53,5 +55,76 @@ StickyBar.propTypes = {
   children: PropTypes.node.isRequired
 }
 
+/**
+ * 按鈕
+ * @param {object} props props - 屬性
+ * @param {string} props.icon - icon
+ * @param {string} props.title - title 屬性值
+ * @param {string} props.popupId - popup ID
+ * @param {bool} props.popupOpen - 是否開啟 (預設：false)
+ * @param {func} props.onClick - 處理 click 事件
+ * @param {string} props.className - 樣式
+ * @returns
+ */
+const IconButton = ({ icon, title='', popupId, popupOpen=false, onClick, className }) => {
+  const selfClassName = stylesStickyBar['icon-button']['self']
+  const iconClassName = stylesStickyBar['icon-button']['icon']
+  let Icon = <BsFilter className={iconClassName} />
+
+  switch (icon) {
+    case 'filter':
+      Icon = <TiFilter className={iconClassName} />
+      break
+  }
+  
+  if (typeof popupId === 'undefined') {
+    return (
+      <button
+        type='button'
+        title={title}
+        aria-label={title}
+        onClick={() => {
+          onClick?.()
+        }}
+        className={`
+          ${selfClassName}
+          ${className}
+        `}
+      >
+        { Icon }
+      </button>
+    )
+  }
+
+  return (
+    <button
+      type='button'
+      title={title}
+      aria-label={title}
+      aria-controls={popupId}
+      aria-expanded={(popupOpen) ? 'true' : 'false'}
+      aria-haspopup='menu'
+      onClick={() => {
+        onClick?.()
+      }}
+      className={`
+        ${selfClassName}
+        ${className}
+      `}
+    >
+      { Icon }
+    </button>
+  )
+}
+IconButton.propTypes = {
+  title: PropTypes.string,
+  icon: PropTypes.string,
+  popupId: PropTypes.string,
+  popupOpen: PropTypes.bool,
+  onClick: PropTypes.func,
+  className: PropTypes.string
+}
+
+StickyBar.IconButton = IconButton
 export default StickyBar
 

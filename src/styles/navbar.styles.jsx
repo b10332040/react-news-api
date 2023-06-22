@@ -65,8 +65,6 @@ const stylesNavbar = {
     'border-[1px]',
     'border-transparent',
     'focus-shadow-white',
-    'transition',
-    'duration-300',
     'md:hidden'
   ),
   'hamburger-icon': clsx(
@@ -87,7 +85,6 @@ const stylesNavbar = {
     'before:overflow-hidden',
     'before:bg-white',
     'before:transition-all',
-    'before:duration-300',
     'after:content-[""]',
     'after:absolute',
     'after:left-0',
@@ -97,8 +94,7 @@ const stylesNavbar = {
     'after:h-[2px]',
     'after:overflow-hidden',
     'after:bg-white',
-    'after:transition-all',
-    'after:duration-300'
+    'after:transition-all'
   ),
   'hamburger-icon--active': clsx(
     'before:top-0',
@@ -151,8 +147,6 @@ const stylesNavbar = {
     'w-full',
     'px-[1.75rem]',
     'py-2',
-    'transition',
-    'duration-300',
     'focus-shadow-white',
     'md:w-auto',
     'md:px-3'
@@ -230,8 +224,6 @@ const stylesNavbar = {
     'right-0',
     'w-[48px]',
     'h-full',
-    'transition',
-    'duration-300',
     'opacity-60',
     'hover:opacity-100',
     'focus:opacity-100', 
@@ -247,7 +239,6 @@ const stylesNavbar = {
     'before:origin-center',
     'before:rotate-45',
     'before:transition-all',
-    'before:duration-300',
     'before:delay-500',
     'after:content-[""]',
     'after:block',
@@ -261,7 +252,6 @@ const stylesNavbar = {
     'after:origin-center',
     'after:rotate-[315deg]',
     'after:transition-all',
-    'after:duration-300',
     'after:delay-500',
   ),
   'search-close-btn--show': clsx(

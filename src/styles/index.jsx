@@ -5,7 +5,7 @@ import stylesHeader from './header.styles'
 import stylesHomePage from './homePage.styles'
 import stylesMain from './main.styles'
 import stylesNavbar from './navbar.styles'
-import stylesPopupMenu from './popupMenu.styles'
+import stylesPopup from './popup.styles'
 import stylesRadioTabList from './radioTabList.styles'
 import stylesSearch from './search.styles'
 import stylesSocialCircleLink from './socialCircleLink.styles'
@@ -20,7 +20,7 @@ export {
   stylesHomePage,
   stylesMain,
   stylesNavbar,
-  stylesPopupMenu,
+  stylesPopup,
   stylesRadioTabList,
   stylesSearch,
   stylesSocialCircleLink,

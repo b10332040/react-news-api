@@ -15,7 +15,6 @@ const stylesArticleCard = {
   'self--has-link': clsx(
     'group',
     'transition-shadow',
-    'duration-300',
     'hover:shadow-sm',
     'hover:shadow-[rgba(0,0,0,0.2)]'
   ),
@@ -60,7 +59,6 @@ const stylesArticleCard = {
     'min-h-full',
     'block',
     'transition-transform',
-    'duration-300',
     'group-hover:scale-[1.1]'
   ),
   'body': clsx(
@@ -73,7 +71,6 @@ const stylesArticleCard = {
     'text-base',
     'font-bold',
     'transition',
-    'duration-300',
     'group-hover:opacity-70',
     'group-hover:cursor-pointer'
   ),

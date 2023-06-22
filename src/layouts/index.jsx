@@ -2,7 +2,7 @@ import Footer from './Footer'
 import Header from './Header'
 import Main from './Main'
 import Navbar from './Navbar'
-import PopupMenu from './PopupMenu'
+import Popup from './Popup'
 import StickyBar from './StickyBar'
 import Waterfall from './Waterfall'
 
@@ -11,7 +11,7 @@ export {
   Header,
   Main,
   Navbar,
-  PopupMenu,
+  Popup,
   StickyBar,
   Waterfall
 }

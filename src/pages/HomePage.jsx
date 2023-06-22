@@ -20,10 +20,11 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { categories, dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
-import { Main, Header, StickyBar, PopupMenu, Waterfall } from '/layouts'
+import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
 import { ArticleCard , Button, RadioTabList, ResultsText, Search } from '/components'
 import { useNews } from '/hooks'
 import { useRef, useState } from 'react'
+import { formatNumber } from '/utils'
 
 
 /**
@@ -245,25 +246,53 @@ const HomePage = () => {
                 }}
               />
             </div>
-            <PopupMenu.OpenButton
+            <StickyBar.IconButton
               title='Open filter popup menu'
               icon='filter'
-              menuId={filterPopupMenuId}
-              open={filterPopupMenuOpen}
-              setOpen={setFilterPopupMenuOpen}
+              popupId={filterPopupMenuId}
+              popupOpen={filterPopupMenuOpen}
+              onClick={() => {
+                setFilterPopupMenuOpen(true)
+              }}
               className='border-l-2 border-[--theme-gray-200]'
             />
           </div>
         </div>
       </StickyBar>
       
-      <PopupMenu
+      <Popup
         open={filterPopupMenuOpen}
-        menuId={filterPopupMenuId}
+        popupId={filterPopupMenuId}
         setOpen={setFilterPopupMenuOpen}
+        overScreenHeight={false}
+        dialogFullInMobile={true}
+        backdropVisibleInMobile={true}
       >
-        filter popup
-      </PopupMenu>
+        <Popup.Dialog>
+          <Popup.Header>
+            <Popup.Title>
+              Filter
+            </Popup.Title>
+          </Popup.Header>
+          <Popup.Body>
+            <div className='h-[120vh]'>
+              filter popup
+            </div>
+          </Popup.Body>
+          <Popup.Footer>
+            <Button
+              title={`${formatNumber(totalResults)} results`}
+              display='block'
+              size='lg'
+              onClick={() => {
+                setFilterPopupMenuOpen(false)
+              }}
+            >
+              {formatNumber(totalResults)} results
+            </Button>
+          </Popup.Footer>
+        </Popup.Dialog>
+      </Popup>
 
       <MainBanner />
       <Main>
@@ -304,11 +333,13 @@ const HomePage = () => {
               </div>
 
               <Button
-                text='Load More'
+                title='Load More'
                 styled='outlined'
                 display='block'
                 className='mx-auto mt-6 max-w-[160px]'
-              />
+              >
+                Load More
+              </Button>
             </div>
           </article>
         </Main.LeftSide>

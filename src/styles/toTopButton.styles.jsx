@@ -16,8 +16,6 @@ const stylesToTopButton = {
     'w-[48px]',
     'h-[48px]',
     'bg-[--theme-black]',
-    'transition-all',
-    'duration-300',
     'shadow',
     'hover:bg-[--theme-gray-400]',
     'focus:bg-[--theme-gray-400]'
@@ -44,7 +42,6 @@ const stylesToTopButton = {
     '-translate-x-1/2',
     '-translate-y-1/2',
     'transition-all',
-    'duration-300',
     'group-hover:top-[calc(50%-2px)]'
   )
 }

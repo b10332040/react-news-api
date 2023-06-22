@@ -7,7 +7,6 @@ const stylesButton = {
     'rounded-full',
     'text-[--theme-gray-400]',
     'transition-colors',
-    'duration-300',
     'disabled:opacity-60',
     'disabled:cursor-default'
   ),

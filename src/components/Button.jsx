@@ -11,16 +11,17 @@ import { stylesButton } from '/styles'
  * @param {bool} props.disabled - disabled 屬性值，按鈕是否不可點擊 (預設：false)
  * @param {bool} props.processing - 是否在處理中 (預設：false)
  * @param {func} props.onClick - 處理 click 事件
- * @param {string} props.text - 按鈕文字 (預設：'')
+ * @param {string} props.title - title 屬性值 (預設：'')
  * @param {string} props.className - 樣式 (預設：'')
+ * @param {node} props.children - 內容
  * @returns
  */
-const Button = ({type='button', display='inline-block', size='base', styled='filled', disabled=false, processing=false, onClick, text='', className=''}) => {
+const Button = ({type='button', display='inline-block', size='base', styled='filled', disabled=false, processing=false, onClick, title='', className='', children}) => {
   return (
     <button
       type={type}
-      title={text}
-      aria-label={text}
+      title={title}
+      aria-label={title}
       onClick={() => {onClick?.()}}
       disabled={disabled}
       className={`
@@ -32,7 +33,7 @@ const Button = ({type='button', display='inline-block', size='base', styled='fil
         ${(processing) ? stylesButton['self--processing'] : stylesButton['self--done']}
       `}
     >
-      { text }
+      { children }
       <span></span>
       <span></span>
       <span></span>
@@ -47,8 +48,9 @@ Button.propTypes = {
   processing: PropTypes.bool,
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
-  text: PropTypes.string,
-  className: PropTypes.string
+  title: PropTypes.string,
+  className: PropTypes.string,
+  children: PropTypes.node
 }
 
 export default Button

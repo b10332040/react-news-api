@@ -45,8 +45,6 @@ const stylesHomePage = {
     'text-center',
     'focus:bg-white',
     'hover:bg-white',
-    'transition-color',
-    'duration-300'
   ),
   'main-banner-slider-prev-button': clsx(
     'left-[12px]',
@@ -71,7 +69,6 @@ const stylesHomePage = {
     '-translate-x-1/2',
     '-translate-y-1/2',
     'transition-all',
-    'duration-300',
     'group-hover:text-[--theme-black]',
     'group-focus:text-[--theme-black]'
   ),
