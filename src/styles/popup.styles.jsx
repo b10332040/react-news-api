@@ -127,7 +127,31 @@ const stylesPopup = {
       'px-3',
       'py-2',
       'overflow-y-auto',
-      'has-scrollbar'
+      'has-scrollbar',
+      '[&>hr]:border-[--theme-gray-200]'
+    )
+  },
+  'title-in-body': {
+    'self': clsx(
+      'py-2',
+      'text-[--theme-black]',
+      'text-sm'
+    )
+  },
+  'inner-content-open-button': {
+    'self': clsx(
+      'block',
+      'w-full',
+      'text-left',
+      'hover:pl-3',
+      'focus:pl-3',
+      'transition-all'
+    ),
+    'title': clsx(
+      '[&>span]:block',
+      '[&>span]:float-right',
+      '[&>span]:text-[--theme-gray-400]',
+      '[&>span]:text-right'
     )
   },
   'footer': {

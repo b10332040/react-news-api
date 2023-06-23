@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
 import { HomePage, SearchPage,SourcesPage, WorldPage } from '/pages'
 import { Footer, Navbar } from '/layouts'
 import { ToTopButton } from '/components'
-import { AppProvider, NewsProvider } from '/contexts'
+import { AppProvider, DataProvider, NewsProvider } from '/contexts'
 
 /**
  * 共用佈局
@@ -11,6 +11,7 @@ import { AppProvider, NewsProvider } from '/contexts'
 const BasicLayout = () => {
   return (
     <AppProvider>
+    <DataProvider>
     <NewsProvider>
       <Navbar />
         <div className='min-h-[100vh]'>
@@ -19,6 +20,7 @@ const BasicLayout = () => {
       <Footer />
       <ToTopButton />
     </NewsProvider>
+    </DataProvider>
     </AppProvider>
   )
 }

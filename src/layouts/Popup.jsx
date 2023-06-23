@@ -213,6 +213,65 @@ Body.propTypes = {
 }
 
 /**
+ * 標題 (in body)
+ * @param {object} props props - 屬性
+ * @param {string} props.className - 樣式
+ * @param {node} props.children - 內容
+ * @returns 
+ */
+const TitleInBody = ({ className='', children }) => {
+  return (
+    <h3 className={`
+      ${stylesPopup['title-in-body']['self']}
+      ${className}
+    `}>
+      { children }
+    </h3>
+  )
+}
+TitleInBody.propTypes = {
+  className: PropTypes.string,
+  children: PropTypes.node
+}
+
+/**
+ * 打開次內容按鈕 
+ * @param {object} props props - 屬性
+ * @returns 
+ */
+const InnerContentOpenButton = ({ title, innerContentId, open, setOpen, children }) => {
+  if (typeof innerContentId === 'undefined') {
+    return <></>
+  }
+
+  return (
+    <button
+      type='button'
+      title={title}
+      aria-label={title}
+      aria-controls={innerContentId}
+      aria-expanded={(open) ? 'true' : 'false'}
+      aria-haspopup='menu'
+      onClick={() => {
+        setOpen?.(true)
+      }}
+      className={stylesPopup['inner-content-open-button']['self']}
+    >
+      <TitleInBody className={stylesPopup['inner-content-open-button']['title']}>
+        { children }
+      </TitleInBody>
+    </button>
+  )
+}
+InnerContentOpenButton.propTypes = {
+  title: PropTypes.string,
+  innerContentId: PropTypes.string.isRequired,
+  open: PropTypes.bool,
+  setOpen: PropTypes.func,
+  children: PropTypes.node
+}
+
+/**
  * Footer
  * @param {object} props props - 屬性
  * @param {node} props.children - 內容
@@ -233,5 +292,7 @@ Popup.Dialog = Dialog
 Popup.Header = Header
 Popup.Title = Title
 Popup.Body = Body
+Popup.TitleInBody = TitleInBody
+Popup.InnerContentOpenButton = InnerContentOpenButton
 Popup.Footer = Footer
 export default Popup

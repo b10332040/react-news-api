@@ -18,11 +18,11 @@ import {
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import { categories, dummyNewsList } from '/data'
+import { dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
 import { ArticleCard , Button, RadioTabList, ResultsText, Search } from '/components'
-import { useNews } from '/hooks'
+import { useData, useNews } from '/hooks'
 import { useRef, useState } from 'react'
 import { formatNumber } from '/utils'
 
@@ -211,7 +211,9 @@ const HomePage = () => {
   const filterPopupMenuId = 'filterPopupMenu'
   const showStickyBarRef = useRef()
   const { category, setCategory, page, pageSize, totalResults } = useNews()
+  const { categoryList, categoryValueMap } = useData()
   const [filterPopupMenuOpen, setFilterPopupMenuOpen] = useState(false)
+  const [filterPopupCategoriesContentOpen, setFilterPopupCategoriesContentOpen] = useState(false)
   const articles = dummyNewsList.articles
   const ArticleList = articles.map((article, index) => {
     return (
@@ -239,7 +241,7 @@ const HomePage = () => {
               <RadioTabList
                 prefix='sticky-bar'
                 name='category'
-                radios={categories}
+                radios={categoryList}
                 inputValue={category}
                 onChange={(inputValue) => {
                   setCategory(inputValue)
@@ -275,9 +277,18 @@ const HomePage = () => {
             </Popup.Title>
           </Popup.Header>
           <Popup.Body>
-            <div className='h-[120vh]'>
-              filter popup
-            </div>
+            <Popup.TitleInBody>
+              Category
+            </Popup.TitleInBody>
+            <hr/>
+            <Popup.InnerContentOpenButton
+              title={`Open Categories Inner Content`}
+              innerContentId='popupCategoriesContent'
+              open={filterPopupCategoriesContentOpen}
+              setOpen={setFilterPopupCategoriesContentOpen}
+            >
+              Category <span>{ categoryValueMap[category]['displayName'] }</span>
+            </Popup.InnerContentOpenButton>
           </Popup.Body>
           <Popup.Footer>
             <Button
@@ -302,7 +313,7 @@ const HomePage = () => {
               <RadioTabList
                 prefix='header'
                 name='category'
-                radios={categories}
+                radios={categoryList}
                 inputValue={category}
                 onChange={(inputValue) => {
                   setCategory(inputValue)
