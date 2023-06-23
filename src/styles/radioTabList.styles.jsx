@@ -32,7 +32,7 @@ const stylesRadioTabList = {
     'cursor-pointer',
     'transition-colors',
     'duration-300',
-    'hover:enabled:text-[--theme-black]',
+    'peer-enabled:hover:text-[--theme-black]',
     'peer-checked:text-[--theme-black]',
     'peer-checked:[&>span]:after:border-[--theme-black]',
     'peer-disabled:cursor-default',

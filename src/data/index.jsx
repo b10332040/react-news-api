@@ -1,10 +1,10 @@
-import category from './category'
+import categories from './categories'
 import contact from './contact'
 import dummyNewsList from './dummyNewsList'
 import world from './world'
 
 export {
-  category,
+  categories,
   contact,
   dummyNewsList,
   world

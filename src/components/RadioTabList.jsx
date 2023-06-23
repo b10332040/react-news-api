@@ -20,14 +20,14 @@ const RadioTabList = ({ prefix='', name, radios, inputValue, onChange, disabled=
     let RadioTabItems = radios.map((radio) => {
       return (
         <li
-          key={`radio-${radio.id}`}
+          key={`radio-${radio.value}`}
           className={stylesRadioTabList['item']}
         >
           <input 
             type='radio'
             name={`${(prefix !== '') ? `${prefix}-` : ''}${name}`}
             value={radio.value}
-            id={radio.id}
+            id={radio.value}
             checked={inputValue === radio.value}
             onChange={(event) => {
               onChange?.(event.target.value)
@@ -36,7 +36,7 @@ const RadioTabList = ({ prefix='', name, radios, inputValue, onChange, disabled=
             disabled={disabled}
           />
           <label
-            htmlFor={radio.id}
+            htmlFor={radio.value}
             className={stylesRadioTabList['label']}
           >
             <span className={stylesRadioTabList['label-text']}>

@@ -209,9 +209,10 @@ const MainBanner = () => {
  */
 const HomePage = () => {
   const filterPopupMenuId = 'filterPopupMenu'
+  const filterPopupInnerContentId = 'popupCategoriesContent'
   const showStickyBarRef = useRef()
   const { category, setCategory, page, pageSize, totalResults } = useNews()
-  const { categoryList, categoryValueMap } = useData()
+  const { categoryList, categoryMap } = useData()
   const [filterPopupMenuOpen, setFilterPopupMenuOpen] = useState(false)
   const [filterPopupCategoriesContentOpen, setFilterPopupCategoriesContentOpen] = useState(false)
   const articles = dummyNewsList.articles
@@ -262,6 +263,7 @@ const HomePage = () => {
         </div>
       </StickyBar>
       
+      {/* start - filter popup */}
       <Popup
         open={filterPopupMenuOpen}
         popupId={filterPopupMenuId}
@@ -283,11 +285,11 @@ const HomePage = () => {
             <hr/>
             <Popup.InnerContentOpenButton
               title={`Open Categories Inner Content`}
-              innerContentId='popupCategoriesContent'
-              open={filterPopupCategoriesContentOpen}
-              setOpen={setFilterPopupCategoriesContentOpen}
+              innerContentId={filterPopupInnerContentId}
+              innerContentOpen={filterPopupCategoriesContentOpen}
+              setInnerContentOpen={setFilterPopupCategoriesContentOpen}
             >
-              Category <span>{ categoryValueMap[category]['displayName'] }</span>
+              Category <span>{ categoryMap.get(category).displayName }</span>
             </Popup.InnerContentOpenButton>
           </Popup.Body>
           <Popup.Footer>
@@ -302,8 +304,41 @@ const HomePage = () => {
               {formatNumber(totalResults)} results
             </Button>
           </Popup.Footer>
+          
+          <Popup.InnerContent
+            innerContentId={filterPopupInnerContentId}
+            innerContentOpen={filterPopupCategoriesContentOpen}
+          >
+            <Popup.InnerContentHeader
+              setInnerContentOpen={setFilterPopupCategoriesContentOpen}
+            >
+              <Popup.Title>
+                Category
+              </Popup.Title>
+            </Popup.InnerContentHeader>
+            <Popup.Body>
+              <div className='h-[120vh]'>
+                Category inner content
+              </div>
+              
+            </Popup.Body>
+            <Popup.Footer>
+            <Button
+              title={`${formatNumber(totalResults)} results`}
+              display='block'
+              size='lg'
+              onClick={() => {
+                setFilterPopupMenuOpen(false)
+              }}
+            >
+              {formatNumber(totalResults)} results
+            </Button>
+          </Popup.Footer>
+          </Popup.InnerContent>
+
         </Popup.Dialog>
       </Popup>
+      {/* close - filter popup */}
 
       <MainBanner />
       <Main>

@@ -1,23 +1,17 @@
 import PropTypes from 'prop-types'
 import { createContext } from 'react'
-import { category } from '/data'
-
-const { categoryValueList, categoryValueMap } = category
+import { categories } from '/data'
 
 const defaultContext = {
   categoryList: [],
-  categoryValueMap: categoryValueMap
+  categoryMap: {}
 }
 const DataContext = createContext(defaultContext)
 
-let categoryList = defaultContext.categoryList
-categoryValueList.forEach((categoryValue) => {
-  categoryList.push({
-    'id': categoryValue,
-    'value': categoryValue,
-    'displayName': categoryValueMap[categoryValue]['displayName']
-  })
-})
+const categoryList = categories
+const categoryMap = new Map(categoryList.map((item) => [item.value, item]))
+
+console.log(categoryMap)
 
 /**
  * 提供資料
@@ -26,11 +20,12 @@ categoryValueList.forEach((categoryValue) => {
  * @returns 
  */
 const DataProvider = ({ children }) => {
+
   return (
     <DataContext.Provider
       value={{
         categoryList,
-        categoryValueMap
+        categoryMap
       }}
     >
       { children }

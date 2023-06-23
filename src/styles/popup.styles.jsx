@@ -45,8 +45,7 @@ const stylesPopup = {
       'text-left',
       'transition-transform',
       'duration-300',
-      'delay-100',
-      'shadow-lg',
+      'delay-100'
     ),
     'self--base': clsx(
       'sm:max-w-[500px]'
@@ -78,29 +77,38 @@ const stylesPopup = {
       'sm:max-h-none'
     ),
     'content': clsx(
+      'relative',
       'flex',
       'flex-col',
       'w-full',
       'h-full',
       'bg-[--theme-gray-50]',
       'overflow-hidden',
+      'shadow-lg'
     ),
   },
   'header': {
     'self': clsx(
+      'relative',
+      'z-[1]',
       'flex',
-      'justify-between',
+      'flex-wrap',
       'items-center',
       'w-full',
+      'pl-3'
     ),
     'close-button': clsx(
       'group',
       'relative',
+      'z-[1]',
+      'top-0',
+      'right-0',
       'w-[48px]',
       'h-[48px]',
     ),
     'close-button-icon': clsx(
       'absolute',
+      'z-[1]',
       'top-1/2',
       'left-1/2',
       'text-[--theme-black]',
@@ -112,8 +120,6 @@ const stylesPopup = {
   },
   'title': {
     'self': clsx(
-      'px-3',
-      'py-2',
       'text-[--theme-black]',
       'text-xl',
       'font-semibold',
@@ -143,8 +149,9 @@ const stylesPopup = {
       'block',
       'w-full',
       'text-left',
-      'hover:pl-3',
-      'focus:pl-3',
+      'enabled:hover:pl-3',
+      'enabled:focus:pl-3',
+      'disabled:opacity-50',
       'transition-all'
     ),
     'title': clsx(
@@ -152,6 +159,47 @@ const stylesPopup = {
       '[&>span]:float-right',
       '[&>span]:text-[--theme-gray-400]',
       '[&>span]:text-right'
+    )
+  },
+  'inner-content': {
+    'self': clsx(
+      'absolute',
+      'z-[2]',
+      'top-0',
+      'flex',
+      'flex-col',
+      'w-full',
+      'h-full',
+      'bg-[--theme-gray-50]',
+      'overflow-hidden',
+      'transition-all',
+      'duration-300'
+    )
+  },
+  'inner-content-header': {
+    'prev-button': clsx(
+      'group',
+      'absolute',
+      'z-[1]',
+      'top-0',
+      'left-0',
+      'block',
+      'w-[48px]',
+      'h-[48px]'
+    ),
+    'prev-button-icon': clsx(
+      'absolute',
+      'z-[1]',
+      'top-1/2',
+      'left-1/2',
+      'text-[--theme-black]',
+      '-translate-x-1/2',
+      '-translate-y-1/2',
+      'group-hover:text-[--theme-gray-400]',
+      'group-focus:text-[--theme-gray-400]'
+    ),
+    'children-wrap': clsx(
+      'ml-[36px]'
     )
   },
   'footer': {

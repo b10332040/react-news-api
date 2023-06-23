@@ -3,6 +3,7 @@ import { useEffect, createContext, useContext } from 'react'
 import { useApp } from '/hooks'
 import { stylesPopup } from '/styles'
 import { RxCross1 } from 'react-icons/rx'
+import { AiOutlineLeft } from 'react-icons/ai'
 
 const defaultContext = {
   open: false,
@@ -156,10 +157,8 @@ const Header = ({ hasCloseButton=true, children }) => {
   }
 
   return (
-    <div 
-      className={stylesPopup['header']['self']}
-    >
-      <div>
+    <div className={stylesPopup['header']['self']}>
+      <div className={(hasCloseButton) ? 'w-[calc(100%-48px)]': 'w-full'}>
         { children }
       </div>
       { CloseButton }
@@ -235,11 +234,17 @@ TitleInBody.propTypes = {
 }
 
 /**
- * 打開次內容按鈕 
+ * 打開按鈕（次內容）
  * @param {object} props props - 屬性
+ * @param {string} props.title - title 屬性值
+ * @param {string} props.innerContentId - inner content ID
+ * @param {bool} props.innerContentOpen - 次內容是否開啟 (預設：false)
+ * @param {func} props.setInnerContentOpen - 設定次內容是否關閉
+ * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
+ * @param {node} props.children - 內容
  * @returns 
  */
-const InnerContentOpenButton = ({ title, innerContentId, open, setOpen, children }) => {
+const InnerContentOpenButton = ({ title, innerContentId, innerContentOpen=false, setInnerContentOpen, disabled=false, children }) => {
   if (typeof innerContentId === 'undefined') {
     return <></>
   }
@@ -250,12 +255,13 @@ const InnerContentOpenButton = ({ title, innerContentId, open, setOpen, children
       title={title}
       aria-label={title}
       aria-controls={innerContentId}
-      aria-expanded={(open) ? 'true' : 'false'}
+      aria-expanded={(innerContentOpen) ? 'true' : 'false'}
       aria-haspopup='menu'
       onClick={() => {
-        setOpen?.(true)
+        setInnerContentOpen?.(true)
       }}
       className={stylesPopup['inner-content-open-button']['self']}
+      disabled={disabled}
     >
       <TitleInBody className={stylesPopup['inner-content-open-button']['title']}>
         { children }
@@ -266,8 +272,74 @@ const InnerContentOpenButton = ({ title, innerContentId, open, setOpen, children
 InnerContentOpenButton.propTypes = {
   title: PropTypes.string,
   innerContentId: PropTypes.string.isRequired,
-  open: PropTypes.bool,
-  setOpen: PropTypes.func,
+  innerContentOpen: PropTypes.bool,
+  setInnerContentOpen: PropTypes.func,
+  disabled: PropTypes.bool,
+  children: PropTypes.node
+}
+
+/**
+ * 次內容
+ * @param {object} props props - 屬性
+ * @param {string} props.innerContentId - inner content ID
+ * @param {bool} props.innerContentOpen - 次內容是否開啟 (預設：false)
+ * @param {node} props.children - 內容
+ * @returns 
+ */
+const InnerContent = ({ innerContentId, innerContentOpen=false, children }) => {
+  if (typeof innerContentId === 'undefined') {
+    return <></>
+  }
+
+  return (
+    <div
+      id={innerContentId}
+      className={`
+        ${stylesPopup['inner-content']['self']}
+        ${(innerContentOpen) ? 'right-0' : '-right-full'}
+      `}
+    >
+      { children }
+    </div>
+  )
+}
+InnerContent.propTypes = {
+  innerContentId: PropTypes.string.isRequired,
+  innerContentOpen: PropTypes.bool,
+  children: PropTypes.node
+}
+
+/**
+ * Header (inner content)
+ * @param {object} props props - 屬性
+ * @param {bool} props.hasCloseButton - 是否有關閉 popup 的按鈕 (預設：false)
+ * @param {func} props.setInnerContentOpen - 設定次內容是否關閉
+ * @param {node} props.children - 內容
+ * @returns 
+ */
+const InnerContentHeader = ({ hasCloseButton=true, setInnerContentOpen, children }) => {
+  return (
+    <Header hasCloseButton={hasCloseButton}>
+      <button
+        type='button'
+        title='Prev'
+        aria-label='Prev'
+        onClick={() => {
+          setInnerContentOpen?.(false)
+        }}
+        className={stylesPopup['inner-content-header']['prev-button']}
+      >
+        <AiOutlineLeft className={stylesPopup['inner-content-header']['prev-button-icon']} />
+      </button>
+      <div className={stylesPopup['inner-content-header']['children-wrap']}>
+        { children }
+      </div>
+    </Header>
+  )
+}
+InnerContentHeader.propTypes = {
+  hasCloseButton: PropTypes.bool,
+  setInnerContentOpen: PropTypes.func,
   children: PropTypes.node
 }
 
@@ -294,5 +366,7 @@ Popup.Title = Title
 Popup.Body = Body
 Popup.TitleInBody = TitleInBody
 Popup.InnerContentOpenButton = InnerContentOpenButton
+Popup.InnerContent = InnerContent
+Popup.InnerContentHeader = InnerContentHeader
 Popup.Footer = Footer
 export default Popup
