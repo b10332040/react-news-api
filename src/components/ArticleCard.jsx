@@ -8,7 +8,7 @@ import { srcDefaultImage } from '/assets/images'
  * @param {object} props - 屬性
  * @param {string} props.type - 類型 ※未提供則隨機顯示
  * @param {object} props.article - 文章資料
- * @param {string} props.className - 樣式
+ * @param {string} props.className - 樣式（預設：''）
  * @returns
  */
 const ArticleCard = ({ type, article, className='' }) => {

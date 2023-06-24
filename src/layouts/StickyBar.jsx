@@ -63,10 +63,10 @@ StickyBar.propTypes = {
  * @param {string} props.popupId - popup ID
  * @param {bool} props.popupOpen - 是否開啟 (預設：false)
  * @param {func} props.onClick - 處理 click 事件
- * @param {string} props.className - 樣式
+ * @param {string} props.className - 樣式（預設：''）
  * @returns
  */
-const IconButton = ({ icon, title='', popupId, popupOpen=false, onClick, className }) => {
+const IconButton = ({ icon, title='', popupId, popupOpen=false, onClick, className='' }) => {
   const selfClassName = stylesStickyBar['icon-button']['self']
   const iconClassName = stylesStickyBar['icon-button']['icon']
   let Icon = <BsFilter className={iconClassName} />

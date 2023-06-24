@@ -1,11 +1,13 @@
 import categories from './categories'
 import contact from './contact'
+import continents from './continents'
+import countries from './countries'
 import dummyNewsList from './dummyNewsList'
-import world from './world'
 
 export {
   categories,
   contact,
-  dummyNewsList,
-  world
+  continents,
+  countries,
+  dummyNewsList
 }

@@ -21,10 +21,10 @@ import 'slick-carousel/slick/slick-theme.css'
 import { dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
-import { ArticleCard, Button, RadioTabList, ResultsText, Search } from '/components'
+import { ArticleCard, Button, Form, RadioTabList, ResultsText, Search } from '/components'
 import { useData, useNews } from '/hooks'
 import { useRef, useState } from 'react'
-import { formatNumber, memoize } from '/utils'
+import { formatNumber, isArrayEmpty, memoize } from '/utils'
 
 
 /**
@@ -74,7 +74,7 @@ MainBannerSliderArrowButton.propTypes = {
  * @returns
  */
 const MainBannerSlider = ({ articles }) => {
-  if (!Array.isArray(articles) || articles.length === 0) {
+  if (isArrayEmpty(articles)) {
     return <></>
   }
 
@@ -136,7 +136,7 @@ MainBannerSlider.propTypes = {
 const MainBanner = ({ articles }) => {
   let Children = <></>
 
-  if (!Array.isArray(articles) || articles.length === 0) {
+  if (isArrayEmpty(articles)) {
     Children = (
       <div>
         <div className={stylesHomePage['main-banner']['content']}>
@@ -217,7 +217,7 @@ MainBanner.propTypes = {
  * @returns 
  */
 const ArticlesWaterfall = ({ articles }) => {
-  if (!Array.isArray(articles) || articles.length === 0) {
+  if (isArrayEmpty(articles)) {
     return <></>
   }
 
@@ -249,12 +249,10 @@ const MemoizedArticlesWaterfall = memoize(ArticlesWaterfall)
  */
 const HomePage = () => {
   const filterPopupMenuId = 'filterPopupMenu'
-  const filterPopupInnerContentId = 'popupCategoriesContent'
   const showStickyBarRef = useRef()
   const { category, setCategory, page, pageSize, totalResults } = useNews()
-  const { categoryList, categoryMap } = useData()
+  const { categoryList } = useData()
   const [filterPopupMenuOpen, setFilterPopupMenuOpen] = useState(false)
-  const [filterPopupCategoriesContentOpen, setFilterPopupCategoriesContentOpen] = useState(false)
   const articles = dummyNewsList.articles
 
   return (
@@ -270,17 +268,16 @@ const HomePage = () => {
             />
           </div>
           <div className='col w-1/2 md:w-9/12 flex flex-wrap justify-end'>
-            <div className='hidden md:block md:max-w-[calc(100%-44px)]'>
+            <Form className='hidden md:block md:max-w-[calc(100%-44px)]'>
               <RadioTabList
-                prefix='sticky-bar'
                 name='category'
                 radios={categoryList}
-                inputValue={category}
+                checkedValue={category}
                 onChange={(inputValue) => {
                   setCategory(inputValue)
                 }}
               />
-            </div>
+            </Form>
             <StickyBar.IconButton
               title='Open filter popup menu'
               icon='filter'
@@ -295,7 +292,6 @@ const HomePage = () => {
         </div>
       </StickyBar>
       
-      {/* start - filter popup */}
       <Popup
         open={filterPopupMenuOpen}
         popupId={filterPopupMenuId}
@@ -303,124 +299,91 @@ const HomePage = () => {
         overScreenHeight={false}
         dialogFullInMobile={true}
         backdropVisibleInMobile={true}
-        hasInnerContent={true}
       >
         <Popup.Dialog>
-          <Popup.Content>
-            <Popup.Header>
-              <Popup.Title>
-                Filter
-              </Popup.Title>
-            </Popup.Header>
-            <Popup.Body>
-              <Popup.TitleInBody>
-                Category
-              </Popup.TitleInBody>
-              <hr/>
-              <Popup.InnerContentOpenButton
-                title={`Open Categories Inner Content`}
-                innerContentId={filterPopupInnerContentId}
-                innerContentOpen={filterPopupCategoriesContentOpen}
-                setInnerContentOpen={setFilterPopupCategoriesContentOpen}
-              >
-                Category <span>{ categoryMap.get(category).displayName }</span>
-              </Popup.InnerContentOpenButton>
-            </Popup.Body>
-            <Popup.Footer>
-              <Button
-                title={`${formatNumber(totalResults)} results`}
-                display='block'
-                size='lg'
-                onClick={() => {
-                  setFilterPopupMenuOpen(false)
+          <Popup.Header>
+            <Popup.Title>
+              Filter
+            </Popup.Title>
+          </Popup.Header>
+          <Popup.Body>
+            <Popup.TitleInBody>
+              Category
+            </Popup.TitleInBody>
+            <Form className='mb-3'>
+              <Popup.RadioTabsInBody
+                radios={categoryList}
+                name='category'
+                checkedValue={category}
+                onChange={(inputValue) => {
+                  setCategory(inputValue)
                 }}
-              >
-                {formatNumber(totalResults)} results
-              </Button>
-            </Popup.Footer>
-          </Popup.Content>
-          
-          <Popup.Content
-            innerContentId={filterPopupInnerContentId}
-            innerContentOpen={filterPopupCategoriesContentOpen}
-          >
-            <Popup.InnerContentHeader
-              setInnerContentOpen={setFilterPopupCategoriesContentOpen}
+              />
+            </Form>
+          </Popup.Body>
+          <Popup.Footer>
+            <Button
+              title={`${formatNumber(totalResults)} results`}
+              display='block'
+              size='lg'
+              onClick={() => {
+                setFilterPopupMenuOpen(false)
+              }}
             >
-              <Popup.Title>
-                Category
-              </Popup.Title>
-            </Popup.InnerContentHeader>
-            <Popup.Body>
-              <div className='h-[120vh]'>
-                Category inner content
-              </div>
-              
-            </Popup.Body>
-            <Popup.Footer>
-              <Button
-                title={`${formatNumber(totalResults)} results`}
-                display='block'
-                size='lg'
-                onClick={() => {
-                  setFilterPopupMenuOpen(false)
-                }}
-              >
-                {formatNumber(totalResults)} results
-              </Button>
-            </Popup.Footer>
-          </Popup.Content>
+              {formatNumber(totalResults)} results
+            </Button>
+          </Popup.Footer>
         </Popup.Dialog>
       </Popup>
-      {/* close - filter popup */}
 
       <MemoizedMainBanner articles={articles} />
 
       <Main>
         <Main.LeftSide>
-          <article>
-            <Header title={`Don't Miss`}>
-              <RadioTabList
-                prefix='header'
-                name='category'
-                radios={categoryList}
-                inputValue={category}
-                onChange={(inputValue) => {
-                  setCategory(inputValue)
-                }}
-              />
-            </Header>
-            <div>
-              <div className='row mt-3 items-center'>
-                <div className='col w-full md:w-1/2'>
-                  <Search
-                    className='ml-auto px-3 md:max-w-[320px]'
-                  />
+          <Form>
+             <article>
+              <Header title={`Don't Miss`}>
+                <RadioTabList
+                  name='category'
+                  radios={categoryList}
+                  checkedValue={category}
+                  onChange={(inputValue) => {
+                    setCategory(inputValue)
+                  }}
+                />
+              </Header>
+              <div>
+                <div className='row mt-3 items-center'>
+                  <div className='col w-full md:w-1/2'>
+                    <Search
+                      className='ml-auto px-3 md:max-w-[320px]'
+                    />
+                  </div>
+                  <div className='col w-full mt-2 md:mt-0 md:w-1/2 md:order-first'>
+                    <ResultsText
+                      page={page}
+                      pageSize={pageSize}
+                      total={totalResults}
+                      className='px-3 text-center md:text-left'
+                    />
+                  </div>
                 </div>
-                <div className='col w-full mt-2 md:mt-0 md:w-1/2 md:order-first'>
-                  <ResultsText
-                    page={page}
-                    pageSize={pageSize}
-                    total={totalResults}
-                    className='px-3 text-center md:text-left'
-                  />
+
+                <div ref={showStickyBarRef}>
+                  <MemoizedArticlesWaterfall articles={articles} />
                 </div>
-              </div>
 
-              <div ref={showStickyBarRef}>
-                <MemoizedArticlesWaterfall articles={articles} />
+                <Button
+                  title='Load More'
+                  styled='outlined'
+                  display='block'
+                  className='mx-auto mt-6 max-w-[160px]'
+                >
+                  Load More
+                </Button>
               </div>
-
-              <Button
-                title='Load More'
-                styled='outlined'
-                display='block'
-                className='mx-auto mt-6 max-w-[160px]'
-              >
-                Load More
-              </Button>
-            </div>
-          </article>
+            </article> 
+          </Form>
         </Main.LeftSide>
 
         <Main.RightSide

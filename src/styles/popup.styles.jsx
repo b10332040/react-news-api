@@ -84,6 +84,16 @@ const stylesPopup = {
       'bg-[--theme-gray-50]',
       'overflow-hidden'
     ),
+    'content': clsx(
+      'relative',
+      'flex',
+      'flex-col',
+      'w-full',
+      'h-full',
+      'max-h-full',
+      'bg-[--theme-gray-50]',
+      'overflow-hidden'
+    )
   },
   'content': {
     'self': clsx(
@@ -147,10 +157,51 @@ const stylesPopup = {
   },
   'title-in-body': {
     'self': clsx(
+      'z-[1]',
       'py-2',
       'text-[--theme-black]',
-      'text-sm'
+      'text-sm',
+      'font-semibold'
     )
+  },
+  'radio-tabs-in-body': {
+    'self': clsx(
+      'w-full',
+      'text-[0px]'
+    ),
+    'tab': clsx(
+      'relative',
+      'z-[1]',
+      'inline-block',
+      'ml-2',
+      'first:ml-0',
+      'my-1',
+      'text-sm'
+    ),
+    'radio': clsx(
+      'invisible',
+      'absolute',
+      'top-0',
+      'left-0',
+      'peer'
+    ),
+    'label': clsx(
+      'block',
+      'px-3',
+      'py-1',
+      'rounded-full',
+      'text-[--theme-black]',
+      'bg-[--theme-gray-200]',
+      'cursor-pointer',
+      'transition-colors',
+      'duration-300',
+      'peer-enabled:hover:text-white',
+      'peer-enabled:hover:bg-[--theme-black]',
+      'peer-checked:text-white',
+      'peer-checked:bg-[--theme-black]',
+      'peer-disabled:cursor-default',
+      'peer-disabled:opacity-50'
+    ),
   },
   'inner-content-open-button': {
     'self': clsx(

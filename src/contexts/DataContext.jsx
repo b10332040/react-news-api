@@ -1,17 +1,23 @@
 import PropTypes from 'prop-types'
 import { createContext } from 'react'
-import { categories } from '/data'
+import { categories, continents, countries } from '/data'
 
 const defaultContext = {
   categoryList: [],
-  categoryMap: {}
+  continentList: [],
+  countryList: [],
+  categoryMap: {},
+  continentMap: {},
+  countryMap: {}
 }
 const DataContext = createContext(defaultContext)
 
 const categoryList = categories
+const continentList = continents
+const countryList = countries
 const categoryMap = new Map(categoryList.map((item) => [item.value, item]))
-
-console.log(categoryMap)
+const continentMap = new Map(continentList.map((item) => [item.value, item]))
+const countryMap = new Map(countryList.map((item) => [item.value, item]))
 
 /**
  * 提供資料
@@ -25,7 +31,11 @@ const DataProvider = ({ children }) => {
     <DataContext.Provider
       value={{
         categoryList,
-        categoryMap
+        continentList,
+        countryList,
+        categoryMap,
+        continentMap,
+        countryMap
       }}
     >
       { children }

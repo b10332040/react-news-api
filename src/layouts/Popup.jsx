@@ -4,6 +4,7 @@ import { useApp } from '/hooks'
 import { stylesPopup } from '/styles'
 import { RxCross1 } from 'react-icons/rx'
 import { AiOutlineLeft } from 'react-icons/ai'
+import { isArrayEmpty } from '/utils'
 
 const defaultContext = {
   open: false,
@@ -89,7 +90,7 @@ const Dialog = ({ size='base', children }) => {
   let animationClassName = ''
   let maxWidthClassName = ''
   let heightClassName = ''
-  let childrenWrapMaxHeightClassName = ''
+  let contentMaxHeightClassName = ''
 
   if (dialogFullInMobile && backdropVisibleInMobile) {
     animationClassName = (open) ? 'translate-x-0 sm:translate-y-0' : 'translate-x-1/3 sm:translate-x-0 sm:-translate-y-1/2'
@@ -101,11 +102,11 @@ const Dialog = ({ size='base', children }) => {
   }
 
   if (dialogFullInMobile) {
-    childrenWrapMaxHeightClassName = (overScreenHeight) ? 'sm:max-h-none' : 'sm:top-1/2 sm:-translate-y-1/2 sm:max-h-[560px]'
+    contentMaxHeightClassName = (overScreenHeight) ? 'sm:max-h-none' : 'sm:max-h-[560px]'
     heightClassName = (hasInnerContent) ? 'sm:h-full' : 'sm:h-auto'
 
   } else {
-    childrenWrapMaxHeightClassName = (overScreenHeight) ? 'max-h-none' : 'top-1/2 -translate-y-1/2 max-h-[560px]'
+    contentMaxHeightClassName = (overScreenHeight) ? 'max-h-none' : 'max-h-[560px]'
     heightClassName = (hasInnerContent) ? 'h-full' : 'h-auto'
   }
 
@@ -122,9 +123,9 @@ const Dialog = ({ size='base', children }) => {
     >
       <div 
         className={`
-          ${stylesPopup['dialog']['children-wrap']}
+          ${stylesPopup['dialog']['content']}
           ${(dialogFullInMobile) ? 'sm:rounded-md' : 'rounded-md'}
-          ${childrenWrapMaxHeightClassName}
+          ${contentMaxHeightClassName}
         `}
       >
         { children }
@@ -233,7 +234,7 @@ Title.propTypes = {
 /**
  * Body
  * @param {object} props - 屬性
- * @param {string} props.className - 樣式
+ * @param {string} props.className - 樣式（預設：''）
  * @param {node} props.children - 內容
  * @returns 
  */
@@ -257,7 +258,7 @@ Body.propTypes = {
 /**
  * 標題 (in body)
  * @param {object} props - 屬性
- * @param {string} props.className - 樣式
+ * @param {string} props.className - 樣式（預設：''）
  * @param {node} props.children - 內容
  * @returns 
  */
@@ -274,6 +275,63 @@ const TitleInBody = ({ className='', children }) => {
 TitleInBody.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node
+}
+
+/**
+ * 單選標籤 (in body)
+ * @param {object} props - 屬性
+ * @param {array} props.radios - 資料
+ * @param {string} props.name - 單選 name 屬性值
+ * @param {string} props.checkedValue - 被選到的值
+ * @param {func} props.onChange - 處理 change 事件
+ * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
+ */
+const RadioTabsInBody = ({ radios, name, checkedValue, onChange, disabled=false }) => {
+  if (isArrayEmpty(radios)) {
+    return <></>
+  }
+
+  const RadioTabs = radios.map((radio) => {
+    return (
+      <li
+        key={`radio-${radio.value}`}
+        className={stylesPopup['radio-tabs-in-body']['tab']}
+      >
+        <input 
+          type='radio'
+          name={name}
+          value={radio.value}
+          id={radio.value}
+          checked={checkedValue === radio.value}
+          onChange={(event) => {
+            onChange?.(event.target.value)
+          }}
+          className={stylesPopup['radio-tabs-in-body']['radio']}
+          disabled={disabled}
+        />
+        <label
+          htmlFor={radio.value}
+          className={stylesPopup['radio-tabs-in-body']['label']}
+        >
+          {radio.displayName}
+        </label>
+      </li>
+    )
+  })
+
+  return (
+    <ul className={stylesPopup['radio-tabs-in-body']['self']}>
+      { RadioTabs }
+    </ul>
+  )
+
+}
+RadioTabsInBody.propTypes = {
+  radios: PropTypes.array.isRequired,
+  name: PropTypes.string.isRequired,
+  checkedValue: PropTypes.string,
+  onChange: PropTypes.func,
+  disabled: PropTypes.bool
 }
 
 /**
@@ -378,6 +436,7 @@ Popup.Header = Header
 Popup.Title = Title
 Popup.Body = Body
 Popup.TitleInBody = TitleInBody
+Popup.RadioTabsInBody = RadioTabsInBody
 Popup.InnerContentOpenButton = InnerContentOpenButton
 Popup.InnerContentHeader = InnerContentHeader
 Popup.Footer = Footer

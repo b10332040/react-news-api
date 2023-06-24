@@ -5,7 +5,6 @@ const stylesButton = {
     'border-2',
     'border-[--theme-gray-200]',
     'rounded-full',
-    'text-[--theme-gray-400]',
     'transition-colors',
     'disabled:opacity-60',
     'disabled:cursor-default'
@@ -28,6 +27,7 @@ const stylesButton = {
     'w-full'
   ),
   'self--outlined': clsx(
+    'text-[--theme-gray-400]',
     'hover:enabled:bg-[--theme-gray-200]',
     'hover:enabled:text-[--theme-black]',
     'focus:enabled:bg-[--theme-gray-200]',
