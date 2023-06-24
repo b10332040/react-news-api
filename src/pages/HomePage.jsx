@@ -21,10 +21,10 @@ import 'slick-carousel/slick/slick-theme.css'
 import { dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
-import { ArticleCard , Button, RadioTabList, ResultsText, Search } from '/components'
+import { Button, RadioTabList, ResultsText, Search } from '/components'
 import { useData, useNews } from '/hooks'
 import { useRef, useState } from 'react'
-import { formatNumber } from '/utils'
+import { formatNumber, memoize } from '/utils'
 
 
 /**
@@ -35,14 +35,14 @@ import { formatNumber } from '/utils'
  * @returns 
  */
 const MainBannerSliderArrowButton = ({ onClick, arrowDirection }) => {
-  let buttonClassName = stylesHomePage['main-banner-slider-prev-button']
-  let arrowClassName = stylesHomePage['main-banner-slider-arrow']
-  let arrowIcon = <AiOutlineLeft className={`${arrowClassName} ${stylesHomePage['main-banner-slider-left-arrow']}`} />
+  let buttonClassName = stylesHomePage['main-banner-slider-arrow-button']['prev']
+  let arrowClassName = stylesHomePage['main-banner-slider-arrow-button']['arrow']
+  let arrowIcon = <AiOutlineLeft className={`${arrowClassName} ${stylesHomePage['main-banner-slider-arrow-button']['arrow--left']}`} />
   let title = 'Prev article'
 
   if (arrowDirection === 'right') {
-    buttonClassName = stylesHomePage['main-banner-slider-next-button']
-    arrowIcon = <AiOutlineRight className={`${arrowClassName} ${stylesHomePage['main-banner-slider-right-arrow']}`} />
+    buttonClassName = stylesHomePage['main-banner-slider-arrow-button']['next']
+    arrowIcon = <AiOutlineRight className={`${arrowClassName} ${stylesHomePage['main-banner-slider-arrow-button']['arrow--right']}`} />
     title = 'Next article'
   }
 
@@ -53,7 +53,7 @@ const MainBannerSliderArrowButton = ({ onClick, arrowDirection }) => {
       title={title}
       onClick={onClick}
       className={`
-        ${stylesHomePage['main-banner-slider-button']}
+        ${stylesHomePage['main-banner-slider-arrow-button']['self']}
         ${buttonClassName}
       `}
     >
@@ -70,67 +70,61 @@ MainBannerSliderArrowButton.propTypes = {
 /**
  * 主 Banner 輪播
  * @param {object} props - 屬性
- * @param {bool} props.showSlider - 使否顯示輪播
  * @param {array} props.articles - 文章資料
  * @returns
  */
-const MainBannerSlider = ({ showSlider, articles }) => {
-  if (showSlider) {
-    articles = articles.slice(0,3)
-
-    const sliderSettings = {
-      infinite: true,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      autoplay: true,
-      autoplaySpeed: 3500,
-      pauseOnHover: true,
-      prevArrow: <MainBannerSliderArrowButton arrowDirection='left' />,
-      nextArrow: <MainBannerSliderArrowButton arrowDirection='right' />
-    }
-
-    const MainBannerSlides = articles.map((article, index) => {
-      return (
-        <section
-          key={`main-banner-article-${index}`}
-          className={stylesHomePage['main-banner-slide']}
-        >
-          <div className={stylesHomePage['main-banner-slide-container']}>
-            <a
-              href={article.url}
-              title={article.title}
-              aria-label={article.title}
-              target='_blank'
-              rel='noreferrer noopener'
-              className={stylesHomePage['main-banner-slide-link']}
-            >
-              <p className={stylesHomePage['main-banner-slide-time']}>
-                {moment(article.publishedAt).format('ll')}
-              </p>
-              <h2 className={stylesHomePage['main-banner-slide-title']}>
-                {article.title}
-              </h2>
-            </a>
-          </div>
-        </section>
-      )
-    })
-
-    return (
-      <article className={stylesHomePage['main-banner-slider']}>
-        <Slider {...sliderSettings}>
-          { MainBannerSlides }
-        </Slider>
-      </article>
-    )
+const MainBannerSlider = ({ articles }) => {
+  if (!Array.isArray(articles) || articles.length === 0) {
+    return <></>
   }
+
+  const sliderSettings = {
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3500,
+    prevArrow: <MainBannerSliderArrowButton arrowDirection='left' />,
+    nextArrow: <MainBannerSliderArrowButton arrowDirection='right' />
+  }
+
+  const MainBannerSlides = articles.map((article, index) => {
+    return (
+      <section
+        key={`main-banner-article-${index}`}
+        className={stylesHomePage['main-banner-slide']['self']}
+      >
+        <div className={stylesHomePage['main-banner-slide']['container']}>
+          <a
+            href={article.url}
+            title={article.title}
+            aria-label={article.title}
+            target='_blank'
+            rel='noreferrer noopener'
+            className={stylesHomePage['main-banner-slide']['link']}
+          >
+            <p className={stylesHomePage['main-banner-slide']['time']}>
+              {moment(article.publishedAt).format('ll')}
+            </p>
+            <h2 className={stylesHomePage['main-banner-slide']['title']}>
+              {article.title}
+            </h2>
+          </a>
+        </div>
+      </section>
+    )
+  })
+
   return (
-    <></>
+    <article className={stylesHomePage['main-banner-slider']['self']}>
+      <Slider {...sliderSettings}>
+        { MainBannerSlides }
+      </Slider>
+    </article>
   )
 }
 MainBannerSlider.propTypes = {
-  showSlider: PropTypes.bool.isRequired,
   articles: PropTypes.array.isRequired
 }
 
@@ -139,13 +133,22 @@ MainBannerSlider.propTypes = {
  * 主 Banner
  * @returns 
  */
-const MainBanner = () => {
-  let articles = dummyNewsList.articles
-  const showSlider = (Array.isArray(articles) && articles.length !== 0) ? true : false
+const MainBanner = ({ articles }) => {
+  let Children = <></>
+
+  if (!Array.isArray(articles) || articles.length === 0) {
+    Children = (
+      <div>
+        <h2>Search worldwide news</h2>
+      </div>
+    )
+  } else {
+    Children = <MainBannerSlider articles={articles.slice(0,3)}/>
+  }
   
   return (
-    <div className={stylesHomePage['main-banner']}>
-      <picture className={stylesHomePage['main-banner-picture']}>
+    <div className={stylesHomePage['main-banner']['self']}>
+      <picture className={stylesHomePage['main-banner']['picture']}>
         <source
           media='(min-width: 992px)'
           srcSet={`
@@ -190,18 +193,21 @@ const MainBanner = () => {
           srcSet={`${srcJpgHomeBanner2x} 2x`}
           alt='Main banner'
           aria-label='Main banner'
-          className={stylesHomePage['main-banner-img']}
+          className={stylesHomePage['main-banner']['img']}
           loading='true'
         />
       </picture>
-      <div className={stylesHomePage['main-banner-mask']}></div>
-      <MainBannerSlider
-        showSlider={showSlider}
-        articles={articles}
-      />
+      <div className={stylesHomePage['main-banner']['mask']}></div>
+      { Children }
     </div>
   )
 }
+MainBanner.propTypes = {
+  articles: PropTypes.array
+}
+
+const MemoizedMainBanner = memoize(MainBanner)
+const MemoizedWaterfall = memoize(Waterfall)
 
 /**
  * 首頁
@@ -216,14 +222,6 @@ const HomePage = () => {
   const [filterPopupMenuOpen, setFilterPopupMenuOpen] = useState(false)
   const [filterPopupCategoriesContentOpen, setFilterPopupCategoriesContentOpen] = useState(false)
   const articles = dummyNewsList.articles
-  const ArticleList = articles.map((article, index) => {
-    return (
-      <ArticleCard 
-        key={`article-${index}`}
-        article={article}
-      />
-    )
-  })
 
   return (
     <>
@@ -340,7 +338,8 @@ const HomePage = () => {
       </Popup>
       {/* close - filter popup */}
 
-      <MainBanner />
+      <MemoizedMainBanner articles={articles} />
+
       <Main>
         <Main.LeftSide>
           <article>
@@ -373,9 +372,11 @@ const HomePage = () => {
               </div>
 
               <div ref={showStickyBarRef}>
-                <Waterfall className='px-3 mt-3'>
-                  { ArticleList }
-                </Waterfall>
+                <MemoizedWaterfall
+                  className='px-3 mt-3'
+                  childrenType='articles'
+                  data={articles}
+                />
               </div>
 
               <Button
