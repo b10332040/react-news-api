@@ -6,7 +6,7 @@ import { TiFilter } from 'react-icons/ti'
 
 /**
  * 黏著 bar
- * @param {object} props props - 屬性
+ * @param {object} props - 屬性
  * @param {any} props.showStickyBarRef - 顯示 bar 的區域
  * @param {node} props.children - 內容
  * @returns 
@@ -57,7 +57,7 @@ StickyBar.propTypes = {
 
 /**
  * 按鈕
- * @param {object} props props - 屬性
+ * @param {object} props - 屬性
  * @param {string} props.icon - icon
  * @param {string} props.title - title 屬性值
  * @param {string} props.popupId - popup ID

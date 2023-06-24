@@ -26,6 +26,30 @@ const stylesHomePage = {
       'bg-black',
       'bg-opacity-30'
     ),
+    'content': clsx(
+      'absolute',
+      'z-[3]',
+      'top-1/2',
+      'left-1/2',
+      'l-0',
+      'container',
+      'mx-auto',
+      'w-full',
+      '-translate-y-1/2',
+      '-translate-x-1/2'
+    ),
+    'title': clsx(
+      'w-full',
+      'sm:max-w-[50%]',
+      'text-white',
+      'font-medium',
+      'text-[1.5rem]',
+      'leading-normal',
+      'drop-shadow-lg',
+      'line-clamp-3',
+      'xl:text-[2rem]',
+      'xl:leading-snug'
+    )
   },
   'main-banner-slider': {
     'self': clsx(

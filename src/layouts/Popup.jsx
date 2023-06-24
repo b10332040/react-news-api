@@ -17,17 +17,18 @@ const usePopup = () => useContext(PopupContext)
 
 /**
  * 彈跳視窗
- * @param {object} props props - 屬性
+ * @param {object} props - 屬性
  * @param {string} props.popupId - popup ID
  * @param {bool} props.open - 是否開啟 (預設：false)
  * @param {func} props.setOpen - 設定彈跳視窗是否關閉
  * @param {bool} props.overScreenHeight - content 高度是否可以超過螢幕高度 (預設：true)
  * @param {bool} props.dialogFullInMobile - Dialog 在手機尺寸下是否滿版 (預設：false)
  * @param {bool} props.backdropVisible - 在手機尺寸下可否看到彈跳視窗背景 (預設：false)
+ * @param {bool} props.hasInnerContent - 是否有 Inner Content (預設：false)
  * @param {node} props.children - 內容
  * @returns
  */
-const Popup = ({ popupId, open=false, setOpen, overScreenHeight=true, dialogFullInMobile=false, backdropVisibleInMobile=false, children }) => {
+const Popup = ({ popupId, open=false, setOpen, overScreenHeight=true, dialogFullInMobile=false, backdropVisibleInMobile=false, hasInnerContent=false, children }) => {
   const { setBodyScroll } = useApp()
 
   useEffect(() => {
@@ -41,7 +42,8 @@ const Popup = ({ popupId, open=false, setOpen, overScreenHeight=true, dialogFull
         setOpen,
         overScreenHeight,
         dialogFullInMobile,
-        backdropVisibleInMobile
+        backdropVisibleInMobile,
+        hasInnerContent
       }}
     >
       <div
@@ -71,20 +73,23 @@ Popup.propTypes = {
   overScreenHeight: PropTypes.bool,
   dialogFullInMobile: PropTypes.bool,
   backdropVisibleInMobile: PropTypes.bool,
+  hasInnerContent: PropTypes.bool,
   children: PropTypes.node
 }
 
 /**
  * dialog
- * @param {object} props props - 屬性
+ * @param {object} props - 屬性
+ * @param {string} props.size - 大小 (預設：'base')
  * @param {node} props.children - 內容
  * @returns
  */
 const Dialog = ({ size='base', children }) => {
-  const { open, overScreenHeight, dialogFullInMobile, backdropVisibleInMobile } = usePopup()
+  const { open, overScreenHeight, dialogFullInMobile, backdropVisibleInMobile, hasInnerContent } = usePopup()
   let animationClassName = ''
   let maxWidthClassName = ''
-  let contentMaxHeightClassName = ''
+  let heightClassName = ''
+  let childrenWrapMaxHeightClassName = ''
 
   if (dialogFullInMobile && backdropVisibleInMobile) {
     animationClassName = (open) ? 'translate-x-0 sm:translate-y-0' : 'translate-x-1/3 sm:translate-x-0 sm:-translate-y-1/2'
@@ -96,10 +101,12 @@ const Dialog = ({ size='base', children }) => {
   }
 
   if (dialogFullInMobile) {
-    contentMaxHeightClassName = (overScreenHeight) ? 'sm:max-h-none' : 'sm:max-h-[calc(100vh-5rem)]'
+    childrenWrapMaxHeightClassName = (overScreenHeight) ? 'sm:max-h-none' : 'sm:top-1/2 sm:-translate-y-1/2 sm:max-h-[560px]'
+    heightClassName = (hasInnerContent) ? 'sm:h-full' : 'sm:h-auto'
 
   } else {
-    contentMaxHeightClassName = (overScreenHeight) ? 'max-h-none' : 'max-h-[calc(100vh-5rem)]'
+    childrenWrapMaxHeightClassName = (overScreenHeight) ? 'max-h-none' : 'top-1/2 -translate-y-1/2 max-h-[560px]'
+    heightClassName = (hasInnerContent) ? 'h-full' : 'h-auto'
   }
 
   return (
@@ -109,14 +116,15 @@ const Dialog = ({ size='base', children }) => {
         ${stylesPopup['dialog'][`self--${size}`]}
         ${(dialogFullInMobile) ? stylesPopup['dialog']['self--full-in-mobile'] : stylesPopup['dialog']['self--normal-in-mobile']}
         ${maxWidthClassName}
+        ${heightClassName}
         ${animationClassName}
       `}
     >
       <div 
         className={`
-          ${stylesPopup['dialog']['content']}
+          ${stylesPopup['dialog']['children-wrap']}
           ${(dialogFullInMobile) ? 'sm:rounded-md' : 'rounded-md'}
-          ${contentMaxHeightClassName}
+          ${childrenWrapMaxHeightClassName}
         `}
       >
         { children }
@@ -130,8 +138,43 @@ Dialog.propTypes = {
 }
 
 /**
+ * Content
+ * @param {object} props - 屬性
+ * @param {string} props.innerContentId - inner content ID
+ * @param {bool} props.innerContentOpen - 次內容是否開啟 (預設：false)
+ * @param {node} props.children - 內容
+ * @returns 
+ */
+const Content = ({ innerContentId, innerContentOpen=false, children }) => {
+  if (typeof innerContentId !== 'undefined') {
+    return (
+      <div
+        id={innerContentId}
+        className={`
+          ${stylesPopup['content']['self']}
+          ${(innerContentOpen) ? 'order-first' : ''}
+        `}
+      >
+        { children }
+      </div>
+    )
+  }
+
+  return (
+    <div className={stylesPopup['content']['self']}>
+      { children }
+    </div>
+  )
+}
+Content.propTypes = {
+  innerContentId: PropTypes.string,
+  innerContentOpen: PropTypes.bool,
+  children: PropTypes.node
+}
+
+/**
  * Header (Popup)
- * @param {object} props props - 屬性
+ * @param {object} props - 屬性
  * @param {bool} props.hasCloseButton - 是否有關閉 popup 的按鈕 (預設：false)
  * @param {node} props.children - 內容
  * @returns 
@@ -172,7 +215,7 @@ Header.propTypes = {
 
 /**
  * 標題
- * @param {object} props props - 屬性
+ * @param {object} props - 屬性
  * @param {node} props.children - 內容
  * @returns 
  */
@@ -189,7 +232,7 @@ Title.propTypes = {
 
 /**
  * Body
- * @param {object} props props - 屬性
+ * @param {object} props - 屬性
  * @param {string} props.className - 樣式
  * @param {node} props.children - 內容
  * @returns 
@@ -213,7 +256,7 @@ Body.propTypes = {
 
 /**
  * 標題 (in body)
- * @param {object} props props - 屬性
+ * @param {object} props - 屬性
  * @param {string} props.className - 樣式
  * @param {node} props.children - 內容
  * @returns 
@@ -235,7 +278,7 @@ TitleInBody.propTypes = {
 
 /**
  * 打開按鈕（次內容）
- * @param {object} props props - 屬性
+ * @param {object} props - 屬性
  * @param {string} props.title - title 屬性值
  * @param {string} props.innerContentId - inner content ID
  * @param {bool} props.innerContentOpen - 次內容是否開啟 (預設：false)
@@ -279,39 +322,8 @@ InnerContentOpenButton.propTypes = {
 }
 
 /**
- * 次內容
- * @param {object} props props - 屬性
- * @param {string} props.innerContentId - inner content ID
- * @param {bool} props.innerContentOpen - 次內容是否開啟 (預設：false)
- * @param {node} props.children - 內容
- * @returns 
- */
-const InnerContent = ({ innerContentId, innerContentOpen=false, children }) => {
-  if (typeof innerContentId === 'undefined') {
-    return <></>
-  }
-
-  return (
-    <div
-      id={innerContentId}
-      className={`
-        ${stylesPopup['inner-content']['self']}
-        ${(innerContentOpen) ? 'right-0' : '-right-full'}
-      `}
-    >
-      { children }
-    </div>
-  )
-}
-InnerContent.propTypes = {
-  innerContentId: PropTypes.string.isRequired,
-  innerContentOpen: PropTypes.bool,
-  children: PropTypes.node
-}
-
-/**
  * Header (inner content)
- * @param {object} props props - 屬性
+ * @param {object} props - 屬性
  * @param {bool} props.hasCloseButton - 是否有關閉 popup 的按鈕 (預設：false)
  * @param {func} props.setInnerContentOpen - 設定次內容是否關閉
  * @param {node} props.children - 內容
@@ -345,7 +357,7 @@ InnerContentHeader.propTypes = {
 
 /**
  * Footer
- * @param {object} props props - 屬性
+ * @param {object} props - 屬性
  * @param {node} props.children - 內容
  * @returns 
  */
@@ -361,12 +373,12 @@ Footer.propTypes = {
 }
 
 Popup.Dialog = Dialog
+Popup.Content = Content
 Popup.Header = Header
 Popup.Title = Title
 Popup.Body = Body
 Popup.TitleInBody = TitleInBody
 Popup.InnerContentOpenButton = InnerContentOpenButton
-Popup.InnerContent = InnerContent
 Popup.InnerContentHeader = InnerContentHeader
 Popup.Footer = Footer
 export default Popup

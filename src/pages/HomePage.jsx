@@ -21,7 +21,7 @@ import 'slick-carousel/slick/slick-theme.css'
 import { dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
-import { Button, RadioTabList, ResultsText, Search } from '/components'
+import { ArticleCard, Button, RadioTabList, ResultsText, Search } from '/components'
 import { useData, useNews } from '/hooks'
 import { useRef, useState } from 'react'
 import { formatNumber, memoize } from '/utils'
@@ -139,7 +139,11 @@ const MainBanner = ({ articles }) => {
   if (!Array.isArray(articles) || articles.length === 0) {
     Children = (
       <div>
-        <h2>Search worldwide news</h2>
+        <div className={stylesHomePage['main-banner']['content']}>
+          <h2 className={stylesHomePage['main-banner']['title']}>
+            Welcome to the World !
+          </h2>
+        </div>
       </div>
     )
   } else {
@@ -206,8 +210,38 @@ MainBanner.propTypes = {
   articles: PropTypes.array
 }
 
+/**
+ * 文章瀑布流
+ * @param {object} props - 屬性
+ * @param {array} props.articles - 文章資料
+ * @returns 
+ */
+const ArticlesWaterfall = ({ articles }) => {
+  if (!Array.isArray(articles) || articles.length === 0) {
+    return <></>
+  }
+
+  const Articles = articles.map((article, index) => {
+    return (
+      <ArticleCard 
+        key={`article-${index}`}
+        article={article}
+      />
+    )
+  })
+
+  return (
+    <Waterfall className='px-3 mt-3'>
+      { Articles }
+    </Waterfall>
+  )
+}
+ArticlesWaterfall.propTypes = {
+  articles: PropTypes.array
+}
+
 const MemoizedMainBanner = memoize(MainBanner)
-const MemoizedWaterfall = memoize(Waterfall)
+const MemoizedArticlesWaterfall = memoize(ArticlesWaterfall)
 
 /**
  * 首頁
@@ -269,41 +303,44 @@ const HomePage = () => {
         overScreenHeight={false}
         dialogFullInMobile={true}
         backdropVisibleInMobile={true}
+        hasInnerContent={true}
       >
         <Popup.Dialog>
-          <Popup.Header>
-            <Popup.Title>
-              Filter
-            </Popup.Title>
-          </Popup.Header>
-          <Popup.Body>
-            <Popup.TitleInBody>
-              Category
-            </Popup.TitleInBody>
-            <hr/>
-            <Popup.InnerContentOpenButton
-              title={`Open Categories Inner Content`}
-              innerContentId={filterPopupInnerContentId}
-              innerContentOpen={filterPopupCategoriesContentOpen}
-              setInnerContentOpen={setFilterPopupCategoriesContentOpen}
-            >
-              Category <span>{ categoryMap.get(category).displayName }</span>
-            </Popup.InnerContentOpenButton>
-          </Popup.Body>
-          <Popup.Footer>
-            <Button
-              title={`${formatNumber(totalResults)} results`}
-              display='block'
-              size='lg'
-              onClick={() => {
-                setFilterPopupMenuOpen(false)
-              }}
-            >
-              {formatNumber(totalResults)} results
-            </Button>
-          </Popup.Footer>
+          <Popup.Content>
+            <Popup.Header>
+              <Popup.Title>
+                Filter
+              </Popup.Title>
+            </Popup.Header>
+            <Popup.Body>
+              <Popup.TitleInBody>
+                Category
+              </Popup.TitleInBody>
+              <hr/>
+              <Popup.InnerContentOpenButton
+                title={`Open Categories Inner Content`}
+                innerContentId={filterPopupInnerContentId}
+                innerContentOpen={filterPopupCategoriesContentOpen}
+                setInnerContentOpen={setFilterPopupCategoriesContentOpen}
+              >
+                Category <span>{ categoryMap.get(category).displayName }</span>
+              </Popup.InnerContentOpenButton>
+            </Popup.Body>
+            <Popup.Footer>
+              <Button
+                title={`${formatNumber(totalResults)} results`}
+                display='block'
+                size='lg'
+                onClick={() => {
+                  setFilterPopupMenuOpen(false)
+                }}
+              >
+                {formatNumber(totalResults)} results
+              </Button>
+            </Popup.Footer>
+          </Popup.Content>
           
-          <Popup.InnerContent
+          <Popup.Content
             innerContentId={filterPopupInnerContentId}
             innerContentOpen={filterPopupCategoriesContentOpen}
           >
@@ -321,19 +358,18 @@ const HomePage = () => {
               
             </Popup.Body>
             <Popup.Footer>
-            <Button
-              title={`${formatNumber(totalResults)} results`}
-              display='block'
-              size='lg'
-              onClick={() => {
-                setFilterPopupMenuOpen(false)
-              }}
-            >
-              {formatNumber(totalResults)} results
-            </Button>
-          </Popup.Footer>
-          </Popup.InnerContent>
-
+              <Button
+                title={`${formatNumber(totalResults)} results`}
+                display='block'
+                size='lg'
+                onClick={() => {
+                  setFilterPopupMenuOpen(false)
+                }}
+              >
+                {formatNumber(totalResults)} results
+              </Button>
+            </Popup.Footer>
+          </Popup.Content>
         </Popup.Dialog>
       </Popup>
       {/* close - filter popup */}
@@ -372,11 +408,7 @@ const HomePage = () => {
               </div>
 
               <div ref={showStickyBarRef}>
-                <MemoizedWaterfall
-                  className='px-3 mt-3'
-                  childrenType='articles'
-                  data={articles}
-                />
+                <MemoizedArticlesWaterfall articles={articles} />
               </div>
 
               <Button

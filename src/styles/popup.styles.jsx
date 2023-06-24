@@ -62,7 +62,6 @@ const stylesPopup = {
       'py-5',
       'mx-auto',
       'w-[calc(100%-2.5rem)]',
-      'h-auto',
       'max-h-none'
     ),
     'self--full-in-mobile': clsx(
@@ -73,19 +72,28 @@ const stylesPopup = {
       'sm:align-middle',
       'sm:py-5',
       'sm:mx-auto',
-      'sm:h-auto',
       'sm:max-h-none'
     ),
-    'content': clsx(
+    'children-wrap': clsx(
       'relative',
+      'z-[1]',
+      'flex',
+      '[&>*]:shrink-0',
+      'w-full',
+      'h-full',
+      'bg-[--theme-gray-50]',
+      'overflow-hidden'
+    ),
+  },
+  'content': {
+    'self': clsx(
       'flex',
       'flex-col',
       'w-full',
       'h-full',
-      'bg-[--theme-gray-50]',
+      'max-h-full',
       'overflow-hidden',
-      'shadow-lg'
-    ),
+    )
   },
   'header': {
     'self': clsx(
@@ -163,14 +171,9 @@ const stylesPopup = {
   },
   'inner-content': {
     'self': clsx(
-      'absolute',
-      'z-[2]',
-      'top-0',
       'flex',
-      'flex-col',
       'w-full',
       'h-full',
-      'bg-[--theme-gray-50]',
       'overflow-hidden',
       'transition-all',
       'duration-300'
