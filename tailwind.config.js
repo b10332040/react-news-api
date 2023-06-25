@@ -28,6 +28,10 @@ export default {
         loadingDot3: {
           '0%, 88%': { bottom: '0px' },
           '66%': { bottom: '3px' }
+        },
+        loadingRotation: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' }
         }
       }
     },

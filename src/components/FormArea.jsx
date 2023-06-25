@@ -8,7 +8,7 @@ import PropTypes from 'prop-types'
  * @param {node} props.children - 內容
  * @returns 
  */
-const Form = ({ handleAfterSubmit, className='', children }) => {
+const FormArea = ({ handleAfterSubmit, className='', children }) => {
   const handleSubmit = (event) => {
     event.preventDefault()
     handleAfterSubmit?.()
@@ -23,10 +23,10 @@ const Form = ({ handleAfterSubmit, className='', children }) => {
     </form>
   )
 }
-Form.propTypes = {
+FormArea.propTypes = {
   handleAfterSubmit: PropTypes.func,
   className: PropTypes.string,
   children: PropTypes.node
 }
 
-export default Form
+export default FormArea

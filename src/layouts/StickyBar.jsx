@@ -16,9 +16,9 @@ const StickyBar = ({ showStickyBarRef, children }) => {
 
   useEffect(() => {
     // 處理頁面滑動
-    const handleScroll = () => {
-      // 判斷要顯示 sticky bar 的區塊是否進入視窗範圍內
-      if (showStickyBarRef.current !== null) {
+    if ((showStickyBarRef?.current) && showStickyBarRef.current !== null) {
+      const handleScroll = () => {
+        // 判斷要顯示 sticky bar 的區塊是否進入視窗範圍內
         const { top, bottom } = showStickyBarRef.current.getBoundingClientRect()
 
         // 區塊頂端 (top) 座標 <= 0 - 區塊頂端已進入視窗頂端
@@ -29,11 +29,11 @@ const StickyBar = ({ showStickyBarRef, children }) => {
           setShowBar(false)
         }
       }
-    }
 
-    window.addEventListener('scroll', handleScroll)
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
+      window.addEventListener('scroll', handleScroll)
+      return () => {
+        window.removeEventListener('scroll', handleScroll)
+      }
     }
   }, [showStickyBarRef])
 

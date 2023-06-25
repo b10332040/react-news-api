@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types'
 import styles from '/styles/navbar.styles'
 import { useState, useEffect } from 'react'
-import { useApp } from '/hooks'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { useApp, useNews } from '/hooks'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { srcSvgLogo } from '/assets/images'
 import { CiSearch } from 'react-icons/ci'
+import { FormArea } from '/components'
 
 /**
  * 頁面連結
@@ -48,28 +49,51 @@ NavbarPageNavLink.propTypes = {
 const Navbar = () => {
   const [navbarMenuOpen, setNavbarMenuOpen] = useState(false)
   const [searchInputOpen, setSearchInputOpen] = useState(false)
+  const [keyword, setKeyword] = useState('')
   const { pageTop } = useApp()
+  const { keywordMaxLength } = useNews()
   const { pathname } = useLocation()
+  const navigate = useNavigate()
+
+  // 當 path name 改變
+  useEffect(() => {
+    setNavbarMenuOpen(false)
+  }, [pathname])
 
   // 處理漢堡選單按鈕點擊
   const handleNavbarTogglerClick = () => {
     setNavbarMenuOpen(!navbarMenuOpen)
   }
 
-  // 處理搜尋表單提交
-  const handleSearchSubmit = (e) => {
-    e.preventDefault()
+  // 處理搜尋框 change 事件，處理第一個字不能為空白
+  const handleSearchChange = (inputValue) => {
+    const trimmedValue = inputValue.trimStart()
+
+    // 不能超過限制字元數量
+    if (encodeURI(trimmedValue).length <= keywordMaxLength) {
+      setKeyword(trimmedValue)
+    }
+    
+    if (inputValue === '') {
+      setKeyword(inputValue)
+    }
   }
 
-  // 處理搜尋框收合
-  const handleSearchInputTogglerClick = (open) => {
-    setSearchInputOpen(open)
+  // 處理當搜尋框按下 Enter
+  const handleSearchEnter = (inputValue) => {
+    const trimmedValue = inputValue.trim()
+    setKeyword(trimmedValue)
+
+    // 轉到 result 頁面，並傳送 encodeURI 後的 trimmed value
+    if (trimmedValue !== '') {
+      navigate(`/search/${encodeURI(trimmedValue)}`)
+    }
   }
 
-  // 當 path name 改變
-  useEffect(() => {
-    setNavbarMenuOpen(false)
-  }, [pathname])
+  // 處理搜尋框 blur 事件，keyword 要去掉前後空白
+  const handleSearchBlur = () => {
+    setKeyword(keyword.trim())
+  }
 
   return (
     <header
@@ -141,19 +165,30 @@ const Navbar = () => {
               ${(searchInputOpen) ? styles['search--open'] : styles['search--close']}
             `}
           >
-            <form onSubmit={handleSearchSubmit} className='relative'>
+            <FormArea className='relative'>
               <input
                 type='text'
-                id='search'
-                placeholder='Search something...'
-                onClick={() => {
-                  handleSearchInputTogglerClick(true)
-                }}
+                placeholder={`Max length: ${keywordMaxLength} chars`}
+                value={keyword}
                 className={`
                   ${styles['search-input']}
                   ${(searchInputOpen) ? styles['search-input--open'] : styles['search-input--close']}
                 `}
                 autoComplete='off'
+                onClick={() => {
+                  setSearchInputOpen(true)
+                }}
+                onChange={(event) => {
+                  handleSearchChange(event.target.value)
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    handleSearchEnter(event.target.value);
+                  }
+                }}
+                onBlur={() => {
+                  handleSearchBlur()
+                }}
               />
               <button
                 type='button'
@@ -164,13 +199,13 @@ const Navbar = () => {
                   ${(searchInputOpen) ? styles['search-close-btn--show'] : styles['search-close-btn--hidden']}
                 `}
                 onClick={() => {
-                  handleSearchInputTogglerClick(false)
+                  setSearchInputOpen(false)
                 }}
               ></button>
               <CiSearch
                 className={styles['search-icon']}
               />
-            </form>
+            </FormArea>
           </div>
         </div>
       </nav>

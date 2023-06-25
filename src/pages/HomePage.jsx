@@ -21,11 +21,10 @@ import 'slick-carousel/slick/slick-theme.css'
 import { dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
-import { ArticleCard, Button, Head, Form, RadioTabList, ResultsText, Search } from '/components'
+import { ArticleCard, Button, Head, Loading, FormArea, RadioTabList, ResultsText, Search, NoResults } from '/components'
 import { useData, useNews } from '/hooks'
 import { useRef, useState } from 'react'
 import { formatNumber, isArrayEmpty, memoize } from '/utils'
-import Loading from '/components/Loading'
 
 
 /**
@@ -249,12 +248,106 @@ const MemoizedArticlesWaterfall = memoize(ArticlesWaterfall)
  * @returns 
  */
 const HomePage = () => {
-  const filterPopupMenuId = 'filterPopupMenu'
-  const showStickyBarRef = useRef()
-  const { category, setCategory, page, pageSize, totalResults } = useNews()
-  const { categoryList } = useData()
+  const [category, setCategory] = useState('general')
+  const [keyword, setKeyword] = useState('')
+  const [page, setPage] = useState(1)
+  const [totalResults, setTotalResults] = useState(0)
   const [filterPopupMenuOpen, setFilterPopupMenuOpen] = useState(false)
-  const articles = dummyNewsList.articles
+  const [loading, setLoading] = useState(false)
+  const [addingArticles, setAddingArticles] = useState(false)
+  const [articleList, setAtricleList] = useState(dummyNewsList.articles)
+  const showStickyBarRef = useRef()
+  const { keywordMaxLength } = useNews()
+  const { categoryList } = useData()
+  const pageSize = 12
+  const totalPage = (totalResults / pageSize > 0 && totalResults % pageSize === 0) ? (totalResults / pageSize) : Math.floor(totalResults / pageSize) + 1
+  const filterPopupMenuId = 'filterPopupMenu'
+  let Result = <></>
+
+  // 當重新取得第一頁文章
+  const getNewArticleList = () => {
+    // setLoading(true)
+    setPage(1)
+  }
+
+  // 處理搜尋框 change 事件，處理第一個字不能為空白
+  const handleSearchChange = (inputValue) => {
+    const trimmedValue = inputValue.trimStart()
+
+    // 不能超過限制字元數量
+    if (encodeURI(trimmedValue).length <= keywordMaxLength) {
+      setKeyword(trimmedValue)
+    }
+    
+    if (inputValue === '') {
+      // 當 input 的值為空時，載入此分類的第一頁文章
+      getNewArticleList()
+      setKeyword(inputValue)
+    }
+  }
+
+  // 處理當搜尋框按下 Enter
+  const handleSearchEnter = (inputValue) => {
+    const trimmedValue = inputValue.trim()
+    getNewArticleList()
+    setKeyword(trimmedValue)
+
+    // 載入此分類+搜尋結果的第一頁文章
+  }
+
+  // 處理搜尋框 blur 事件，keyword 要去掉前後空白
+  const handleSearchBlur = () => {
+    setKeyword(keyword.trim())
+  }
+
+  // 處理 load more click 事件
+  const handleLoadMoreClick = () => {
+    setPage(page + 1)
+    setAddingArticles(true)
+
+    // 載入此分類+搜尋結果的下一頁文章
+  }
+
+  // 處理 category change 事件
+  const handleCategoryRadioChange = (inputValue) => {
+    getNewArticleList()
+    setCategory(inputValue)
+    // 載入此分類的第一頁文章
+  }
+
+  if (loading) {
+    Result = (
+      <div className='w-full h-[120px]'>
+        <Loading />
+      </div>
+    )
+
+  } else {
+    if (isArrayEmpty(articleList)) {
+      Result = <NoResults />
+
+    } else {
+      Result = (
+        <>
+          <MemoizedArticlesWaterfall articles={articleList} />
+          <Button
+            title='Load More'
+            styled='outlined'
+            display='block'
+            className={`
+              mx-auto mt-6 max-w-[160px]
+              ${!(totalPage > page) && 'invisible'}
+            `}
+            disabled={addingArticles}
+            processing={addingArticles}
+            onClick={handleLoadMoreClick}
+          >
+            Load More
+          </Button>
+        </>
+      )
+    }
+  }
 
   return (
     <>
@@ -270,16 +363,16 @@ const HomePage = () => {
             />
           </div>
           <div className='col w-1/2 md:w-9/12 flex flex-wrap justify-end'>
-            <Form className='hidden md:block md:max-w-[calc(100%-44px)]'>
+            <FormArea className='hidden md:block md:max-w-[calc(100%-44px)]'>
               <RadioTabList
                 name='category'
                 radios={categoryList}
                 checkedValue={category}
                 onChange={(inputValue) => {
-                  setCategory(inputValue)
+                  handleCategoryRadioChange(inputValue)
                 }}
               />
-            </Form>
+            </FormArea>
             <StickyBar.IconButton
               title='Open filter popup menu'
               icon='filter'
@@ -312,16 +405,16 @@ const HomePage = () => {
             <Popup.TitleInBody>
               Category
             </Popup.TitleInBody>
-            <Form className='mb-3'>
+            <FormArea className='mb-3'>
               <Popup.RadioTabsInBody
                 radios={categoryList}
                 name='category'
                 checkedValue={category}
                 onChange={(inputValue) => {
-                  setCategory(inputValue)
+                  handleCategoryRadioChange(inputValue)
                 }}
               />
-            </Form>
+            </FormArea>
           </Popup.Body>
           <Popup.Footer>
             <Button
@@ -338,11 +431,11 @@ const HomePage = () => {
         </Popup.Dialog>
       </Popup>
 
-      <MemoizedMainBanner articles={articles} />
+      <MemoizedMainBanner articles={articleList} />
 
       <Main>
         <Main.LeftSide>
-          <Form>
+          <FormArea>
              <article>
               <Header title={`Don't Miss`}>
                 <RadioTabList
@@ -350,7 +443,7 @@ const HomePage = () => {
                   radios={categoryList}
                   checkedValue={category}
                   onChange={(inputValue) => {
-                    setCategory(inputValue)
+                    handleCategoryRadioChange(inputValue)
                   }}
                 />
               </Header>
@@ -358,6 +451,17 @@ const HomePage = () => {
                 <div className='row mt-3 items-center'>
                   <div className='col w-full md:w-1/2'>
                     <Search
+                      onChange={(inputValue) => {
+                        handleSearchChange?.(inputValue)
+                      }}
+                      onBlur={(inputValue) => {
+                        handleSearchBlur?.(inputValue)
+                      }}
+                      handleEnter={(inputValue) => {
+                        handleSearchEnter?.(inputValue)
+                      }}
+                      placeholder={`Max length: ${keywordMaxLength} chars`}
+                      value={keyword}
                       className='ml-auto px-3 md:max-w-[320px]'
                     />
                   </div>
@@ -370,27 +474,12 @@ const HomePage = () => {
                     />
                   </div>
                 </div>
-
                 <div ref={showStickyBarRef}>
-                  {
-                    (isArrayEmpty(articles)) ?
-                    <Loading />
-                    :
-                    <MemoizedArticlesWaterfall articles={articles} />
-                  }
+                  { Result }
                 </div>
-
-                <Button
-                  title='Load More'
-                  styled='outlined'
-                  display='block'
-                  className='mx-auto mt-6 max-w-[160px]'
-                >
-                  Load More
-                </Button>
               </div>
             </article> 
-          </Form>
+          </FormArea>
         </Main.LeftSide>
 
         <Main.RightSide

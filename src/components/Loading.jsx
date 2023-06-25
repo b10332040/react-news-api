@@ -5,9 +5,7 @@ import styles from '/styles/loading.styles'
 const Loading = () => {
   return (
     <div className={styles['self']}>
-      <div className={styles['loading-wrap']}>
-        <span className={styles['loading']}></span>
-      </div>
+      <span className={styles['loading']}></span>
     </div>
   )
 }
