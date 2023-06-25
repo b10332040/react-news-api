@@ -4,6 +4,7 @@ import { useState, useEffect, createContext } from 'react'
 const defaultContext = {
   pageTop: true,
   setBodyScroll: null,
+  headProps: {}
 }
 const AppContext = createContext(defaultContext)
 

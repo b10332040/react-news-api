@@ -48,6 +48,7 @@ import srcWebpWorldBannerLg2x from './world-banner-lg-2x.webp'
 import srcWebpWorldBannerMd1x from './world-banner-md-1x.webp'
 import srcWebpWorldBannerMd2x from './world-banner-md-2x.webp'
 import srcSvgLogo from './logo.svg'
+import srcFavicon from './favicon.ico'
 
 export {
   srcDefaultImage,
@@ -99,5 +100,6 @@ export {
   srcWebpWorldBannerLg2x,
   srcWebpWorldBannerMd1x,
   srcWebpWorldBannerMd2x,
-  srcSvgLogo
+  srcSvgLogo,
+  srcFavicon
 }

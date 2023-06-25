@@ -21,7 +21,7 @@ import 'slick-carousel/slick/slick-theme.css'
 import { dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
-import { ArticleCard, Button, Form, RadioTabList, ResultsText, Search } from '/components'
+import { ArticleCard, Button, Head, Form, RadioTabList, ResultsText, Search } from '/components'
 import { useData, useNews } from '/hooks'
 import { useRef, useState } from 'react'
 import { formatNumber, isArrayEmpty, memoize } from '/utils'
@@ -257,6 +257,7 @@ const HomePage = () => {
 
   return (
     <>
+      <Head title='Homepage' />
       <StickyBar showStickyBarRef={showStickyBarRef}>
         <div className='row items-center h-full'>
           <div className='col w-1/2 md:w-3/12'>

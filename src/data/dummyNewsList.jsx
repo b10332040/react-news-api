@@ -12,7 +12,7 @@ const dummyNewsList = {
             "description": "As Paul Heyman is informing Jey Uso that he will need his passport and suit measurements, Jey tells him that he doesn’t want to be in The Bloodline if Heyman...",
             "url": "https://www.youtube.com/watch?v=VW3X1acAEt8",
             "urlToImage": "https://i.ytimg.com/vi/VW3X1acAEt8/maxresdefault.jpg",
-            "publishedAt": "2023-06-14T02:07:12Z",
+            "publishedAt": "2023-06-24T02:07:12Z",
             "content": null
         },
         {
