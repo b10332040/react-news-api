@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
+import styles from '/styles/stickyBar.styles'
 import { useEffect, useState } from 'react'
-import { stylesStickyBar } from '/styles'
 import { BsFilter } from 'react-icons/bs'
 import { TiFilter } from 'react-icons/ti'
 
@@ -40,11 +40,11 @@ const StickyBar = ({ showStickyBarRef, children }) => {
   return (
     <div
       className={`
-        ${stylesStickyBar['sticky-bar']['self']}
+        ${styles['sticky-bar']['self']}
         ${(showBar) ? 'top-[55px]' : '-top-[55px]'}
       `}
     >
-      <div className={stylesStickyBar['sticky-bar']['container']}>
+      <div className={styles['sticky-bar']['container']}>
         { children }
       </div>
     </div>
@@ -67,8 +67,8 @@ StickyBar.propTypes = {
  * @returns
  */
 const IconButton = ({ icon, title='', popupId, popupOpen=false, onClick, className='' }) => {
-  const selfClassName = stylesStickyBar['icon-button']['self']
-  const iconClassName = stylesStickyBar['icon-button']['icon']
+  const selfClassName = styles['icon-button']['self']
+  const iconClassName = styles['icon-button']['icon']
   let Icon = <BsFilter className={iconClassName} />
 
   switch (icon) {

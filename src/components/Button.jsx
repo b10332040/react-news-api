@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { stylesButton } from '/styles'
+import styles from '/styles/button.styles'
 
 /**
  * 按鈕
@@ -26,11 +26,11 @@ const Button = ({type='button', display='inline-block', size='base', styled='fil
       disabled={disabled}
       className={`
         ${className}
-        ${stylesButton['self']}
-        ${stylesButton[`self--${display}`]}
-        ${stylesButton[`self--${size}`]}
-        ${stylesButton[`self--${styled}`]}
-        ${(processing) ? stylesButton['self--processing'] : stylesButton['self--done']}
+        ${styles['self']}
+        ${styles[`self--${display}`]}
+        ${styles[`self--${size}`]}
+        ${styles[`self--${styled}`]}
+        ${(processing) ? styles['self--processing'] : styles['self--done']}
       `}
     >
       { children }

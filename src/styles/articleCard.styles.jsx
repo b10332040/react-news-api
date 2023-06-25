@@ -3,7 +3,7 @@ import clsx from 'clsx'
 /**
  * ArticleCard 樣式
  */
-const stylesArticleCard = {
+const styles = {
   'self': clsx(
     'relative',
     'z-[1]',
@@ -95,4 +95,4 @@ const stylesArticleCard = {
   )
 }
 
-export default stylesArticleCard
+export default styles

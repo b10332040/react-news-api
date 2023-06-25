@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 
-const stylesPopup = {
+const styles = {
   'popup': {
     'self': clsx(
       'fixed',
@@ -266,4 +266,4 @@ const stylesPopup = {
   }
 }
 
-export default stylesPopup
+export default styles

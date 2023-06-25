@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 
-const stylesButton = {
+const styles = {
   'self': clsx(
     'border-2',
     'border-[--theme-gray-200]',
@@ -61,4 +61,4 @@ const stylesButton = {
   )
 }
 
-export default stylesButton
+export default styles

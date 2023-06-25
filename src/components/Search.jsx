@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
+import styles from '/styles/search.styles'
 import { CiSearch } from 'react-icons/ci'
-import { stylesSearch } from '/styles'
 
 /**
  * 搜尋框
@@ -13,7 +13,7 @@ const Search = ({onChange, className=''}) => {
   return (
     <div
       className={`
-        ${stylesSearch['self']}
+        ${styles['self']}
         ${className}
       `}
     >
@@ -24,10 +24,10 @@ const Search = ({onChange, className=''}) => {
         onChange={(event) => {
           onChange?.(event.target.value)
         }}
-        className={stylesSearch['input']}
+        className={styles['input']}
         autoComplete='off'
       />
-      <CiSearch className={stylesSearch['icon']} />
+      <CiSearch className={styles['icon']} />
     </div>
   )
 }

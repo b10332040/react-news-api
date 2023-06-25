@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
+import styles from '/styles/main.styles'
 import Header from './Header'
 import { contact } from '/data'
 import { SocialCircleLink } from '/components'
-import { stylesMain } from '/styles'
 
 /**
  * 主要內容
@@ -31,8 +31,8 @@ Main.propTypes = {
  */
 const LeftSide = ({ children }) => {
   return (
-    <div className={stylesMain['left-side']['self']}>
-      <div className={stylesMain['left-side']['container']}>
+    <div className={styles['left-side']['self']}>
+      <div className={styles['left-side']['container']}>
         { children }
       </div>
     </div>
@@ -51,12 +51,12 @@ LeftSide.propTypes = {
  */
 const RightSide = ({ children, isContentSticky=false }) => {
   return (
-    <div className={stylesMain['right-side']['self']}>
-      <div className={stylesMain['right-side']['container']}>
+    <div className={styles['right-side']['self']}>
+      <div className={styles['right-side']['container']}>
         <article
           className={`
-            ${stylesMain['right-side']['stickyWrap']}
-            ${(isContentSticky) ? stylesMain['right-side']['stickyWrap--sticky'] : ''}
+            ${styles['right-side']['stickyWrap']}
+            ${(isContentSticky) ? styles['right-side']['stickyWrap--sticky'] : ''}
           `}
         >
           { children }
@@ -111,7 +111,7 @@ const RightSideSection = ({contentType, title, children}) => {
       case 'connect':
         title = (typeof title !== 'undefined') ? title : 'Stay Connected'
         children = (
-          <ul className={stylesMain['right-side-section']['connect-list']}>
+          <ul className={styles['right-side-section']['connect-list']}>
             <li>
               <SocialCircleLink
                 to={contact.github.to}

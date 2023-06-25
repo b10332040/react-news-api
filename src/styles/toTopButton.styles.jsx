@@ -3,7 +3,7 @@ import clsx from 'clsx'
 /**
  * ToTopButton 樣式
  */
-const stylesToTopButton = {
+const styles = {
   'self': clsx(
     'group',
     'fixed',
@@ -46,4 +46,4 @@ const stylesToTopButton = {
   )
 }
 
-export default stylesToTopButton
+export default styles

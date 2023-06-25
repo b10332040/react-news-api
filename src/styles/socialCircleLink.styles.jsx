@@ -3,7 +3,7 @@ import clsx from 'clsx'
 /**
  * SocialCircleLink 樣式
  */
-const stylesSocialCircleLink = {
+const styles = {
   'self': clsx(
     'group',
     'flex',
@@ -25,4 +25,4 @@ const stylesSocialCircleLink = {
   )
 }
 
-export default stylesSocialCircleLink
+export default styles

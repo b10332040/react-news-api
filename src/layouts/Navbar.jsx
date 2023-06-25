@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
+import styles from '/styles/navbar.styles'
 import { useState, useEffect } from 'react'
 import { useApp } from '/hooks'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { stylesNavbar } from '/styles'
 import { srcSvgLogo } from '/assets/images'
 import { CiSearch } from 'react-icons/ci'
 
@@ -18,15 +18,15 @@ const NavbarPageNavLink = ({ to, title, children }) => {
   return (
     <li
      key={`nav-page-link-${title}`}
-     className={stylesNavbar['item']}
+     className={styles['item']}
     >
       <NavLink
         to={to}
         title={title}
         aria-label={title}
         className={({ isActive }) => `
-          ${stylesNavbar['link']}
-          ${(isActive) ? stylesNavbar['link--active'] : stylesNavbar['link--inactive']}
+          ${styles['link']}
+          ${(isActive) ? styles['link--active'] : styles['link--inactive']}
         `}
         end={(to === '/') ? true : false}
       >
@@ -74,26 +74,26 @@ const Navbar = () => {
   return (
     <header
       className={`
-        ${stylesNavbar['self']}
-        ${(pageTop) ? stylesNavbar['self--top'] : stylesNavbar['self--non-top']}
+        ${styles['self']}
+        ${(pageTop) ? styles['self--top'] : styles['self--non-top']}
       `}
     >
       <nav
         className={`
-          ${stylesNavbar['nav']}
-          ${(pageTop) ? stylesNavbar['nav--top'] : stylesNavbar['nav--non-top']}
+          ${styles['nav']}
+          ${(pageTop) ? styles['nav--top'] : styles['nav--non-top']}
         `}
       >
         <Link
           to='/'
           title='home'
           aria-label='home'
-          className={stylesNavbar['logo-wrap']}
+          className={styles['logo-wrap']}
         >
           <img
            src={srcSvgLogo}
            alt="logo"
-           className={stylesNavbar['logo']}
+           className={styles['logo']}
           />
         </Link>
 
@@ -105,20 +105,20 @@ const Navbar = () => {
           aria-expanded={(navbarMenuOpen) ? 'true' : 'false'}
           aria-haspopup='menu'
           onClick={handleNavbarTogglerClick}
-          className={stylesNavbar['hamburger']}
+          className={styles['hamburger']}
         >
           <span
             className={`
-              ${stylesNavbar['hamburger-icon']}
-              ${(navbarMenuOpen) ? stylesNavbar['hamburger-icon--active'] : stylesNavbar['hamburger-icon--inactive']}
+              ${styles['hamburger-icon']}
+              ${(navbarMenuOpen) ? styles['hamburger-icon--active'] : styles['hamburger-icon--inactive']}
             `}
           ></span>
         </button>
         <div
           id='navbarMenu'
           className={`
-            ${stylesNavbar['menu']}
-            ${(navbarMenuOpen) ? stylesNavbar['menu--open'] : stylesNavbar['menu--close']}
+            ${styles['menu']}
+            ${(navbarMenuOpen) ? styles['menu--open'] : styles['menu--close']}
           `}
         >
           <ul>
@@ -137,8 +137,8 @@ const Navbar = () => {
           </ul>
           <div
             className={`
-              ${stylesNavbar['search']}
-              ${(searchInputOpen) ? stylesNavbar['search--open'] : stylesNavbar['search--close']}
+              ${styles['search']}
+              ${(searchInputOpen) ? styles['search--open'] : styles['search--close']}
             `}
           >
             <form onSubmit={handleSearchSubmit} className='relative'>
@@ -150,8 +150,8 @@ const Navbar = () => {
                   handleSearchInputTogglerClick(true)
                 }}
                 className={`
-                  ${stylesNavbar['search-input']}
-                  ${(searchInputOpen) ? stylesNavbar['search-input--open'] : stylesNavbar['search-input--close']}
+                  ${styles['search-input']}
+                  ${(searchInputOpen) ? styles['search-input--open'] : styles['search-input--close']}
                 `}
                 autoComplete='off'
               />
@@ -160,15 +160,15 @@ const Navbar = () => {
                 title='Close search input'
                 aria-label='Close search input'
                 className={`
-                  ${stylesNavbar['search-close-btn']}
-                  ${(searchInputOpen) ? stylesNavbar['search-close-btn--show'] : stylesNavbar['search-close-btn--hidden']}
+                  ${styles['search-close-btn']}
+                  ${(searchInputOpen) ? styles['search-close-btn--show'] : styles['search-close-btn--hidden']}
                 `}
                 onClick={() => {
                   handleSearchInputTogglerClick(false)
                 }}
               ></button>
               <CiSearch
-                className={stylesNavbar['search-icon']}
+                className={styles['search-icon']}
               />
             </form>
           </div>

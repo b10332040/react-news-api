@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
+import styles from '/styles/popup.styles'
 import { useEffect, createContext, useContext } from 'react'
 import { useApp } from '/hooks'
-import { stylesPopup } from '/styles'
 import { RxCross1 } from 'react-icons/rx'
 import { AiOutlineLeft } from 'react-icons/ai'
 import { isArrayEmpty } from '/utils'
@@ -50,8 +50,8 @@ const Popup = ({ popupId, open=false, setOpen, overScreenHeight=true, dialogFull
       <div
         id={popupId}
         className={`
-          ${stylesPopup['popup']['self']}
-          ${(dialogFullInMobile) ? stylesPopup['popup']['self--full-in-mobile'] : stylesPopup['popup']['self--normal-in-mobile']}
+          ${styles['popup']['self']}
+          ${(dialogFullInMobile) ? styles['popup']['self--full-in-mobile'] : styles['popup']['self--normal-in-mobile']}
           ${(open) ? 'visible opacity-100' : 'invisible opacity-0'}
         `}
       >
@@ -59,7 +59,7 @@ const Popup = ({ popupId, open=false, setOpen, overScreenHeight=true, dialogFull
           onClick={() => {
             setOpen?.(false)
           }}
-          className={stylesPopup['popup']['backdrop']}
+          className={styles['popup']['backdrop']}
         ></div>
 
         { children }
@@ -113,9 +113,9 @@ const Dialog = ({ size='base', children }) => {
   return (
     <div 
       className={`
-        ${stylesPopup['dialog']['self']}
-        ${stylesPopup['dialog'][`self--${size}`]}
-        ${(dialogFullInMobile) ? stylesPopup['dialog']['self--full-in-mobile'] : stylesPopup['dialog']['self--normal-in-mobile']}
+        ${styles['dialog']['self']}
+        ${styles['dialog'][`self--${size}`]}
+        ${(dialogFullInMobile) ? styles['dialog']['self--full-in-mobile'] : styles['dialog']['self--normal-in-mobile']}
         ${maxWidthClassName}
         ${heightClassName}
         ${animationClassName}
@@ -123,7 +123,7 @@ const Dialog = ({ size='base', children }) => {
     >
       <div 
         className={`
-          ${stylesPopup['dialog']['content']}
+          ${styles['dialog']['content']}
           ${(dialogFullInMobile) ? 'sm:rounded-md' : 'rounded-md'}
           ${contentMaxHeightClassName}
         `}
@@ -152,7 +152,7 @@ const Content = ({ innerContentId, innerContentOpen=false, children }) => {
       <div
         id={innerContentId}
         className={`
-          ${stylesPopup['content']['self']}
+          ${styles['content']['self']}
           ${(innerContentOpen) ? 'order-first' : ''}
         `}
       >
@@ -162,7 +162,7 @@ const Content = ({ innerContentId, innerContentOpen=false, children }) => {
   }
 
   return (
-    <div className={stylesPopup['content']['self']}>
+    <div className={styles['content']['self']}>
       { children }
     </div>
   )
@@ -193,15 +193,15 @@ const Header = ({ hasCloseButton=true, children }) => {
         onClick={() => {
           setOpen?.(false)
         }}
-        className={stylesPopup['header']['close-button']}
+        className={styles['header']['close-button']}
       >
-        <RxCross1 className={stylesPopup['header']['close-button-icon']} />
+        <RxCross1 className={styles['header']['close-button-icon']} />
       </button>
     )
   }
 
   return (
-    <div className={stylesPopup['header']['self']}>
+    <div className={styles['header']['self']}>
       <div className={(hasCloseButton) ? 'w-[calc(100%-48px)]': 'w-full'}>
         { children }
       </div>
@@ -222,7 +222,7 @@ Header.propTypes = {
  */
 const Title = ({ children }) => {
   return (
-    <h2 className={stylesPopup['title']['self']}>
+    <h2 className={styles['title']['self']}>
       { children }
     </h2>
   )
@@ -242,7 +242,7 @@ const Body = ({ className='', children }) => {
   return (
     <div 
       className={`
-        ${stylesPopup['body']['self']}
+        ${styles['body']['self']}
         ${className}
       `}
     >
@@ -265,7 +265,7 @@ Body.propTypes = {
 const TitleInBody = ({ className='', children }) => {
   return (
     <h3 className={`
-      ${stylesPopup['title-in-body']['self']}
+      ${styles['title-in-body']['self']}
       ${className}
     `}>
       { children }
@@ -295,7 +295,7 @@ const RadioTabsInBody = ({ radios, name, checkedValue, onChange, disabled=false 
     return (
       <li
         key={`radio-${radio.value}`}
-        className={stylesPopup['radio-tabs-in-body']['tab']}
+        className={styles['radio-tabs-in-body']['tab']}
       >
         <input 
           type='radio'
@@ -306,12 +306,12 @@ const RadioTabsInBody = ({ radios, name, checkedValue, onChange, disabled=false 
           onChange={(event) => {
             onChange?.(event.target.value)
           }}
-          className={stylesPopup['radio-tabs-in-body']['radio']}
+          className={styles['radio-tabs-in-body']['radio']}
           disabled={disabled}
         />
         <label
           htmlFor={radio.value}
-          className={stylesPopup['radio-tabs-in-body']['label']}
+          className={styles['radio-tabs-in-body']['label']}
         >
           {radio.displayName}
         </label>
@@ -320,7 +320,7 @@ const RadioTabsInBody = ({ radios, name, checkedValue, onChange, disabled=false 
   })
 
   return (
-    <ul className={stylesPopup['radio-tabs-in-body']['self']}>
+    <ul className={styles['radio-tabs-in-body']['self']}>
       { RadioTabs }
     </ul>
   )
@@ -361,10 +361,10 @@ const InnerContentOpenButton = ({ title, innerContentId, innerContentOpen=false,
       onClick={() => {
         setInnerContentOpen?.(true)
       }}
-      className={stylesPopup['inner-content-open-button']['self']}
+      className={styles['inner-content-open-button']['self']}
       disabled={disabled}
     >
-      <TitleInBody className={stylesPopup['inner-content-open-button']['title']}>
+      <TitleInBody className={styles['inner-content-open-button']['title']}>
         { children }
       </TitleInBody>
     </button>
@@ -397,11 +397,11 @@ const InnerContentHeader = ({ hasCloseButton=true, setInnerContentOpen, children
         onClick={() => {
           setInnerContentOpen?.(false)
         }}
-        className={stylesPopup['inner-content-header']['prev-button']}
+        className={styles['inner-content-header']['prev-button']}
       >
-        <AiOutlineLeft className={stylesPopup['inner-content-header']['prev-button-icon']} />
+        <AiOutlineLeft className={styles['inner-content-header']['prev-button-icon']} />
       </button>
-      <div className={stylesPopup['inner-content-header']['children-wrap']}>
+      <div className={styles['inner-content-header']['children-wrap']}>
         { children }
       </div>
     </Header>
@@ -421,7 +421,7 @@ InnerContentHeader.propTypes = {
  */
 const Footer = ({ children }) => {
   return (
-    <div className={stylesPopup['footer']['self']}>
+    <div className={styles['footer']['self']}>
       { children }
     </div>
   )

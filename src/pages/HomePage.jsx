@@ -1,6 +1,6 @@
 import moment from 'moment'
 import PropTypes from 'prop-types'
-import { stylesHomePage } from '/styles'
+import styles from '/styles/homePage.styles'
 import { 
   srcJpgHomeBanner1x,
   srcJpgHomeBanner2x,
@@ -25,6 +25,7 @@ import { ArticleCard, Button, Head, Form, RadioTabList, ResultsText, Search } fr
 import { useData, useNews } from '/hooks'
 import { useRef, useState } from 'react'
 import { formatNumber, isArrayEmpty, memoize } from '/utils'
+import Loading from '/components/Loading'
 
 
 /**
@@ -35,14 +36,14 @@ import { formatNumber, isArrayEmpty, memoize } from '/utils'
  * @returns 
  */
 const MainBannerSliderArrowButton = ({ onClick, arrowDirection }) => {
-  let buttonClassName = stylesHomePage['main-banner-slider-arrow-button']['prev']
-  let arrowClassName = stylesHomePage['main-banner-slider-arrow-button']['arrow']
-  let arrowIcon = <AiOutlineLeft className={`${arrowClassName} ${stylesHomePage['main-banner-slider-arrow-button']['arrow--left']}`} />
+  let buttonClassName = styles['main-banner-slider-arrow-button']['prev']
+  let arrowClassName = styles['main-banner-slider-arrow-button']['arrow']
+  let arrowIcon = <AiOutlineLeft className={`${arrowClassName} ${styles['main-banner-slider-arrow-button']['arrow--left']}`} />
   let title = 'Prev article'
 
   if (arrowDirection === 'right') {
-    buttonClassName = stylesHomePage['main-banner-slider-arrow-button']['next']
-    arrowIcon = <AiOutlineRight className={`${arrowClassName} ${stylesHomePage['main-banner-slider-arrow-button']['arrow--right']}`} />
+    buttonClassName = styles['main-banner-slider-arrow-button']['next']
+    arrowIcon = <AiOutlineRight className={`${arrowClassName} ${styles['main-banner-slider-arrow-button']['arrow--right']}`} />
     title = 'Next article'
   }
 
@@ -53,7 +54,7 @@ const MainBannerSliderArrowButton = ({ onClick, arrowDirection }) => {
       title={title}
       onClick={onClick}
       className={`
-        ${stylesHomePage['main-banner-slider-arrow-button']['self']}
+        ${styles['main-banner-slider-arrow-button']['self']}
         ${buttonClassName}
       `}
     >
@@ -93,21 +94,21 @@ const MainBannerSlider = ({ articles }) => {
     return (
       <section
         key={`main-banner-article-${index}`}
-        className={stylesHomePage['main-banner-slide']['self']}
+        className={styles['main-banner-slide']['self']}
       >
-        <div className={stylesHomePage['main-banner-slide']['container']}>
+        <div className={styles['main-banner-slide']['container']}>
           <a
             href={article.url}
             title={article.title}
             aria-label={article.title}
             target='_blank'
             rel='noreferrer noopener'
-            className={stylesHomePage['main-banner-slide']['link']}
+            className={styles['main-banner-slide']['link']}
           >
-            <p className={stylesHomePage['main-banner-slide']['time']}>
+            <p className={styles['main-banner-slide']['time']}>
               {moment(article.publishedAt).format('ll')}
             </p>
-            <h2 className={stylesHomePage['main-banner-slide']['title']}>
+            <h2 className={styles['main-banner-slide']['title']}>
               {article.title}
             </h2>
           </a>
@@ -117,7 +118,7 @@ const MainBannerSlider = ({ articles }) => {
   })
 
   return (
-    <article className={stylesHomePage['main-banner-slider']['self']}>
+    <article className={styles['main-banner-slider']['self']}>
       <Slider {...sliderSettings}>
         { MainBannerSlides }
       </Slider>
@@ -139,8 +140,8 @@ const MainBanner = ({ articles }) => {
   if (isArrayEmpty(articles)) {
     Children = (
       <div>
-        <div className={stylesHomePage['main-banner']['content']}>
-          <h2 className={stylesHomePage['main-banner']['title']}>
+        <div className={styles['main-banner']['content']}>
+          <h2 className={styles['main-banner']['title']}>
             Welcome to the World !
           </h2>
         </div>
@@ -151,8 +152,8 @@ const MainBanner = ({ articles }) => {
   }
   
   return (
-    <div className={stylesHomePage['main-banner']['self']}>
-      <picture className={stylesHomePage['main-banner']['picture']}>
+    <div className={styles['main-banner']['self']}>
+      <picture className={styles['main-banner']['picture']}>
         <source
           media='(min-width: 992px)'
           srcSet={`
@@ -197,11 +198,11 @@ const MainBanner = ({ articles }) => {
           srcSet={`${srcJpgHomeBanner2x} 2x`}
           alt='Main banner'
           aria-label='Main banner'
-          className={stylesHomePage['main-banner']['img']}
+          className={styles['main-banner']['img']}
           loading='true'
         />
       </picture>
-      <div className={stylesHomePage['main-banner']['mask']}></div>
+      <div className={styles['main-banner']['mask']}></div>
       { Children }
     </div>
   )
@@ -371,7 +372,12 @@ const HomePage = () => {
                 </div>
 
                 <div ref={showStickyBarRef}>
-                  <MemoizedArticlesWaterfall articles={articles} />
+                  {
+                    (isArrayEmpty(articles)) ?
+                    <Loading />
+                    :
+                    <MemoizedArticlesWaterfall articles={articles} />
+                  }
                 </div>
 
                 <Button

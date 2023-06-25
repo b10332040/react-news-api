@@ -1,5 +1,5 @@
+import styles from '/styles/toTopButton.styles'
 import { useApp } from '/hooks'
-import { stylesToTopButton } from '/styles'
 import { SlArrowUp } from 'react-icons/sl'
 
 /**
@@ -20,13 +20,13 @@ const ToTopButton = () => {
       title='To top'
       aria-label='To top'
       className={`
-        ${stylesToTopButton['self']}
-        ${(pageTop) ? stylesToTopButton['self--hidden'] : stylesToTopButton['self--show']}
+        ${styles['self']}
+        ${(pageTop) ? styles['self--hidden'] : styles['self--show']}
       `}
       onClick={handleClick}
     >
-      <div className={stylesToTopButton['icon-wrap']}>
-        <SlArrowUp className={stylesToTopButton['icon']} />
+      <div className={styles['icon-wrap']}>
+        <SlArrowUp className={styles['icon']} />
       </div>
     </button>
   )

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
+import styles from '/styles/socialCircleLink.styles'
 import { AiFillBehanceCircle, AiFillGithub, AiOutlineLink, AiTwotoneMail } from 'react-icons/ai'
-import { stylesSocialCircleLink } from '/styles'
 
 /**
  * 圓圈聯絡連結
@@ -11,7 +11,7 @@ import { stylesSocialCircleLink } from '/styles'
  * @returns
  */
 const SocialCircleLink = ({to, title, icon}) => {
-  const iconClassName = stylesSocialCircleLink['icon']
+  const iconClassName = styles['icon']
   let Icon = <AiOutlineLink className={iconClassName} />
 
   switch (icon) {
@@ -35,7 +35,7 @@ const SocialCircleLink = ({to, title, icon}) => {
       aria-label={title}
       target='_blank'
       rel='noreferrer noopener'
-      className={stylesSocialCircleLink['self']}
+      className={styles['self']}
     >
       { Icon }
     </a>

@@ -3,7 +3,7 @@ import clsx from 'clsx'
 /**
  * Search 樣式
  */
-const stylesSearch = {
+const styles = {
   'self': clsx(
     'relative',
     'z-[1]',
@@ -32,4 +32,4 @@ const stylesSearch = {
   )
 }
 
-export default stylesSearch
+export default styles

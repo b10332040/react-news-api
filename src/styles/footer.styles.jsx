@@ -3,7 +3,7 @@ import clsx from 'clsx'
 /**
  * Footer 樣式
  */
-const stylesFooter = {
+const styles = {
   'self': clsx(
     'bg-[--theme-black]',
     'py-10'
@@ -69,4 +69,4 @@ const stylesFooter = {
   )
 }
 
-export default stylesFooter
+export default styles

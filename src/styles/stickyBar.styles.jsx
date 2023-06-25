@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 
-const stylesStickyBar = {
+const styles = {
   'sticky-bar': {
     'self': clsx(
       'fixed',
@@ -44,4 +44,4 @@ const stylesStickyBar = {
   }
 }
 
-export default stylesStickyBar
+export default styles

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { stylesHeader } from '/styles'
+import styles from '/styles/header.styles'
 
 /**
  * 標題
@@ -9,8 +9,8 @@ import { stylesHeader } from '/styles'
  * @returns
  */
 const Header = ({ title, children }) => {
-  const headerClassName = stylesHeader['self']
-  const titleClassName = stylesHeader['title']
+  const headerClassName = styles['self']
+  const titleClassName = styles['title']
   const hasChildren = typeof(children) === 'undefined' ? false : true
 
   if (hasChildren) {
@@ -19,12 +19,12 @@ const Header = ({ title, children }) => {
         <h3
           className={`
             ${titleClassName}
-            ${stylesHeader['title--has-right']}
+            ${styles['title--has-right']}
           `}
         >
           { title }
         </h3>
-        <div className={stylesHeader['right-side']}>
+        <div className={styles['right-side']}>
           { children }
         </div>
       </header>

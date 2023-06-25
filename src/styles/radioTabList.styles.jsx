@@ -3,7 +3,7 @@ import clsx from 'clsx'
 /**
  * RadioTabList 樣式
  */
-const stylesRadioTabList = {
+const styles = {
   'self': clsx(
     'whitespace-nowrap',
     'overflow-x-auto',
@@ -56,4 +56,4 @@ const stylesRadioTabList = {
   )
 }
 
-export default stylesRadioTabList
+export default styles

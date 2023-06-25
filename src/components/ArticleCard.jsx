@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { stylesArticleCard } from '/styles'
+import styles from '/styles/articleCard.styles'
 import { formateDateDiff, getRandomNum } from '/utils'
 import { srcDefaultImage } from '/assets/images'
 
@@ -32,7 +32,7 @@ const ArticleCard = ({ type, article, className='' }) => {
         href={article.url}
         target='_blank'
         rel='noreferrer noopener'
-        className={stylesArticleCard['linkMask']}
+        className={styles['linkMask']}
       ></a>
     )
   }
@@ -40,7 +40,7 @@ const ArticleCard = ({ type, article, className='' }) => {
   if (type !== 'text') {
     TopImage = (
       <div
-        className={(type === 'base') ? stylesArticleCard['top-img'] : stylesArticleCard['bg-img']}
+        className={(type === 'base') ? styles['top-img'] : styles['bg-img']}
       >
         <div>
           <img
@@ -49,7 +49,7 @@ const ArticleCard = ({ type, article, className='' }) => {
             title={`Image about ${title}`}
             aria-label={`Image about ${title}`}
             loading='true'
-            className={stylesArticleCard['img']}
+            className={styles['img']}
           />
         </div>
       </div>
@@ -59,18 +59,18 @@ const ArticleCard = ({ type, article, className='' }) => {
   return (
     <section
       className={`
-        ${stylesArticleCard['self']}
-        ${(hasLink) ? stylesArticleCard['self--has-link'] : ''}
+        ${styles['self']}
+        ${(hasLink) ? styles['self--has-link'] : ''}
         ${className}
       `}
     >
       { LinkCover }
       { TopImage }
-      <div className={stylesArticleCard['body']}>
+      <div className={styles['body']}>
         <h3 
           className={`
-            ${stylesArticleCard['title']}
-            ${(type === 'cover') ? stylesArticleCard['title--cover'] : stylesArticleCard['title--no-cover']}
+            ${styles['title']}
+            ${(type === 'cover') ? styles['title--cover'] : styles['title--no-cover']}
           `}
         >
           {title}
@@ -78,8 +78,8 @@ const ArticleCard = ({ type, article, className='' }) => {
 
         <p 
           className={`
-            ${stylesArticleCard['note']}
-            ${(type === 'cover') ? stylesArticleCard['note--cover'] : stylesArticleCard['note--no-cover']}
+            ${styles['note']}
+            ${(type === 'cover') ? styles['note--cover'] : styles['note--no-cover']}
           `}
         >
           {`${sourceName}${(sourceName !== '' && dateDiff !== '') ? ' · ' : ''}${dateDiff}`}

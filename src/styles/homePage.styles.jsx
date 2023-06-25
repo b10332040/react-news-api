@@ -3,7 +3,7 @@ import clsx from 'clsx'
 /**
  * HomePage 樣式
  */
-const stylesHomePage = {
+const styles = {
   'main-banner': {
     'self': clsx(
       'main-banner',
@@ -143,4 +143,4 @@ const stylesHomePage = {
   }
 }
 
-export default stylesHomePage
+export default styles

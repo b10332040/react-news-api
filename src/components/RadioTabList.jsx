@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { stylesRadioTabList } from '/styles'
+import styles from '/styles/radioTabList.styles'
 import { isArrayEmpty } from '/utils'
 
 /**
@@ -21,7 +21,7 @@ const RadioTabList = ({ name, radios, checkedValue, onChange, disabled=false }) 
     return (
       <li
         key={`radio-${radio.value}`}
-        className={stylesRadioTabList['item']}
+        className={styles['item']}
       >
         <input 
           type='radio'
@@ -32,14 +32,14 @@ const RadioTabList = ({ name, radios, checkedValue, onChange, disabled=false }) 
           onChange={(event) => {
             onChange?.(event.target.value)
           }}
-          className={stylesRadioTabList['input']}
+          className={styles['input']}
           disabled={disabled}
         />
         <label
           htmlFor={radio.value}
-          className={stylesRadioTabList['label']}
+          className={styles['label']}
         >
-          <span className={stylesRadioTabList['label-text']}>
+          <span className={styles['label-text']}>
             {radio.displayName}
           </span>
         </label>
@@ -48,7 +48,7 @@ const RadioTabList = ({ name, radios, checkedValue, onChange, disabled=false }) 
   })
 
   return (
-    <ul className={stylesRadioTabList['self']}>
+    <ul className={styles['self']}>
       { RadioTabItems }
     </ul>
   )

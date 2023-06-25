@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import { Link, NavLink } from 'react-router-dom'
-import { stylesFooter } from '/styles'
+import styles from '/styles/footer.styles'
 import { srcSvgLogo } from '/assets/images'
 import { AiFillBehanceCircle, AiFillGithub, AiOutlineLink, AiTwotoneMail } from 'react-icons/ai'
 import { contact } from '/data'
@@ -17,15 +17,15 @@ const FooterPageNavLink = ({ to, title, children }) => {
   return (
     <li
       key={`footer-page-link-${title}`}
-      className={stylesFooter['link-list-item']}
+      className={styles['link-list-item']}
     >
       <NavLink
         to={to}
         title={title}
         aria-label={title}
         className={({ isActive }) => `
-          ${stylesFooter['link']}
-          ${(isActive) ? stylesFooter['link--active'] : stylesFooter['link--inactive']}
+          ${styles['link']}
+          ${(isActive) ? styles['link--active'] : styles['link--inactive']}
         `}
         end={(to === '/') ? true : false}
       >
@@ -69,7 +69,7 @@ const FooterContactLink = ({ to, title, icon='', children }) => {
   return (
     <li
       key={`footer-contact-link-${title}`}
-      className={stylesFooter['link-list-item']}
+      className={styles['link-list-item']}
     >
       <a
         href={to}
@@ -78,11 +78,11 @@ const FooterContactLink = ({ to, title, icon='', children }) => {
         target='_blank'
         rel='noreferrer noopener'
         className={`
-          ${stylesFooter['link']}
-          ${stylesFooter['contact-link']}
+          ${styles['link']}
+          ${styles['contact-link']}
         `}
       >
-        <div className={stylesFooter['link-icon']}>
+        <div className={styles['link-icon']}>
           { Icon }
         </div>
         { children }
@@ -104,27 +104,27 @@ FooterContactLink.propTypes = {
  */
 const Footer = () => {
   return (
-    <footer className={stylesFooter['self']}>
+    <footer className={styles['self']}>
       <article className="container">
         <div className="row">
-          <div className={stylesFooter['col-2/4']}>
+          <div className={styles['col-2/4']}>
             <Link
               to='/'
               title='home'
               aria-label='home'
-              className={stylesFooter['logo']}
+              className={styles['logo']}
             >
               <img
                 src={srcSvgLogo}
                 alt="logo"
               />
             </Link>
-            <p className={stylesFooter['copyright']}>
+            <p className={styles['copyright']}>
               Copyright ©2023 All rights reserved
             </p>
           </div>
-          <section className={stylesFooter['col-1/4']}>
-            <h2 className={stylesFooter['link-list-title']}>Links</h2>
+          <section className={styles['col-1/4']}>
+            <h2 className={styles['link-list-title']}>Links</h2>
             <ul>
               <FooterPageNavLink
                 to='/'
@@ -140,8 +140,8 @@ const Footer = () => {
               </FooterPageNavLink>
             </ul>
           </section>
-          <section className={stylesFooter['col-1/4']}>
-            <h2 className={stylesFooter['link-list-title']}>Contact</h2>
+          <section className={styles['col-1/4']}>
+            <h2 className={styles['link-list-title']}>Contact</h2>
             <ul>
               <FooterContactLink
                 to={contact.mail.to}

@@ -3,7 +3,7 @@ import clsx from 'clsx'
 /**
  * Main 樣式
  */
-const stylesMain = {
+const styles = {
   'left-side': {
     'self': clsx(
       'col',
@@ -47,4 +47,4 @@ const stylesMain = {
   }
 }
 
-export default stylesMain
+export default styles

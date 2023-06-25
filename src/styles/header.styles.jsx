@@ -3,7 +3,7 @@ import clsx from 'clsx'
 /**
  * Header 樣式
  */
-const stylesHeader = {
+const styles = {
   'self': clsx(
     'relative',
     'flex',
@@ -41,4 +41,4 @@ const stylesHeader = {
   )
 }
 
-export default stylesHeader
+export default styles

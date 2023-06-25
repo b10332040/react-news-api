@@ -3,7 +3,7 @@ import clsx from 'clsx'
 /**
  * NavBar 樣式
  */
-const stylesNavbar = {
+const styles = {
   'self': clsx(
     'fixed',
     'z-40',
@@ -276,4 +276,4 @@ const stylesNavbar = {
   )
 }
 
-export default stylesNavbar
+export default styles
