@@ -3,6 +3,7 @@ import styles from '/styles/stickyBar.styles'
 import { useEffect, useState } from 'react'
 import { BsFilter } from 'react-icons/bs'
 import { TiFilter } from 'react-icons/ti'
+import { isExisted } from '/utils'
 
 /**
  * 黏著 bar
@@ -77,7 +78,7 @@ const IconButton = ({ icon, title='', popupId, popupOpen=false, onClick, classNa
       break
   }
   
-  if (typeof popupId === 'undefined') {
+  if (isExisted(popupId)) {
     return (
       <button
         type='button'

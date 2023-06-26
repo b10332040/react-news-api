@@ -5,7 +5,7 @@ import { TbMoodEmpty } from 'react-icons/tb'
 /**
  * 無結果
  * @param {object} props - 屬性
- * @param {string} props.message - 訊息（預設：''）
+ * @param {node} props.message - 訊息（預設：''）
  */
 const NoResults = ({ message='' }) => {
   return (
@@ -23,7 +23,7 @@ const NoResults = ({ message='' }) => {
   )
 }
 NoResults.propTypes = {
-  message: PropTypes.string,
+  message: PropTypes.node,
 }
 
 export default NoResults

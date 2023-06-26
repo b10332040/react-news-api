@@ -3,6 +3,7 @@ import styles from '/styles/main.styles'
 import Header from './Header'
 import { contact } from '/data'
 import { SocialCircleLink } from '/components'
+import { isExisted } from '/utils'
 
 /**
  * 主要內容
@@ -78,10 +79,12 @@ RightSide.propTypes = {
  * @param {node} props.children - 內容
  */
 const RightSideSection = ({contentType, title, children}) => {
-  if (typeof contentType !== 'undefined') {
+  const isTitleExisted = isExisted(title)
+
+  if (isExisted(contentType)) {
     switch (contentType) {
       case 'about':
-        title = (typeof title !== 'undefined') ? title : 'About'
+        title = (isTitleExisted) ? title : 'About'
         children = (
           <p className='text-sm text-[--theme-gray-400] leading-loose'>
             {/* 此新聞網站使用 React 框架以及串接
@@ -109,7 +112,7 @@ const RightSideSection = ({contentType, title, children}) => {
         break
 
       case 'connect':
-        title = (typeof title !== 'undefined') ? title : 'Stay Connected'
+        title = (isTitleExisted) ? title : 'Stay Connected'
         children = (
           <ul className={styles['right-side-section']['connect-list']}>
             <li>
@@ -132,7 +135,7 @@ const RightSideSection = ({contentType, title, children}) => {
     }
   }
 
-  if (typeof title !== 'undefined' && typeof children !== 'undefined') {
+  if (isExisted(title) && isExisted(children)) {
     return (
       <section>
         <Header title={title}/>

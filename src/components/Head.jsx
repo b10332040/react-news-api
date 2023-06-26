@@ -23,24 +23,27 @@ const Head = ({ title='', description='', srcImage='' }) => {
   }
 
   return (
-    <HelmetProvider>
-      <Helmet>
-        <meta charset='utf-8' />
-        <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <>
+      <HelmetProvider>
+        <Helmet>
+          <meta charset='utf-8' />
+          <meta name='viewport' content='width=device-width, initial-scale=1.0' />
 
-        <title> { seo.title } </title>
-        <meta property='og:title' content={ seo.title } />
-        <meta property='og:site_name' content={ seo.title } />
-        <meta property='og:description' content={ seo.description } />
-        <meta property='og:image' content={ seo.image } />
-        <meta property='og:rul' content={ seo.url } />
-        <meta property='og:type' content='website' />
-        <meta name='description' content={ seo.description } />
-        <link rel='canonical' href={ seo.url } />
-        <link rel='shortcut icon' href={ srcFavicon } type='image/x-icon' />
-        <link rel='apple-touch-icon' href={ srcFavicon } />
-      </Helmet>
-    </HelmetProvider>
+          <title> { seo.title } </title>
+          <meta property='og:title' content={ seo.title } />
+          <meta property='og:site_name' content={ seo.title } />
+          <meta property='og:description' content={ seo.description } />
+          <meta property='og:image' content={ seo.image } />
+          <meta property='og:rul' content={ seo.url } />
+          <meta property='og:type' content='website' />
+          <meta name='description' content={ seo.description } />
+          <link rel='canonical' href={ seo.url } />
+          <link rel='shortcut icon' href={ srcFavicon } type='image/x-icon' />
+          <link rel='apple-touch-icon' href={ srcFavicon } />
+        </Helmet>
+      </HelmetProvider>
+      <h1 className='absolute -z-[1] top-0 left-0 opacity-0'>{`${seo.title}-${seo.description}`}</h1>
+    </>
   )
 }
 Head.propTypes = {

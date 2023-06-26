@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
 import { HomePage, SearchPage,SourcesPage, WorldPage } from '/pages'
 import { Footer, Navbar } from '/layouts'
 import { ToTopButton } from '/components'
-import { AppProvider, DataProvider, NewsProvider } from '/contexts'
+import { AppProvider, NewsProvider } from '/contexts'
 
 /**
  * 共用佈局
@@ -11,7 +11,6 @@ import { AppProvider, DataProvider, NewsProvider } from '/contexts'
 const BasicLayout = () => {
   return (
     <AppProvider>
-    <DataProvider>
     <NewsProvider>
       <Navbar />
         <div className='min-h-[100vh]'>
@@ -20,7 +19,6 @@ const BasicLayout = () => {
       <Footer />
       <ToTopButton />
     </NewsProvider>
-    </DataProvider>
     </AppProvider>
   )
 }
@@ -31,11 +29,11 @@ function App() {
       <Routes>
         <Route path='/' element={<BasicLayout />}>
           <Route index element={<HomePage />} />
-          <Route path='search/:keyword' element={<SearchPage />} />
+          <Route path='search' element={<SearchPage />} />
           <Route path='sources' element={<SourcesPage />} />
-          <Route path='sources/:source' element={<SourcesPage />} />
-          <Route path='world' element={<WorldPage />} />
-          <Route path='world/:country' element={<WorldPage />} />
+          <Route path='sources/:id' element={<SourcesPage />} />
+          <Route path='country' element={<WorldPage />} />
+          <Route path='country/:id' element={<WorldPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

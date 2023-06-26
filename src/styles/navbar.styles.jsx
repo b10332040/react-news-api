@@ -7,8 +7,8 @@ const styles = {
   'self': clsx(
     'fixed',
     'z-40',
-    't-0',
-    'l-0',
+    'top-0',
+    'left-0',
     'w-full',
     'transition-all',
     'duration-300'

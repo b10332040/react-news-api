@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import styles from '/styles/articleCard.styles'
-import { formateDateDiff, getRandomNum } from '/utils'
+import { formateDateDiff, getRandomNum, isExisted } from '/utils'
 import { srcDefaultImage } from '/assets/images'
 
 /**
@@ -17,7 +17,7 @@ const ArticleCard = ({ type, article, className='' }) => {
   const title = (article?.title) ? article.title : ''
   const dateDiff = (article?.publishedAt) ? formateDateDiff(article.publishedAt) : ''
   const sourceName = (article.source?.name) ? article.source.name : ''
-  const randomType = (typeof type !== 'undefined') ? false : true
+  const randomType = !(isExisted(type))
   let urlToImage = (article?.urlToImage) ? article.urlToImage : srcDefaultImage // 沒有圖片給預設圖片
   let LinkCover = <></>
   let TopImage = <></>

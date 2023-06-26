@@ -22,7 +22,7 @@ import { dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
 import { ArticleCard, Button, Head, Loading, FormArea, RadioTabList, ResultsText, Search, NoResults } from '/components'
-import { useData, useNews } from '/hooks'
+import { useNews } from '/hooks'
 import { useRef, useState } from 'react'
 import { formatNumber, isArrayEmpty, memoize } from '/utils'
 
@@ -248,6 +248,7 @@ const MemoizedArticlesWaterfall = memoize(ArticlesWaterfall)
  * @returns 
  */
 const HomePage = () => {
+  const { keywordMaxLength, categoryList, getTotalPage } = useNews()
   const [category, setCategory] = useState('general')
   const [keyword, setKeyword] = useState('')
   const [page, setPage] = useState(1)
@@ -255,17 +256,15 @@ const HomePage = () => {
   const [filterPopupMenuOpen, setFilterPopupMenuOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [addingArticles, setAddingArticles] = useState(false)
-  const [articleList, setAtricleList] = useState(dummyNewsList.articles)
+  const [articleList, setArticleList] = useState(dummyNewsList.articles)
   const showStickyBarRef = useRef()
-  const { keywordMaxLength } = useNews()
-  const { categoryList } = useData()
   const pageSize = 12
-  const totalPage = (totalResults / pageSize > 0 && totalResults % pageSize === 0) ? (totalResults / pageSize) : Math.floor(totalResults / pageSize) + 1
+  const totalPage = getTotalPage({ totalResults, pageSize })
   const filterPopupMenuId = 'filterPopupMenu'
   let Result = <></>
 
   // 當重新取得第一頁文章
-  const getNewArticleList = () => {
+  const getPageOneArticles = () => {
     // setLoading(true)
     setPage(1)
   }
@@ -281,7 +280,7 @@ const HomePage = () => {
     
     if (inputValue === '') {
       // 當 input 的值為空時，載入此分類的第一頁文章
-      getNewArticleList()
+      getPageOneArticles()
       setKeyword(inputValue)
     }
   }
@@ -289,7 +288,7 @@ const HomePage = () => {
   // 處理當搜尋框按下 Enter
   const handleSearchEnter = (inputValue) => {
     const trimmedValue = inputValue.trim()
-    getNewArticleList()
+    getPageOneArticles()
     setKeyword(trimmedValue)
 
     // 載入此分類+搜尋結果的第一頁文章
@@ -310,7 +309,7 @@ const HomePage = () => {
 
   // 處理 category change 事件
   const handleCategoryRadioChange = (inputValue) => {
-    getNewArticleList()
+    getPageOneArticles()
     setCategory(inputValue)
     // 載入此分類的第一頁文章
   }
@@ -351,7 +350,7 @@ const HomePage = () => {
 
   return (
     <>
-      <Head title='Homepage' />
+      <Head title='Home' />
       <StickyBar showStickyBarRef={showStickyBarRef}>
         <div className='row items-center h-full'>
           <div className='col w-1/2 md:w-3/12'>
@@ -359,7 +358,10 @@ const HomePage = () => {
               page={page}
               pageSize={pageSize}
               total={totalResults}
-              className='my-3 lg:my-0'
+              className={`
+                'my-3 lg:my-0'
+                ${(totalResults === 0) && 'invisible'}
+              `}
             />
           </div>
           <div className='col w-1/2 md:w-9/12 flex flex-wrap justify-end'>
@@ -470,7 +472,10 @@ const HomePage = () => {
                       page={page}
                       pageSize={pageSize}
                       total={totalResults}
-                      className='px-3 text-center md:text-left'
+                      className={`
+                        px-3 text-center md:text-left
+                        ${(totalResults === 0) && 'invisible'}
+                      `}
                     />
                   </div>
                 </div>

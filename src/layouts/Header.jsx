@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import styles from '/styles/header.styles'
+import { isExisted } from '/utils'
 
 /**
  * 標題
@@ -11,9 +12,8 @@ import styles from '/styles/header.styles'
 const Header = ({ title, children }) => {
   const headerClassName = styles['self']
   const titleClassName = styles['title']
-  const hasChildren = typeof(children) === 'undefined' ? false : true
 
-  if (hasChildren) {
+  if (isExisted(children)) {
     return (
       <header className={headerClassName}>
         <h3

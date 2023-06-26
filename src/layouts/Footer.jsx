@@ -133,7 +133,7 @@ const Footer = () => {
                 Home
               </FooterPageNavLink>
               <FooterPageNavLink
-                to='/world'
+                to='/country'
                 title='world'
               >
                 World

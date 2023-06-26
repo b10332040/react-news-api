@@ -4,7 +4,7 @@ import { useEffect, createContext, useContext } from 'react'
 import { useApp } from '/hooks'
 import { RxCross1 } from 'react-icons/rx'
 import { AiOutlineLeft } from 'react-icons/ai'
-import { isArrayEmpty } from '/utils'
+import { isArrayEmpty, isExisted } from '/utils'
 
 const defaultContext = {
   open: false,
@@ -147,7 +147,7 @@ Dialog.propTypes = {
  * @returns 
  */
 const Content = ({ innerContentId, innerContentOpen=false, children }) => {
-  if (typeof innerContentId !== 'undefined') {
+  if (isExisted(innerContentId)) {
     return (
       <div
         id={innerContentId}
@@ -346,7 +346,7 @@ RadioTabsInBody.propTypes = {
  * @returns 
  */
 const InnerContentOpenButton = ({ title, innerContentId, innerContentOpen=false, setInnerContentOpen, disabled=false, children }) => {
-  if (typeof innerContentId === 'undefined') {
+  if (isExisted(innerContentId)) {
     return <></>
   }
 

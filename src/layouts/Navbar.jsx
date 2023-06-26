@@ -86,7 +86,7 @@ const Navbar = () => {
 
     // 轉到 result 頁面，並傳送 encodeURI 後的 trimmed value
     if (trimmedValue !== '') {
-      navigate(`/search/${encodeURI(trimmedValue)}`)
+      navigate(`/search?keyword=${encodeURI(trimmedValue)}`)
     }
   }
 
@@ -153,7 +153,7 @@ const Navbar = () => {
               Home
             </NavbarPageNavLink>
             <NavbarPageNavLink
-              to='/world'
+              to='/country'
               title='world'
             >
               World

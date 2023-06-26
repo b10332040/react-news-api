@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import Masonry from 'react-masonry-css'
+import { isExisted } from '/utils'
 
 /**
  * 瀑布流
@@ -10,7 +11,7 @@ import Masonry from 'react-masonry-css'
  * @returns
  */
 const Waterfall = ({ breakpointCols, className='', children }) => {
-  if (typeof breakpointCols === 'undefined') {
+  if (!isExisted(breakpointCols)) {
     breakpointCols={
       default: 3,
       575: 1,

@@ -31,9 +31,7 @@ const styles = {
       'z-[3]',
       'top-1/2',
       'left-1/2',
-      'l-0',
       'container',
-      'mx-auto',
       'w-full',
       '-translate-y-1/2',
       '-translate-x-1/2'
@@ -43,11 +41,11 @@ const styles = {
       'sm:max-w-[50%]',
       'text-white',
       'font-medium',
-      'text-[1.5rem]',
+      'text-2xl',
       'leading-normal',
       'drop-shadow-lg',
       'line-clamp-3',
-      'xl:text-[2rem]',
+      'xl:text-3xl',
       'xl:leading-snug'
     )
   },
