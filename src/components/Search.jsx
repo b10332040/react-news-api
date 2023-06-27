@@ -39,7 +39,9 @@ const Search = ({onChange, onBlur, handleEnter, value, placeholder='', className
         className={styles['input']}
         autoComplete='off'
       />
-      <CiSearch className={styles['icon']} />
+      <div className={styles['icon-wrap']}>
+        <CiSearch className={styles['icon']} />
+      </div>
     </div>
   )
 }

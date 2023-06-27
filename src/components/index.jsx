@@ -4,7 +4,7 @@ import FormArea from './FormArea'
 import Head from './Head'
 import Loading from './Loading'
 import NoResults from './NoResults'
-import RadioTabList from './RadioTabList'
+import RadioTabs from './RadioTabs'
 import ResultsText from './ResultsText'
 import Search from './Search'
 import SocialCircleLink from './SocialCircleLink'
@@ -17,7 +17,7 @@ export {
   Head,
   Loading,
   NoResults,
-  RadioTabList,
+  RadioTabs,
   ResultsText,
   Search,
   SocialCircleLink,

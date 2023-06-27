@@ -80,9 +80,9 @@ const styles = {
       'text-[0rem]',
       'has-scrollbar',
       'last:absolute',
-      'last:left-0',
+      'last:left-3',
       'last:top-full',
-      'last:w-full'
+      'last:w-[calc(100%-1.5rem)]'
     ),
     'item': clsx(
       'relative',

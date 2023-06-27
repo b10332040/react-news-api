@@ -59,10 +59,10 @@ const styles = {
     'self--normal-in-mobile': clsx(
       'inline-block',
       'align-middle',
-      'py-5',
       'mx-auto',
       'w-[calc(100%-2.5rem)]',
-      'max-h-none'
+      'h-auto',
+      'py-5'
     ),
     'self--full-in-mobile': clsx(
       'w-full',
@@ -70,19 +70,10 @@ const styles = {
       'max-h-full',
       'sm:inline-block',
       'sm:align-middle',
-      'sm:py-5',
       'sm:mx-auto',
-      'sm:max-h-none'
-    ),
-    'children-wrap': clsx(
-      'relative',
-      'z-[1]',
-      'flex',
-      '[&>*]:shrink-0',
-      'w-full',
-      'h-full',
-      'bg-[--theme-gray-50]',
-      'overflow-hidden'
+      'sm:h-auto',
+      'sm:max-h-none',
+      'sm:py-5'
     ),
     'content': clsx(
       'relative',
@@ -112,8 +103,7 @@ const styles = {
       'flex',
       'flex-wrap',
       'items-center',
-      'w-full',
-      'pl-3'
+      'w-full'
     ),
     'close-button': clsx(
       'group',
@@ -149,7 +139,6 @@ const styles = {
       'grow',
       'w-full',
       'px-3',
-      'py-2',
       'overflow-y-auto',
       'has-scrollbar',
       '[&>hr]:border-[--theme-gray-200]'
@@ -203,7 +192,44 @@ const styles = {
       'peer-disabled:opacity-50'
     ),
   },
-  'inner-content-open-button': {
+  'radio-list-in-body': {
+    'self': clsx(
+      'w-full',
+      'text-[0px]'
+    ),
+    'item': clsx(
+      'relative',
+      'z-[1]',
+      'block',
+      'my-1',
+      'text-sm'
+    ),
+    'radio': clsx(
+      'invisible',
+      'absolute',
+      'top-0',
+      'left-0',
+      'peer'
+    ),
+    'label': clsx(
+      'block',
+      'px-3',
+      'py-1',
+      'rounded-full',
+      'text-[--theme-black]',
+      'bg-[--theme-gray-200]',
+      'cursor-pointer',
+      'transition-colors',
+      'duration-300',
+      'peer-enabled:hover:text-white',
+      'peer-enabled:hover:bg-[--theme-black]',
+      'peer-checked:text-white',
+      'peer-checked:bg-[--theme-black]',
+      'peer-disabled:cursor-default',
+      'peer-disabled:opacity-50'
+    ),
+  },
+  'change-content-button': {
     'self': clsx(
       'block',
       'w-full',
@@ -213,55 +239,25 @@ const styles = {
       'disabled:opacity-50',
       'transition-all'
     ),
-    'title': clsx(
-      '[&>span]:block',
-      '[&>span]:float-right',
-      '[&>span]:text-[--theme-gray-400]',
-      '[&>span]:text-right'
-    )
-  },
-  'inner-content': {
-    'self': clsx(
-      'flex',
-      'w-full',
-      'h-full',
-      'overflow-hidden',
-      'transition-all',
-      'duration-300'
-    )
-  },
-  'inner-content-header': {
-    'prev-button': clsx(
-      'group',
-      'absolute',
-      'z-[1]',
-      'top-0',
-      'left-0',
-      'block',
-      'w-[48px]',
-      'h-[48px]'
-    ),
-    'prev-button-icon': clsx(
-      'absolute',
-      'z-[1]',
-      'top-1/2',
-      'left-1/2',
-      'text-[--theme-black]',
-      '-translate-x-1/2',
-      '-translate-y-1/2',
-      'group-hover:text-[--theme-gray-400]',
-      'group-focus:text-[--theme-gray-400]'
-    ),
     'children-wrap': clsx(
-      'ml-[36px]'
+      'flex',
+      'flex-wrap',
+      'justify-between',
+      'items-center'
+    ),
+    'note': clsx(
+      'block',
+      'w-1/2',
+      'text-[--theme-gray-400]',
+      'text-right',
+      'line-clamp-1'
     )
   },
   'footer': {
     'self': clsx(
       'self-end',
       'w-full',
-      'px-3',
-      'py-2'
+      'p-3'
     )
   }
 }

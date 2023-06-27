@@ -13,7 +13,7 @@ import { isExisted } from '/utils'
  */
 const Main = ({ children }) => {
   return (
-    <main className="my-[60px] md:my-[80px] xl:my-[100px] container">
+    <main className={styles['main']['self']}>
       <div className="row">
         { children }
       </div>

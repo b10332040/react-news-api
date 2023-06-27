@@ -4,6 +4,13 @@ import clsx from 'clsx'
  * Main 樣式
  */
 const styles = {
+  'main': {
+    'self': clsx(
+      'my-[80px]',
+      'xl:my-[100px]',
+      'container'
+    )
+  },
   'left-side': {
     'self': clsx(
       'col',

@@ -22,14 +22,14 @@ const usePopup = () => useContext(PopupContext)
  * @param {string} props.popupId - popup ID
  * @param {bool} props.open - 是否開啟 (預設：false)
  * @param {func} props.setOpen - 設定彈跳視窗是否關閉
+ * @param {func} props.setContentType - 設定內容類型
  * @param {bool} props.overScreenHeight - content 高度是否可以超過螢幕高度 (預設：true)
  * @param {bool} props.dialogFullInMobile - Dialog 在手機尺寸下是否滿版 (預設：false)
  * @param {bool} props.backdropVisible - 在手機尺寸下可否看到彈跳視窗背景 (預設：false)
- * @param {bool} props.hasInnerContent - 是否有 Inner Content (預設：false)
  * @param {node} props.children - 內容
  * @returns
  */
-const Popup = ({ popupId, open=false, setOpen, overScreenHeight=true, dialogFullInMobile=false, backdropVisibleInMobile=false, hasInnerContent=false, children }) => {
+const Popup = ({ popupId, open=false, setOpen, setContentType, overScreenHeight=true, dialogFullInMobile=false, backdropVisibleInMobile=false, children }) => {
   const { setBodyScroll } = useApp()
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const Popup = ({ popupId, open=false, setOpen, overScreenHeight=true, dialogFull
         overScreenHeight,
         dialogFullInMobile,
         backdropVisibleInMobile,
-        hasInnerContent
+        setContentType
       }}
     >
       <div
@@ -71,10 +71,10 @@ Popup.propTypes = {
   popupId: PropTypes.string.isRequired,
   open: PropTypes.bool,
   setOpen: PropTypes.func,
+  setContentType: PropTypes.func,
   overScreenHeight: PropTypes.bool,
   dialogFullInMobile: PropTypes.bool,
   backdropVisibleInMobile: PropTypes.bool,
-  hasInnerContent: PropTypes.bool,
   children: PropTypes.node
 }
 
@@ -86,7 +86,7 @@ Popup.propTypes = {
  * @returns
  */
 const Dialog = ({ size='base', children }) => {
-  const { open, overScreenHeight, dialogFullInMobile, backdropVisibleInMobile, hasInnerContent } = usePopup()
+  const { open, overScreenHeight, dialogFullInMobile, backdropVisibleInMobile } = usePopup()
   let animationClassName = ''
   let maxWidthClassName = ''
   let heightClassName = ''
@@ -103,11 +103,9 @@ const Dialog = ({ size='base', children }) => {
 
   if (dialogFullInMobile) {
     contentMaxHeightClassName = (overScreenHeight) ? 'sm:max-h-none' : 'sm:max-h-[560px]'
-    heightClassName = (hasInnerContent) ? 'sm:h-full' : 'sm:h-auto'
 
   } else {
     contentMaxHeightClassName = (overScreenHeight) ? 'max-h-none' : 'max-h-[560px]'
-    heightClassName = (hasInnerContent) ? 'h-full' : 'h-auto'
   }
 
   return (
@@ -176,41 +174,74 @@ Content.propTypes = {
 /**
  * Header (Popup)
  * @param {object} props - 屬性
- * @param {bool} props.hasCloseButton - 是否有關閉 popup 的按鈕 (預設：false)
+ * @param {bool} props.hasCloseButton - 是否有關閉 popup 按鈕 (預設：true)
+ * @param {bool} props.hasLeftArrowButton - 是否有回上一層內容按鈕 (預設：false)
  * @param {node} props.children - 內容
  * @returns 
  */
-const Header = ({ hasCloseButton=true, children }) => {
-  const { setOpen } = usePopup()
-  let CloseButton = <></>
+const Header = ({ hasCloseButton=true, hasLeftArrowButton=false, children }) => {
+  const { setOpen, setContentType } = usePopup()
+  let childrenWrapWidthClassName = 'w-full'
+  let selfPaddingCLassName = ''
 
-  if (hasCloseButton) {
-    CloseButton = (
-      <button
-        type='button'
-        title='Close'
-        aria-label='Close'
-        onClick={() => {
-          setOpen?.(false)
-        }}
-        className={styles['header']['close-button']}
-      >
-        <RxCross1 className={styles['header']['close-button-icon']} />
-      </button>
-    )
+  if (hasCloseButton && hasLeftArrowButton) {
+    childrenWrapWidthClassName = 'w-[calc(100%-96px)]'
+  } else if (hasCloseButton || hasLeftArrowButton) {
+    childrenWrapWidthClassName = 'w-[calc(100%-48px)]'
+  }
+
+  if (!hasCloseButton && !hasLeftArrowButton) {
+    selfPaddingCLassName = 'px-3'
+  } else if (!hasLeftArrowButton) {
+    selfPaddingCLassName = 'pl-3'
+  } else if (!hasCloseButton) {
+    selfPaddingCLassName = 'pr-3'
   }
 
   return (
-    <div className={styles['header']['self']}>
-      <div className={(hasCloseButton) ? 'w-[calc(100%-48px)]': 'w-full'}>
+    <div
+      className={`
+        ${styles['header']['self']}
+        ${selfPaddingCLassName}
+      `}
+    >
+      {
+        (hasLeftArrowButton) &&
+        <button
+          type='button'
+          title='Prev'
+          aria-label='Prev'
+          onClick={() => {
+            setContentType?.('upper')
+          }}
+          className={styles['header']['close-button']}
+        >
+          <AiOutlineLeft className={styles['header']['close-button-icon']} />
+        </button>
+      }
+      <div className={childrenWrapWidthClassName}>
         { children }
       </div>
-      { CloseButton }
+      { 
+        (hasCloseButton) &&
+        <button
+          type='button'
+          title='Close'
+          aria-label='Close'
+          onClick={() => {
+            setOpen?.(false)
+          }}
+          className={styles['header']['close-button']}
+        >
+          <RxCross1 className={styles['header']['close-button-icon']} />
+        </button>
+      }
     </div>
   )
 }
 Header.propTypes = {
   hasCloseButton: PropTypes.bool,
+  hasLeftArrowButton: PropTypes.bool,
   children: PropTypes.node
 }
 
@@ -287,36 +318,39 @@ TitleInBody.propTypes = {
  * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
  */
 const RadioTabsInBody = ({ radios, name, checkedValue, onChange, disabled=false }) => {
-  if (isArrayEmpty(radios)) {
+  if (isArrayEmpty(radios) || !isExisted(name)) {
     return <></>
   }
 
-  const RadioTabs = radios.map((radio) => {
-    return (
-      <li
-        key={`radio-${radio.value}`}
-        className={styles['radio-tabs-in-body']['tab']}
-      >
-        <input 
-          type='radio'
-          name={name}
-          value={radio.value}
-          id={radio.value}
-          checked={checkedValue === radio.value}
-          onChange={(event) => {
-            onChange?.(event.target.value)
-          }}
-          className={styles['radio-tabs-in-body']['radio']}
-          disabled={disabled}
-        />
-        <label
-          htmlFor={radio.value}
-          className={styles['radio-tabs-in-body']['label']}
+  let RadioTabs = <></>
+  RadioTabs = radios.map((radio) => {
+    if (radio?.value && radio?.displayName) {
+      return (
+        <li
+          key={`radio-${radio.value}`}
+          className={styles['radio-tabs-in-body']['tab']}
         >
-          {radio.displayName}
-        </label>
-      </li>
-    )
+          <input 
+            type='radio'
+            name={name}
+            value={radio.value}
+            id={radio.value}
+            checked={checkedValue === radio.value}
+            onChange={(event) => {
+              onChange?.(event.target.value)
+            }}
+            className={styles['radio-tabs-in-body']['radio']}
+            disabled={disabled}
+          />
+          <label
+            htmlFor={radio.value}
+            className={styles['radio-tabs-in-body']['label']}
+          >
+            {radio.displayName}
+          </label>
+        </li>
+      )
+    }
   })
 
   return (
@@ -324,7 +358,6 @@ const RadioTabsInBody = ({ radios, name, checkedValue, onChange, disabled=false 
       { RadioTabs }
     </ul>
   )
-
 }
 RadioTabsInBody.propTypes = {
   radios: PropTypes.array.isRequired,
@@ -335,81 +368,105 @@ RadioTabsInBody.propTypes = {
 }
 
 /**
- * 打開按鈕（次內容）
+ * 單選列表 (in body)
+ * @param {object} props - 屬性
+ * @param {array} props.radios - 資料
+ * @param {string} props.name - 單選 name 屬性值
+ * @param {string} props.checkedValue - 被選到的值
+ * @param {func} props.onChange - 處理 change 事件
+ * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
+ */
+const RadioListInBody = ({ radios, name, checkedValue, onChange, disabled=false }) => {
+  if (isArrayEmpty(radios) || !isExisted(name)) {
+    return <></>
+  }
+
+  let RadioItem = <></>
+  RadioItem = radios.map((radio) => {
+    if (radio?.value && radio?.displayName) {
+      return (
+        <li
+          key={`radio-${radio.value}`}
+          className={styles['radio-list-in-body']['item']}
+        >
+          <input 
+            type='radio'
+            name={name}
+            value={radio.value}
+            id={radio.value}
+            checked={checkedValue === radio.value}
+            onChange={(event) => {
+              onChange?.(event.target.value)
+            }}
+            className={styles['radio-list-in-body']['radio']}
+            disabled={disabled}
+          />
+          <label
+            htmlFor={radio.value}
+            className={styles['radio-list-in-body']['label']}
+          >
+            {radio.displayName}
+            
+          </label>
+        </li>
+      )
+    }
+  })
+
+  return (
+    <ul className={styles['radio-list-in-body']['self']}>
+      { RadioItem }
+    </ul>
+  )
+}
+RadioListInBody.propTypes = {
+  radios: PropTypes.array.isRequired,
+  name: PropTypes.string.isRequired,
+  checkedValue: PropTypes.string,
+  onChange: PropTypes.func,
+  disabled: PropTypes.bool
+}
+
+/**
+ * 換其他內容按鈕
  * @param {object} props - 屬性
  * @param {string} props.title - title 屬性值
- * @param {string} props.innerContentId - inner content ID
- * @param {bool} props.innerContentOpen - 次內容是否開啟 (預設：false)
- * @param {func} props.setInnerContentOpen - 設定次內容是否關閉
+ * @param {string} props.note - 備註
  * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
+ * @param {string} props.contentType - 要變更的內容類型
  * @param {node} props.children - 內容
  * @returns 
  */
-const InnerContentOpenButton = ({ title, innerContentId, innerContentOpen=false, setInnerContentOpen, disabled=false, children }) => {
-  if (isExisted(innerContentId)) {
-    return <></>
-  }
+const ChangeContentButtonInBody = ({ title, note, disabled=false, contentType='upper', children }) => {
+  const { setContentType } = usePopup()
 
   return (
     <button
       type='button'
       title={title}
       aria-label={title}
-      aria-controls={innerContentId}
-      aria-expanded={(innerContentOpen) ? 'true' : 'false'}
-      aria-haspopup='menu'
       onClick={() => {
-        setInnerContentOpen?.(true)
+        setContentType?.(contentType)
       }}
-      className={styles['inner-content-open-button']['self']}
+      className={styles['change-content-button']['self']}
       disabled={disabled}
     >
-      <TitleInBody className={styles['inner-content-open-button']['title']}>
-        { children }
-      </TitleInBody>
+      <div className={styles['change-content-button']['children-wrap']}>
+        <TitleInBody>
+          { children }
+        </TitleInBody>
+        <span className={styles['change-content-button']['note']}>
+          { note }
+        </span>
+      </div>
     </button>
   )
 }
-InnerContentOpenButton.propTypes = {
+ChangeContentButtonInBody.propTypes = {
   title: PropTypes.string,
-  innerContentId: PropTypes.string.isRequired,
-  innerContentOpen: PropTypes.bool,
-  setInnerContentOpen: PropTypes.func,
+  note: PropTypes.string,
   disabled: PropTypes.bool,
-  children: PropTypes.node
-}
-
-/**
- * Header (inner content)
- * @param {object} props - 屬性
- * @param {bool} props.hasCloseButton - 是否有關閉 popup 的按鈕 (預設：false)
- * @param {func} props.setInnerContentOpen - 設定次內容是否關閉
- * @param {node} props.children - 內容
- * @returns 
- */
-const InnerContentHeader = ({ hasCloseButton=true, setInnerContentOpen, children }) => {
-  return (
-    <Header hasCloseButton={hasCloseButton}>
-      <button
-        type='button'
-        title='Prev'
-        aria-label='Prev'
-        onClick={() => {
-          setInnerContentOpen?.(false)
-        }}
-        className={styles['inner-content-header']['prev-button']}
-      >
-        <AiOutlineLeft className={styles['inner-content-header']['prev-button-icon']} />
-      </button>
-      <div className={styles['inner-content-header']['children-wrap']}>
-        { children }
-      </div>
-    </Header>
-  )
-}
-InnerContentHeader.propTypes = {
-  hasCloseButton: PropTypes.bool,
-  setInnerContentOpen: PropTypes.func,
+  contentType: PropTypes.string,
   children: PropTypes.node
 }
 
@@ -437,7 +494,7 @@ Popup.Title = Title
 Popup.Body = Body
 Popup.TitleInBody = TitleInBody
 Popup.RadioTabsInBody = RadioTabsInBody
-Popup.InnerContentOpenButton = InnerContentOpenButton
-Popup.InnerContentHeader = InnerContentHeader
+Popup.RadioListInBody = RadioListInBody
+Popup.ChangeContentButtonInBody = ChangeContentButtonInBody
 Popup.Footer = Footer
 export default Popup

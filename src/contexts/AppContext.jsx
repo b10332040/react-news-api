@@ -6,6 +6,7 @@ const defaultContext = {
   pageTop: true,
   setBodyScroll: null,
   scrollLeftToCheckedRadio: null,
+  getTotalPage: null
 }
 const AppContext = createContext(defaultContext)
 
@@ -19,16 +20,20 @@ const AppProvider = ({ children }) => {
   const [bodyScroll, setBodyScroll] = useState(true)
   const [pageTop, setPageTop] = useState(defaultContext.pageTop)
 
-  // 處理被選到的單選按鈕自動滾到左側
+  /**
+   * <input value = {value} ...> 自動滾到 radiosWrap 的最左側
+   * @param {object} radiosWrap 
+   * @param {string} value 
+   */
   const scrollLeftToCheckedRadio = (radiosWrap, value) => {
-    if (isExisted(value) && isExisted(radiosWrap)) {
+    if (isExisted(value) && value !== '' && isExisted(radiosWrap.current)) {
       const selectedRadio = radiosWrap.current.querySelector(`input[value="${value}"]`)
       let radiosWrapLeft = 0
-      let radiosWrapScrollLeft = 0 
+      let radiosWrapScrollLeft = 0
       let checkRadioLeft = 0
       if (selectedRadio) {
         radiosWrapLeft = radiosWrap.current.getBoundingClientRect().left
-        radiosWrapScrollLeft = radiosWrap.current.scrollLeft
+        radiosWrapScrollLeft = radiosWrap.current.scrollLeft 
         checkRadioLeft = selectedRadio.getBoundingClientRect().left
       }
 
@@ -39,6 +44,20 @@ const AppProvider = ({ children }) => {
         left: checkRadioLeft - radiosWrapLeft + radiosWrapScrollLeft,
         behavior: 'smooth'
       })
+    }
+  }
+
+  /**
+   * 取得總頁數
+   * @param {number} totalResults - 結果總數量
+   * @param {number} pageSize -一頁顯示幾筆資料
+   * @returns 
+   */
+  const getTotalPage = (totalResults, pageSize) => {
+    if (totalResults / pageSize > 0 && totalResults % pageSize === 0) {
+      return totalResults / pageSize
+    } else {
+      return Math.floor(totalResults / pageSize) + 1
     }
   }
 
@@ -68,7 +87,8 @@ const AppProvider = ({ children }) => {
       value={{
         pageTop,
         setBodyScroll,
-        scrollLeftToCheckedRadio
+        scrollLeftToCheckedRadio,
+        getTotalPage
       }}
     >
       { children }

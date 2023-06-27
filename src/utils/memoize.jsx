@@ -8,8 +8,6 @@ import { memo } from "react"
 const memoize = ( Component ) => {
   const MemoizedComponent = memo(Component)
   MemoizedComponent.displayName = `Memoized${Component.displayName || Component.name}`;
-
-  console.log(MemoizedComponent.displayName)
   
   return MemoizedComponent
 }

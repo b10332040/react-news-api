@@ -21,11 +21,10 @@ import 'slick-carousel/slick/slick-theme.css'
 import { dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
-import { ArticleCard, Button, Head, Loading, FormArea, RadioTabList, ResultsText, Search, NoResults } from '/components'
-import { useNews } from '/hooks'
-import { useRef, useState } from 'react'
+import { ArticleCard, Button, Head, Loading, FormArea, RadioTabs, ResultsText, Search, NoResults } from '/components'
+import { useApp, useNews } from '/hooks'
+import { useEffect, useRef, useState } from 'react'
 import { formatNumber, isArrayEmpty, memoize } from '/utils'
-
 
 /**
  * 主 Banner 輪播前後箭頭按鈕
@@ -65,7 +64,6 @@ MainBannerSliderArrowButton.propTypes = {
   onClick: PropTypes.func,
   arrowDirection:PropTypes.string.isRequired
 }
-
 
 /**
  * 主 Banner 輪播
@@ -127,7 +125,6 @@ const MainBannerSlider = ({ articles }) => {
 MainBannerSlider.propTypes = {
   articles: PropTypes.array.isRequired
 }
-
 
 /**
  * 主 Banner
@@ -248,26 +245,35 @@ const MemoizedArticlesWaterfall = memoize(ArticlesWaterfall)
  * @returns 
  */
 const HomePage = () => {
-  const { keywordMaxLength, categoryList, getTotalPage } = useNews()
-  const [category, setCategory] = useState('general')
-  const [keyword, setKeyword] = useState('')
+  const { keywordMaxLength, categoryList } = useNews()
+  const { scrollLeftToCheckedRadio, getTotalPage } = useApp()
   const [page, setPage] = useState(1)
-  const [totalResults, setTotalResults] = useState(0)
-  const [filterPopupMenuOpen, setFilterPopupMenuOpen] = useState(false)
+  const [keyword, setKeyword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [addingArticles, setAddingArticles] = useState(false)
+  const [category, setCategory] = useState('general')
   const [articleList, setArticleList] = useState(dummyNewsList.articles)
+  const [totalResults, setTotalResults] = useState(0)
+  const [popupMenuOpen, setPopupMenuOpen] = useState(false)
+  const [addingArticles, setAddingArticles] = useState(false)
   const showStickyBarRef = useRef()
+  const categoryRadioTabsRef = useRef()
+  const categoryRadioTabsOnStickyBarRef = useRef()
   const pageSize = 12
-  const totalPage = getTotalPage({ totalResults, pageSize })
+  const totalPage = getTotalPage(totalResults, pageSize)
   const filterPopupMenuId = 'filterPopupMenu'
   let Result = <></>
 
-  // 當重新取得第一頁文章
-  const getPageOneArticles = () => {
+  // 當 category 改變，出現 loading 效果，並把 page 改成第一頁
+  useEffect(() => {
     // setLoading(true)
     setPage(1)
-  }
+  }, [category])
+
+  // 當類型 (category) 改變，滾動到上層的最左側
+  useEffect(() => {
+    scrollLeftToCheckedRadio(categoryRadioTabsOnStickyBarRef, category)
+    scrollLeftToCheckedRadio(categoryRadioTabsRef, category)
+  },[category, scrollLeftToCheckedRadio])
 
   // 處理搜尋框 change 事件，處理第一個字不能為空白
   const handleSearchChange = (inputValue) => {
@@ -280,7 +286,6 @@ const HomePage = () => {
     
     if (inputValue === '') {
       // 當 input 的值為空時，載入此分類的第一頁文章
-      getPageOneArticles()
       setKeyword(inputValue)
     }
   }
@@ -288,7 +293,6 @@ const HomePage = () => {
   // 處理當搜尋框按下 Enter
   const handleSearchEnter = (inputValue) => {
     const trimmedValue = inputValue.trim()
-    getPageOneArticles()
     setKeyword(trimmedValue)
 
     // 載入此分類+搜尋結果的第一頁文章
@@ -309,7 +313,6 @@ const HomePage = () => {
 
   // 處理 category change 事件
   const handleCategoryRadioChange = (inputValue) => {
-    getPageOneArticles()
     setCategory(inputValue)
     // 載入此分類的第一頁文章
   }
@@ -320,11 +323,11 @@ const HomePage = () => {
         <Loading />
       </div>
     )
-
   } else {
     if (isArrayEmpty(articleList)) {
-      Result = <NoResults />
-
+      Result = (
+        <NoResults />
+      )
     } else {
       Result = (
         <>
@@ -366,7 +369,8 @@ const HomePage = () => {
           </div>
           <div className='col w-1/2 md:w-9/12 flex flex-wrap justify-end'>
             <FormArea className='hidden md:block md:max-w-[calc(100%-44px)]'>
-              <RadioTabList
+              <RadioTabs
+                selfRef={categoryRadioTabsOnStickyBarRef}
                 name='category'
                 radios={categoryList}
                 checkedValue={category}
@@ -379,9 +383,9 @@ const HomePage = () => {
               title='Open filter popup menu'
               icon='filter'
               popupId={filterPopupMenuId}
-              popupOpen={filterPopupMenuOpen}
+              popupOpen={popupMenuOpen}
               onClick={() => {
-                setFilterPopupMenuOpen(true)
+                setPopupMenuOpen(true)
               }}
               className='border-l-2 border-[--theme-gray-200]'
             />
@@ -390,9 +394,9 @@ const HomePage = () => {
       </StickyBar>
       
       <Popup
-        open={filterPopupMenuOpen}
+        open={popupMenuOpen}
         popupId={filterPopupMenuId}
-        setOpen={setFilterPopupMenuOpen}
+        setOpen={setPopupMenuOpen}
         overScreenHeight={false}
         dialogFullInMobile={true}
         backdropVisibleInMobile={true}
@@ -404,10 +408,10 @@ const HomePage = () => {
             </Popup.Title>
           </Popup.Header>
           <Popup.Body>
-            <Popup.TitleInBody>
-              Category
-            </Popup.TitleInBody>
-            <FormArea className='mb-3'>
+            <FormArea className='sm:pb-3 h-full max-h-full'>
+              <Popup.TitleInBody>
+                Category
+              </Popup.TitleInBody>
               <Popup.RadioTabsInBody
                 radios={categoryList}
                 name='category'
@@ -424,7 +428,7 @@ const HomePage = () => {
               display='block'
               size='lg'
               onClick={() => {
-                setFilterPopupMenuOpen(false)
+                setPopupMenuOpen(false)
               }}
             >
               {formatNumber(totalResults)} results
@@ -440,7 +444,8 @@ const HomePage = () => {
           <FormArea>
              <article>
               <Header title={`Don't Miss`}>
-                <RadioTabList
+                <RadioTabs
+                  selfRef={categoryRadioTabsRef}
                   name='category'
                   radios={categoryList}
                   checkedValue={category}
@@ -452,20 +457,22 @@ const HomePage = () => {
               <div>
                 <div className='row mt-3 items-center'>
                   <div className='col w-full md:w-1/2'>
-                    <Search
-                      onChange={(inputValue) => {
-                        handleSearchChange?.(inputValue)
-                      }}
-                      onBlur={(inputValue) => {
-                        handleSearchBlur?.(inputValue)
-                      }}
-                      handleEnter={(inputValue) => {
-                        handleSearchEnter?.(inputValue)
-                      }}
-                      placeholder={`Max length: ${keywordMaxLength} chars`}
-                      value={keyword}
-                      className='ml-auto px-3 md:max-w-[320px]'
-                    />
+                    <div className='px-3'>
+                      <Search
+                        onChange={(inputValue) => {
+                          handleSearchChange?.(inputValue)
+                        }}
+                        onBlur={(inputValue) => {
+                          handleSearchBlur?.(inputValue)
+                        }}
+                        handleEnter={(inputValue) => {
+                          handleSearchEnter?.(inputValue)
+                        }}
+                        placeholder={`Max length: ${keywordMaxLength} chars`}
+                        value={keyword}
+                        className='ml-auto md:max-w-[320px]'
+                      />
+                    </div>
                   </div>
                   <div className='col w-full mt-2 md:mt-0 md:w-1/2 md:order-first'>
                     <ResultsText

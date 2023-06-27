@@ -9,8 +9,7 @@ const defaultContext = {
   countryList: [],
   categoryMap: {},
   continentMap: {},
-  countryMap: {},
-  getTotalPage: null
+  countryMap: {}
 }
 const NewsContext = createContext(defaultContext)
 
@@ -30,13 +29,6 @@ const NewsProvider = ({ children }) => {
   const categoryMap = new Map(categoryList.map((item) => [item.value, item]))
   const continentMap = new Map(continentList.map((item) => [item.value, item]))
   const countryMap = new Map(countryList.map((item) => [item.value, item]))
-  const getTotalPage = ({ totalResults, pageSize }) => {
-    if (totalResults / pageSize > 0 && totalResults % pageSize === 0) {
-      return totalResults / pageSize
-    } else {
-      return Math.floor(totalResults / pageSize) + 1
-    }
-  }
 
   return (
     <NewsContext.Provider
@@ -47,8 +39,7 @@ const NewsProvider = ({ children }) => {
         countryList,
         categoryMap,
         continentMap,
-        countryMap,
-        getTotalPage
+        countryMap
       }}
     >
       { children }

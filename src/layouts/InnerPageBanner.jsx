@@ -257,7 +257,7 @@ RadioTabsWrap.propTypes = {
 /**
  * 單選標籤
  * @param {object} props - 屬性
- * @param {object} props.radioTabsRef - ref
+ * @param {object} props.selfRef - ref
  * @param {array} props.radios - 資料
  * @param {string} props.mode - 模式 (預設：'')
  * @param {string} props.name - 單選 name 屬性值
@@ -265,13 +265,12 @@ RadioTabsWrap.propTypes = {
  * @param {func} props.onChange - 處理 change 事件
  * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
  */
-const RadioTabs = ({ radioTabsRef, radios, mode='', name, checkedValue, onChange, disabled=false }) => {
+const RadioTabs = ({ selfRef, radios, mode='', name, checkedValue, onChange, disabled=false }) => {
 
   if (isArrayEmpty(radios) || !isExisted(name)) {
     return <></>
   }
   
-  const SelfClassName = styles['radio-tabs']['self']
   let RadioTab = <></>
   RadioTab = radios.map((radio) => {
     if (radio?.value && radio?.displayName) {
@@ -308,24 +307,14 @@ const RadioTabs = ({ radioTabsRef, radios, mode='', name, checkedValue, onChange
     }
   })
   
-  if (isExisted(radioTabsRef)) {
-    return (
-      <ul
-        ref={radioTabsRef}
-        className={SelfClassName}
-      >
-        { RadioTab }
-      </ul>
-    )
-  }
   return (
-    <ul className={SelfClassName}>
+    <ul ref={selfRef} className={styles['radio-tabs']['self']}>
       { RadioTab }
     </ul>
   )
 }
 RadioTabs.propTypes = {
-  radioTabsRef: PropTypes.object,
+  selfRef: PropTypes.object,
   radios: PropTypes.array.isRequired,
   mode: PropTypes.string,
   name: PropTypes.string.isRequired,

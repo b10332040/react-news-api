@@ -12,8 +12,8 @@ const styles = {
   'input': clsx(
     'block',
     'w-full',
-    'rounded-full',
-    'pl-[36px]',
+    'rounded-[20px]',
+    'pl-[40px]',
     'pr-4',
     'py-2',
     'bg-[--theme-gray-200]',
@@ -23,11 +23,22 @@ const styles = {
     'duration-300',
     'focus-shadow-gray'
   ),
+  'icon-wrap': clsx(
+    'absolute',
+    'z-[1]',
+    'top-0',
+    'left-0',
+    'w-[40px]',
+    'h-full'
+  ),
   'icon': clsx(
     'absolute',
+    'z-[1]',
     'top-1/2',
-    'left-[24px]',
+    'left-1/2',
+    'block',
     '-translate-y-1/2',
+    '-translate-x-1/2',
     'text-[--theme-gray-400]'
   )
 }
