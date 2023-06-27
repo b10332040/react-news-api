@@ -43,7 +43,7 @@ const MemoizedArticlesWaterfall = memoize(ArticlesWaterfall)
  * @returns 
  */
 const WorldPage = () => {
-  const { scrollLeftToCheckedRadio, getTotalPage } = useApp()
+  const { getTotalPage, scrollToCheckedRadio } = useApp()
   const { keywordMaxLength, categoryList, continentList, countryList, continentMap, countryMap } = useNews()
   const { id } = useParams()
   const [page, setPage] = useState(1)
@@ -55,13 +55,15 @@ const WorldPage = () => {
   const [articleList, setArticleList] = useState(dummyNewsList.articles)
   const [totalResults, setTotalResults] = useState(0)
   const [popupMenuOpen, setPopupMenuOpen] = useState(false)
-  const [popupContentType, setPopupContentType] = useState('upper')
   const [addingArticles, setAddingArticles] = useState(false)
   const [noResultsMessage, setNoResultsMessage] = useState('')
+  const [popupContentType, setPopupContentType] = useState('upper')
+  const [searchCountryResult, setSearchCountryResult] = useState(countryList)
+  const popupBodyRef = useRef()
   const showStickyBarRef = useRef()
-  const continentRadioTabsRef = useRef()
   const countryRadioTabsRef = useRef()
   const categoryRadioTabsRef = useRef()
+  const continentRadioTabsRef = useRef()
   const categoryRadioTabsOnStickyBarRef = useRef()
   const pageSize = 12
   const totalPage = getTotalPage(totalResults, pageSize)
@@ -71,6 +73,7 @@ const WorldPage = () => {
   let Result = <></>
   let popupHeaderHasLeftArrowButton = false
   let popupTitle = ''
+  let PopupBodyTop = <></>
   let PopupContent = <></>
   let countryListInContent = []
 
@@ -87,7 +90,7 @@ const WorldPage = () => {
 
   useEffect(() => {
     if (isExisted(id)) {
-      // 判斷是否有傳入國家代碼
+      // 路徑上是否有傳入國家代碼
       const tempId = id.toLowerCase()
       if (isExisted(countryMap.get(tempId))) {
         console.log('has id')
@@ -109,22 +112,49 @@ const WorldPage = () => {
     }
   }, [id, countryMap, continentMap])
   
-  // 當洲 (continentId) 改變，滾動到上層的最左側
+  // 當洲 (continentId) / 國家 (countryId) 改變
   useEffect(() => {
-    scrollLeftToCheckedRadio(continentRadioTabsRef, continentId)
-    scrollLeftToCheckedRadio(countryRadioTabsRef, countryId)
-  },[continentId, countryId, scrollLeftToCheckedRadio])
+    // 洲標籤列表列表自動滾動到選到的洲
+    scrollToCheckedRadio({
+      radiosWrap: continentRadioTabsRef,
+      value: continentId
+    })
+    // 國家標籤列表列表自動滾動到選到的國家
+    scrollToCheckedRadio({
+      radiosWrap: countryRadioTabsRef,
+      value: countryId
+    })
+  },[continentId, countryId, scrollToCheckedRadio])
 
-  // 當國家 (countryId) 改變，滾動到上層的最左側
+  // 當國家 (countryId) 改變
   useEffect(() => {
-    scrollLeftToCheckedRadio(countryRadioTabsRef, countryId)
-  },[countryId, scrollLeftToCheckedRadio])
+    // 設定洲（該國家屬於哪洲）
+    if (countryId !=='' && isExisted(countryMap.get(countryId))) {
+      const tempCountry = countryMap.get(countryId)
+      if (tempCountry?.continentValue) {
+        setContinentId(tempCountry.continentValue)
+      }
+    }
+    // 彈跳視窗國家列表自動滾動到選到的國家
+    scrollToCheckedRadio({
+      direction: 'top',
+      radiosWrap: popupBodyRef,
+      value: countryId
+    })
+  },[countryId, scrollToCheckedRadio, countryMap])
 
-  // 當類型 (category) 改變，滾動到上層的最左側
+  // 當類型 (category) 改變
   useEffect(() => {
-    scrollLeftToCheckedRadio(categoryRadioTabsOnStickyBarRef, category)
-    scrollLeftToCheckedRadio(categoryRadioTabsRef, category)
-  },[category, scrollLeftToCheckedRadio])
+    // 類型標籤列表（包含 sticky bar 上的）自動滾動到選到的類型
+    scrollToCheckedRadio({
+      radiosWrap: categoryRadioTabsOnStickyBarRef,
+      value: category
+    })
+    scrollToCheckedRadio({
+      radiosWrap: categoryRadioTabsRef,
+      value: category
+    })
+  },[category, scrollToCheckedRadio])
 
   // 當類型 (category) 或國家 (countryId) 改變
   // 出現 loading 效果，並把 page 改成第一頁
@@ -176,6 +206,21 @@ const WorldPage = () => {
     // 載入此分類的第一頁文章
   }
 
+  // 處理搜尋國家 change 事件
+  const handleSearchCountryChange = (inputValue) => {
+    const trimmedValue = inputValue.trim().toLowerCase()
+
+    if (inputValue === '') {
+      setSearchCountryResult(countryList)
+
+    } else {
+      const tempCountryResult = countryList.filter((item) => {
+        const tempItemDisplayName = item.displayName.toLowerCase()
+        return tempItemDisplayName.includes(trimmedValue)
+      })
+      setSearchCountryResult(tempCountryResult)
+    }
+  }
 
   // 處理文章區塊要顯示的內容
   if (loading) {
@@ -218,15 +263,20 @@ const WorldPage = () => {
     case 'country':
       popupHeaderHasLeftArrowButton = true
       popupTitle = 'Country'
+      PopupBodyTop = (
+        <div className='w-full px-3 pt-1 pb-3'>
+          <Search
+            placeholder='Search country'
+            onChange={(inputValue) => {
+              handleSearchCountryChange(inputValue)
+            }}
+          />
+        </div>
+      )
       PopupContent = (
-        <FormArea className='sm:pb-3 h-full max-h-full'>
-          <div className='w-full pt-2 pb-3 sticky z-[2] top-0 left-0 bg-[--theme-gray-50]'>
-            <Search
-              placeholder='Search country'
-            />
-          </div>
+        <FormArea className='h-full max-h-full'>
           <Popup.RadioListInBody
-            radios={countryList}
+            radios={searchCountryResult}
             name='category'
             checkedValue={countryId}
             onChange={(inputValue) => {
@@ -240,7 +290,7 @@ const WorldPage = () => {
     default:
       popupTitle = 'Filter'
       PopupContent = (
-        <FormArea className='sm:pb-3 h-full max-h-full'>
+        <FormArea className='h-full max-h-full'>
           <Popup.ChangeContentButtonInBody
             title='Go to select country'
             note={(country?.displayName) ? country?.displayName : ''}
@@ -299,6 +349,7 @@ const WorldPage = () => {
               popupOpen={popupMenuOpen}
               onClick={() => {
                 setPopupMenuOpen(true)
+                setPopupContentType('upper')
               }}
               className='border-l-2 border-[--theme-gray-200]'
             />
@@ -323,7 +374,8 @@ const WorldPage = () => {
               { popupTitle }
             </Popup.Title>
           </Popup.Header>
-          <Popup.Body>
+          { PopupBodyTop }
+          <Popup.Body selfRef={popupBodyRef}>
             { PopupContent }
           </Popup.Body>
           <Popup.Footer>

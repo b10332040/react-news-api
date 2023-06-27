@@ -5,7 +5,7 @@ import { isExisted } from '/utils'
 const defaultContext = {
   pageTop: true,
   setBodyScroll: null,
-  scrollLeftToCheckedRadio: null,
+  scrollToCheckedRadio: null,
   getTotalPage: null
 }
 const AppContext = createContext(defaultContext)
@@ -21,29 +21,44 @@ const AppProvider = ({ children }) => {
   const [pageTop, setPageTop] = useState(defaultContext.pageTop)
 
   /**
-   * <input value = {value} ...> 自動滾到 radiosWrap 的最左側
-   * @param {object} radiosWrap 
+   * <input value = {value} ...> 該選項在容器中自動滾到指定方向
    * @param {string} value 
+   * @param {object} props - 屬性
+   * @param {object} radiosWrap - 有滾動卷軸的容器
+   * @param {string} props.value - 值
    */
-  const scrollLeftToCheckedRadio = (radiosWrap, value) => {
+  const scrollToCheckedRadio = ({ direction='left' , radiosWrap, value }) => {
     if (isExisted(value) && value !== '' && isExisted(radiosWrap.current)) {
       const selectedRadio = radiosWrap.current.querySelector(`input[value="${value}"]`)
-      let radiosWrapLeft = 0
-      let radiosWrapScrollLeft = 0
-      let checkRadioLeft = 0
-      if (selectedRadio) {
-        radiosWrapLeft = radiosWrap.current.getBoundingClientRect().left
-        radiosWrapScrollLeft = radiosWrap.current.scrollLeft 
-        checkRadioLeft = selectedRadio.getBoundingClientRect().left
+      let radiosWrapDirection = 0
+      let radiosWrapScrollDirection = 0
+      let checkRadioDirection = 0
+
+      if (direction === 'top') {
+        if (selectedRadio) {
+          radiosWrapDirection = radiosWrap.current.getBoundingClientRect().top
+          radiosWrapScrollDirection = radiosWrap.current.scrollTop
+          checkRadioDirection = selectedRadio.getBoundingClientRect().top
+        }
+        radiosWrap.current.scrollTo({
+          top: checkRadioDirection - radiosWrapDirection + radiosWrapScrollDirection,
+          behavior: 'smooth'
+        })
+
+      } else {
+        if (selectedRadio) {
+          radiosWrapDirection = radiosWrap.current.getBoundingClientRect().left
+          radiosWrapScrollDirection = radiosWrap.current.scrollLeft
+          checkRadioDirection = selectedRadio.getBoundingClientRect().left
+        }
+        radiosWrap.current.scrollTo({
+          left: checkRadioDirection - radiosWrapDirection + radiosWrapScrollDirection,
+          behavior: 'smooth'
+        })
       }
 
-      // 選到的單選按鈕相對於整個頁面左側的偏移量 - 容器相對於整個頁面左側的偏移量 + 容器橫向滾動位置
-      // console.log(`checkRadioLeft(${checkRadioLeft}) - radiosWrapLeft(${radiosWrapLeft}) + radiosWrapScrollLeft(${radiosWrapScrollLeft}) = ${checkRadioLeft - radiosWrapLeft + radiosWrapScrollLeft}`)
-      
-      radiosWrap.current.scrollTo({
-        left: checkRadioLeft - radiosWrapLeft + radiosWrapScrollLeft,
-        behavior: 'smooth'
-      })
+      // 選到的單選按鈕相對於整個頁面指定方向的偏移量 - 容器相對於整個頁面指定方向的偏移量 + 容器指定方向滾動位置
+      // console.log(`checkRadioDirection(${checkRadioDirection}) - radiosWrapDirection(${radiosWrapDirection}) + radiosWrapScrollDirection(${radiosWrapScrollDirection}) = ${checkRadioDirection - radiosWrapDirection + radiosWrapScrollDirection}`)
     }
   }
 
@@ -87,7 +102,7 @@ const AppProvider = ({ children }) => {
       value={{
         pageTop,
         setBodyScroll,
-        scrollLeftToCheckedRadio,
+        scrollToCheckedRadio,
         getTotalPage
       }}
     >

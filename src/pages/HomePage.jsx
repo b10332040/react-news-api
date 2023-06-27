@@ -246,7 +246,7 @@ const MemoizedArticlesWaterfall = memoize(ArticlesWaterfall)
  */
 const HomePage = () => {
   const { keywordMaxLength, categoryList } = useNews()
-  const { scrollLeftToCheckedRadio, getTotalPage } = useApp()
+  const { getTotalPage, scrollToCheckedRadio } = useApp()
   const [page, setPage] = useState(1)
   const [keyword, setKeyword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -263,17 +263,22 @@ const HomePage = () => {
   const filterPopupMenuId = 'filterPopupMenu'
   let Result = <></>
 
-  // 當 category 改變，出現 loading 效果，並把 page 改成第一頁
+  // 當類型 (category) 改變
   useEffect(() => {
+    // 類型標籤列表（包含 sticky bar 上的）自動滾動到選到的類型
+    scrollToCheckedRadio({
+      radiosWrap: categoryRadioTabsOnStickyBarRef,
+      value: category
+    })
+    scrollToCheckedRadio({
+      radiosWrap: categoryRadioTabsRef,
+      value: category
+    })
+
+    // 出現 loading 效果，並把 page 改成第一頁
     // setLoading(true)
     setPage(1)
-  }, [category])
-
-  // 當類型 (category) 改變，滾動到上層的最左側
-  useEffect(() => {
-    scrollLeftToCheckedRadio(categoryRadioTabsOnStickyBarRef, category)
-    scrollLeftToCheckedRadio(categoryRadioTabsRef, category)
-  },[category, scrollLeftToCheckedRadio])
+  },[category, scrollToCheckedRadio])
 
   // 處理搜尋框 change 事件，處理第一個字不能為空白
   const handleSearchChange = (inputValue) => {

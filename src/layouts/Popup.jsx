@@ -265,13 +265,15 @@ Title.propTypes = {
 /**
  * Body
  * @param {object} props - 屬性
+ * @param {object} props.selfRef - ref
  * @param {string} props.className - 樣式（預設：''）
  * @param {node} props.children - 內容
  * @returns 
  */
-const Body = ({ className='', children }) => {
+const Body = ({ selfRef, className='', children }) => {
   return (
-    <div 
+    <div
+      ref={selfRef}
       className={`
         ${styles['body']['self']}
         ${className}
@@ -282,6 +284,7 @@ const Body = ({ className='', children }) => {
   )
 }
 Body.propTypes = {
+  selfRef: PropTypes.object,
   className: PropTypes.string,
   children: PropTypes.node
 }
@@ -406,7 +409,6 @@ const RadioListInBody = ({ radios, name, checkedValue, onChange, disabled=false 
             className={styles['radio-list-in-body']['label']}
           >
             {radio.displayName}
-            
           </label>
         </li>
       )
