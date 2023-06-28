@@ -11,9 +11,10 @@ import { CiSearch } from 'react-icons/ci'
  * @param {string} props.value - 值
  * @param {string} props.placeholder - 提示文字（預設：''）
  * @param {string} props.className - 樣式（預設：''）
+ * @param {bool} props.disabled - disabled 屬性值，選項是否不可輸入 (預設：false)
  * @returns
  */
-const Search = ({onChange, onBlur, handleEnter, value, placeholder='', className=''}) => {
+const Search = ({ onChange, onBlur, handleEnter, value, placeholder='', className='', disabled=false }) => {
   return (
     <div
       className={`
@@ -38,6 +39,7 @@ const Search = ({onChange, onBlur, handleEnter, value, placeholder='', className
         value={value}
         className={styles['input']}
         autoComplete='off'
+        disabled={disabled}
       />
       <div className={styles['icon-wrap']}>
         <CiSearch className={styles['icon']} />
@@ -51,7 +53,8 @@ Search.propTypes = {
   handleEnter: PropTypes.func,
   value: PropTypes.string,
   placeholder: PropTypes.string,
-  className: PropTypes.string
+  className: PropTypes.string,
+  disabled: PropTypes.bool
 }
 
 export default Search

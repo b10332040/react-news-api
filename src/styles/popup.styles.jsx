@@ -157,8 +157,10 @@ const styles = {
     'self': clsx(
       'w-full',
       'text-[0px]'
-    ),
-    'tab': clsx(
+    )
+  },
+  'radio-tab-in-body': {
+    'self': clsx(
       'relative',
       'z-[1]',
       'inline-block',
@@ -190,13 +192,15 @@ const styles = {
       'peer-checked:bg-[--theme-black]',
       'peer-disabled:cursor-default',
       'peer-disabled:opacity-50'
-    ),
+    )
   },
   'radio-list-in-body': {
     'self': clsx(
       'w-full'
-    ),
-    'item': clsx(
+    )
+  },
+  'radio-item-in-body': {
+    'self': clsx(
       'relative',
       'z-[1]',
       'block'

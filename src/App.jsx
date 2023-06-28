@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
-import { HomePage, SearchPage,SourcesPage, WorldPage } from '/pages'
+import { HomePage, NotFoundPage, SearchPage,SourcesPage, WorldPage } from '/pages'
 import { Footer, Navbar } from '/layouts'
 import { ToTopButton } from '/components'
 import { AppProvider, NewsProvider } from '/contexts'
@@ -30,11 +30,11 @@ function App() {
         <Route path='/' element={<BasicLayout />}>
           <Route index element={<HomePage />} />
           <Route path='search' element={<SearchPage />} />
-          <Route path='sources' element={<SourcesPage />} />
+          <Route path='search/:keyword' element={<SearchPage />} />
           <Route path='sources/:id' element={<SourcesPage />} />
           <Route path='country' element={<WorldPage />} />
-          <Route path='country/:id' element={<WorldPage />} />
         </Route>
+        <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   )

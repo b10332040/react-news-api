@@ -22,14 +22,13 @@ const usePopup = () => useContext(PopupContext)
  * @param {string} props.popupId - popup ID
  * @param {bool} props.open - 是否開啟 (預設：false)
  * @param {func} props.setOpen - 設定彈跳視窗是否關閉
- * @param {func} props.setContentType - 設定內容類型
  * @param {bool} props.overScreenHeight - content 高度是否可以超過螢幕高度 (預設：true)
  * @param {bool} props.dialogFullInMobile - Dialog 在手機尺寸下是否滿版 (預設：false)
  * @param {bool} props.backdropVisible - 在手機尺寸下可否看到彈跳視窗背景 (預設：false)
  * @param {node} props.children - 內容
  * @returns
  */
-const Popup = ({ popupId, open=false, setOpen, setContentType, overScreenHeight=true, dialogFullInMobile=false, backdropVisibleInMobile=false, children }) => {
+const Popup = ({ popupId, open=false, setOpen, overScreenHeight=true, dialogFullInMobile=false, backdropVisibleInMobile=false, children }) => {
   const { setBodyScroll } = useApp()
 
   useEffect(() => {
@@ -43,8 +42,7 @@ const Popup = ({ popupId, open=false, setOpen, setContentType, overScreenHeight=
         setOpen,
         overScreenHeight,
         dialogFullInMobile,
-        backdropVisibleInMobile,
-        setContentType
+        backdropVisibleInMobile
       }}
     >
       <div
@@ -71,7 +69,6 @@ Popup.propTypes = {
   popupId: PropTypes.string.isRequired,
   open: PropTypes.bool,
   setOpen: PropTypes.func,
-  setContentType: PropTypes.func,
   overScreenHeight: PropTypes.bool,
   dialogFullInMobile: PropTypes.bool,
   backdropVisibleInMobile: PropTypes.bool,
@@ -176,11 +173,12 @@ Content.propTypes = {
  * @param {object} props - 屬性
  * @param {bool} props.hasCloseButton - 是否有關閉 popup 按鈕 (預設：true)
  * @param {bool} props.hasLeftArrowButton - 是否有回上一層內容按鈕 (預設：false)
+ * @param {bool} props.onLeftArrowButtonClick - 處理回上一層內容按鈕 click 事件 
  * @param {node} props.children - 內容
  * @returns 
  */
-const Header = ({ hasCloseButton=true, hasLeftArrowButton=false, children }) => {
-  const { setOpen, setContentType } = usePopup()
+const Header = ({ hasCloseButton=true, hasLeftArrowButton=false, onLeftArrowButtonClick, children }) => {
+  const { setOpen } = usePopup()
   let childrenWrapWidthClassName = 'w-full'
   let selfPaddingCLassName = ''
 
@@ -212,7 +210,7 @@ const Header = ({ hasCloseButton=true, hasLeftArrowButton=false, children }) => 
           title='Prev'
           aria-label='Prev'
           onClick={() => {
-            setContentType?.('upper')
+            onLeftArrowButtonClick?.()
           }}
           className={styles['header']['close-button']}
         >
@@ -242,6 +240,7 @@ const Header = ({ hasCloseButton=true, hasLeftArrowButton=false, children }) => 
 Header.propTypes = {
   hasCloseButton: PropTypes.bool,
   hasLeftArrowButton: PropTypes.bool,
+  onLeftArrowButtonClick: PropTypes.func,
   children: PropTypes.node
 }
 
@@ -312,59 +311,63 @@ TitleInBody.propTypes = {
 }
 
 /**
- * 單選標籤 (in body)
+ * 多個單選標籤外層 (in body)
  * @param {object} props - 屬性
- * @param {array} props.radios - 資料
- * @param {string} props.name - 單選 name 屬性值
- * @param {string} props.checkedValue - 被選到的值
- * @param {func} props.onChange - 處理 change 事件
- * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
+ * @param {node} props.children - 內容
+ * @returns
  */
-const RadioTabsInBody = ({ radios, name, checkedValue, onChange, disabled=false }) => {
-  if (isArrayEmpty(radios) || !isExisted(name)) {
-    return <></>
-  }
-
-  let RadioTabs = <></>
-  RadioTabs = radios.map((radio) => {
-    if (radio?.value && radio?.displayName) {
-      return (
-        <li
-          key={`radio-${radio.value}`}
-          className={styles['radio-tabs-in-body']['tab']}
-        >
-          <input 
-            type='radio'
-            name={name}
-            value={radio.value}
-            id={radio.value}
-            checked={checkedValue === radio.value}
-            onChange={(event) => {
-              onChange?.(event.target.value)
-            }}
-            className={styles['radio-tabs-in-body']['radio']}
-            disabled={disabled}
-          />
-          <label
-            htmlFor={radio.value}
-            className={styles['radio-tabs-in-body']['label']}
-          >
-            {radio.displayName}
-          </label>
-        </li>
-      )
-    }
-  })
-
+const RadioTabsInBody = ({ children }) => {
   return (
     <ul className={styles['radio-tabs-in-body']['self']}>
-      { RadioTabs }
+      { children }
     </ul>
   )
 }
 RadioTabsInBody.propTypes = {
-  radios: PropTypes.array.isRequired,
+  children: PropTypes.node
+}
+
+/**
+ * 單選標籤 (in body)
+ * @param {object} props - 屬性
+ * @param {string} props.name - name 屬性值
+ * @param {object} props.radio - 資料
+ * @param {string} props.checkedValue - 被選到的值
+ * @param {func} props.onChange - 處理 change 事件
+ * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
+ * @returns
+ */
+const RadioTabInBody = ({ name, radio, checkedValue, onChange, disabled=false }) => {
+  if (!isExisted(name) && !isExisted(radio.value) && !isExisted(radio.displayName)) {
+    return <></>
+  }
+
+  return (
+    <li className={styles['radio-tab-in-body']['self']}>
+      <input 
+        type='radio'
+        name={name}
+        value={radio.value}
+        id={radio.value}
+        checked={checkedValue === radio.value}
+        onChange={(event) => {
+          onChange?.(event.target.value)
+        }}
+        className={styles['radio-tab-in-body']['radio']}
+        disabled={disabled}
+      />
+      <label
+        htmlFor={radio.value}
+        className={styles['radio-tab-in-body']['label']}
+      >
+        {radio.displayName}
+      </label>
+    </li>
+  )
+}
+RadioTabInBody.propTypes = {
   name: PropTypes.string.isRequired,
+  radio: PropTypes.object.isRequired,
   checkedValue: PropTypes.string,
   onChange: PropTypes.func,
   disabled: PropTypes.bool
@@ -373,57 +376,60 @@ RadioTabsInBody.propTypes = {
 /**
  * 單選列表 (in body)
  * @param {object} props - 屬性
- * @param {array} props.radios - 資料
- * @param {string} props.name - 單選 name 屬性值
- * @param {string} props.checkedValue - 被選到的值
- * @param {func} props.onChange - 處理 change 事件
- * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
+ * @param {node} props.children - 內容
  */
-const RadioListInBody = ({ radios, name, checkedValue, onChange, disabled=false }) => {
-  if (isArrayEmpty(radios) || !isExisted(name)) {
-    return <></>
-  }
-
-  let RadioItem = <></>
-  RadioItem = radios.map((radio) => {
-    if (radio?.value && radio?.displayName) {
-      return (
-        <li
-          key={`radio-${radio.value}`}
-          className={styles['radio-list-in-body']['item']}
-        >
-          <input 
-            type='radio'
-            name={name}
-            value={radio.value}
-            id={radio.value}
-            checked={checkedValue === radio.value}
-            onChange={(event) => {
-              onChange?.(event.target.value)
-            }}
-            className={styles['radio-list-in-body']['radio']}
-            disabled={disabled}
-          />
-          <label
-            htmlFor={radio.value}
-            className={styles['radio-list-in-body']['label']}
-          >
-            {radio.displayName}
-          </label>
-        </li>
-      )
-    }
-  })
-
+const RadioListInBody = ({ children }) => {
   return (
     <ul className={styles['radio-list-in-body']['self']}>
-      { RadioItem }
+      { children }
     </ul>
   )
 }
 RadioListInBody.propTypes = {
-  radios: PropTypes.array.isRequired,
+  children: PropTypes.node
+}
+
+/**
+ * 單選項目 (in body)
+ * @param {object} props - 屬性
+ * @param {string} props.name - name 屬性值
+ * @param {object} props.radio - 資料
+ * @param {string} props.checkedValue - 被選到的值
+ * @param {func} props.onChange - 處理 change 事件
+ * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
+ * @returns
+ */
+const RadioItemInBody = ({ name, radio, checkedValue, onChange, disabled=false }) => {
+  if (!isExisted(name) && !isExisted(radio.value) && !isExisted(radio.displayName)) {
+    return <></>
+  }
+
+  return (
+    <li className={styles['radio-item-in-body']['self']}>
+      <input 
+        type='radio'
+        name={name}
+        value={radio.value}
+        id={radio.value}
+        checked={checkedValue === radio.value}
+        onChange={(event) => {
+          onChange?.(event.target.value)
+        }}
+        className={styles['radio-item-in-body']['radio']}
+        disabled={disabled}
+      />
+      <label
+        htmlFor={radio.value}
+        className={styles['radio-item-in-body']['label']}
+      >
+        {radio.displayName}
+      </label>
+    </li>
+  )
+}
+RadioItemInBody.propTypes = {
   name: PropTypes.string.isRequired,
+  radio: PropTypes.object.isRequired,
   checkedValue: PropTypes.string,
   onChange: PropTypes.func,
   disabled: PropTypes.bool
@@ -435,12 +441,11 @@ RadioListInBody.propTypes = {
  * @param {string} props.title - title 屬性值
  * @param {string} props.note - 備註
  * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
- * @param {string} props.contentType - 要變更的內容類型
+ * @param {func} props.onClick - 處理 click 事件
  * @param {node} props.children - 內容
  * @returns 
  */
-const ChangeContentButtonInBody = ({ title, note, disabled=false, contentType='upper', children }) => {
-  const { setContentType } = usePopup()
+const ChangeContentButtonInBody = ({ title, note, disabled=false, onClick, children }) => {
 
   return (
     <button
@@ -448,7 +453,7 @@ const ChangeContentButtonInBody = ({ title, note, disabled=false, contentType='u
       title={title}
       aria-label={title}
       onClick={() => {
-        setContentType?.(contentType)
+        onClick?.()
       }}
       className={styles['change-content-button']['self']}
       disabled={disabled}
@@ -468,7 +473,7 @@ ChangeContentButtonInBody.propTypes = {
   title: PropTypes.string,
   note: PropTypes.string,
   disabled: PropTypes.bool,
-  contentType: PropTypes.string,
+  onClick: PropTypes.func,
   children: PropTypes.node
 }
 
@@ -496,7 +501,9 @@ Popup.Title = Title
 Popup.Body = Body
 Popup.TitleInBody = TitleInBody
 Popup.RadioTabsInBody = RadioTabsInBody
+Popup.RadioTabInBody = RadioTabInBody
 Popup.RadioListInBody = RadioListInBody
+Popup.RadioItemInBody = RadioItemInBody
 Popup.ChangeContentButtonInBody = ChangeContentButtonInBody
 Popup.Footer = Footer
 export default Popup

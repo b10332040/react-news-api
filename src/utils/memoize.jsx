@@ -5,7 +5,7 @@ import { memo } from "react"
  * @param {func} Component 
  * @returns 
  */
-const memoize = ( Component ) => {
+const memoize = (Component) => {
   const MemoizedComponent = memo(Component)
   MemoizedComponent.displayName = `Memoized${Component.displayName || Component.name}`;
   

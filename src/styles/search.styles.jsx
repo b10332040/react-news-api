@@ -10,6 +10,7 @@ const styles = {
     'w-full'
   ),
   'input': clsx(
+    'peer',
     'block',
     'w-full',
     'rounded-[20px]',
@@ -21,7 +22,8 @@ const styles = {
     'placeholder:text-sm',
     'transition-all',
     'duration-300',
-    'focus-shadow-gray'
+    'focus-shadow-gray',
+    'disabled:opacity-70'
   ),
   'icon-wrap': clsx(
     'absolute',
@@ -29,7 +31,8 @@ const styles = {
     'top-0',
     'left-0',
     'w-[40px]',
-    'h-full'
+    'h-full',
+    'peer-disabled:opacity-50'
   ),
   'icon': clsx(
     'absolute',

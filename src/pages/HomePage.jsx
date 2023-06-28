@@ -22,9 +22,9 @@ import { dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
 import { ArticleCard, Button, Head, Loading, FormArea, RadioTabs, ResultsText, Search, NoResults } from '/components'
-import { useApp, useNews } from '/hooks'
+import { useNews } from '/hooks'
 import { useEffect, useRef, useState } from 'react'
-import { formatNumber, isArrayEmpty, memoize } from '/utils'
+import { formatNumber, getTotalPage, isArrayEmpty, memoize, scrollToCheckedRadio } from '/utils'
 
 /**
  * 主 Banner 輪播前後箭頭按鈕
@@ -246,7 +246,6 @@ const MemoizedArticlesWaterfall = memoize(ArticlesWaterfall)
  */
 const HomePage = () => {
   const { keywordMaxLength, categoryList } = useNews()
-  const { getTotalPage, scrollToCheckedRadio } = useApp()
   const [page, setPage] = useState(1)
   const [keyword, setKeyword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -260,9 +259,17 @@ const HomePage = () => {
   const categoryRadioTabsOnStickyBarRef = useRef()
   const pageSize = 12
   const totalPage = getTotalPage(totalResults, pageSize)
+  const isDisabled = (loading || addingArticles)
   const filterPopupMenuId = 'filterPopupMenu'
   let Result = <></>
+  let CategoryTabs = <></>
+  let CategoryTabsInPopup = <></>
 
+  // 載入（預設國家+預設分類）的第一頁文章
+  useEffect(() => {
+    // setLoading(true)
+  }, [])
+  
   // 當類型 (category) 改變
   useEffect(() => {
     // 類型標籤列表（包含 sticky bar 上的）自動滾動到選到的類型
@@ -273,24 +280,26 @@ const HomePage = () => {
     scrollToCheckedRadio({
       radiosWrap: categoryRadioTabsRef,
       value: category
-    })
+    })    
+  },[category])
 
-    // 出現 loading 效果，並把 page 改成第一頁
+
+  const handleCategoryChange = (inputValue) => {
+    setCategory(inputValue)
     // setLoading(true)
     setPage(1)
-  },[category, scrollToCheckedRadio])
+    // 載入（此分類）的第一頁文章
+  }
 
-  // 處理搜尋框 change 事件，處理第一個字不能為空白
   const handleSearchChange = (inputValue) => {
     const trimmedValue = inputValue.trimStart()
-
     // 不能超過限制字元數量
     if (encodeURI(trimmedValue).length <= keywordMaxLength) {
       setKeyword(trimmedValue)
     }
     
     if (inputValue === '') {
-      // 當 input 的值為空時，載入此分類的第一頁文章
+      // 當 input 的值為空時，載入（當前分類）的第一頁文章
       setKeyword(inputValue)
     }
   }
@@ -299,8 +308,9 @@ const HomePage = () => {
   const handleSearchEnter = (inputValue) => {
     const trimmedValue = inputValue.trim()
     setKeyword(trimmedValue)
-
-    // 載入此分類+搜尋結果的第一頁文章
+    // setLoading(true)
+    setPage(1)
+    // 載入（當前分類+此搜尋結果）的第一頁文章
   }
 
   // 處理搜尋框 blur 事件，keyword 要去掉前後空白
@@ -312,15 +322,9 @@ const HomePage = () => {
   const handleLoadMoreClick = () => {
     setPage(page + 1)
     setAddingArticles(true)
-
-    // 載入此分類+搜尋結果的下一頁文章
+    // 載入（當前分類+當前搜尋結果）的下一頁文章
   }
-
-  // 處理 category change 事件
-  const handleCategoryRadioChange = (inputValue) => {
-    setCategory(inputValue)
-    // 載入此分類的第一頁文章
-  }
+  
 
   if (loading) {
     Result = (
@@ -356,6 +360,38 @@ const HomePage = () => {
     }
   }
 
+  // 產生所有分類的標籤
+  if (!isArrayEmpty(categoryList)) {
+    CategoryTabs = categoryList.map((categoryItem) => {
+      return (
+        <RadioTabs.Tab
+          key={categoryItem.value}
+          name='category'
+          radio={categoryItem}
+          checkedValue={category}
+          onChange={(inputValue) => {
+            handleCategoryChange(inputValue)
+          }}
+          disabled={isDisabled}
+        />
+      )
+    })
+    CategoryTabsInPopup = categoryList.map((categoryItem) => {
+      return (
+        <Popup.RadioTabInBody
+          key={categoryItem.value}
+          name='category'
+          radio={categoryItem}
+          checkedValue={category}
+          onChange={(inputValue) => {
+            handleCategoryChange(inputValue)
+          }}
+          disabled={isDisabled}
+        />
+      )
+    })
+  }
+
   return (
     <>
       <Head title='Home' />
@@ -368,7 +404,7 @@ const HomePage = () => {
               total={totalResults}
               className={`
                 'my-3 lg:my-0'
-                ${(totalResults === 0) && 'invisible'}
+                ${(totalResults === 0) ? 'invisible' : ''}
               `}
             />
           </div>
@@ -380,9 +416,13 @@ const HomePage = () => {
                 radios={categoryList}
                 checkedValue={category}
                 onChange={(inputValue) => {
-                  handleCategoryRadioChange(inputValue)
+                  handleCategoryChange(inputValue)
                 }}
+                disabled={isDisabled}
               />
+              <RadioTabs selfRef={categoryRadioTabsOnStickyBarRef}>
+                { CategoryTabs }
+              </RadioTabs>
             </FormArea>
             <StickyBar.IconButton
               title='Open filter popup menu'
@@ -417,14 +457,9 @@ const HomePage = () => {
               <Popup.TitleInBody>
                 Category
               </Popup.TitleInBody>
-              <Popup.RadioTabsInBody
-                radios={categoryList}
-                name='category'
-                checkedValue={category}
-                onChange={(inputValue) => {
-                  handleCategoryRadioChange(inputValue)
-                }}
-              />
+              <Popup.RadioTabsInBody>
+                { CategoryTabsInPopup }
+              </Popup.RadioTabsInBody>
             </FormArea>
           </Popup.Body>
           <Popup.Footer>
@@ -448,16 +483,17 @@ const HomePage = () => {
         <Main.LeftSide>
           <FormArea>
              <article>
-              <Header title={`Don't Miss`}>
-                <RadioTabs
-                  selfRef={categoryRadioTabsRef}
-                  name='category'
-                  radios={categoryList}
-                  checkedValue={category}
-                  onChange={(inputValue) => {
-                    handleCategoryRadioChange(inputValue)
-                  }}
-                />
+              <Header>
+                <Header.ShortContainer>
+                  <Header.Title>
+                    Don&apos;t Miss
+                  </Header.Title>
+                </Header.ShortContainer>
+                <Header.LongContainer isContentRight={true}>
+                  <RadioTabs selfRef={categoryRadioTabsRef}>
+                    { CategoryTabs }
+                  </RadioTabs>
+                </Header.LongContainer>
               </Header>
               <div>
                 <div className='row mt-3 items-center'>
@@ -476,6 +512,7 @@ const HomePage = () => {
                         placeholder={`Max length: ${keywordMaxLength} chars`}
                         value={keyword}
                         className='ml-auto md:max-w-[320px]'
+                        disabled={isDisabled}
                       />
                     </div>
                   </div>
@@ -486,7 +523,7 @@ const HomePage = () => {
                       total={totalResults}
                       className={`
                         px-3 text-center md:text-left
-                        ${(totalResults === 0) && 'invisible'}
+                        ${(totalResults === 0) ? 'invisible' : ''}
                       `}
                     />
                   </div>

@@ -83,8 +83,10 @@ const styles = {
       'last:left-3',
       'last:top-full',
       'last:w-[calc(100%-1.5rem)]'
-    ),
-    'item': clsx(
+    )
+  },
+  'radio-tab': {
+    'self': clsx(
       'relative',
       'z-[1]',
       'inline-block',

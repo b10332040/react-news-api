@@ -58,6 +58,7 @@ const Navbar = () => {
   // 當 path name 改變
   useEffect(() => {
     setNavbarMenuOpen(false)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [pathname])
 
   // 處理漢堡選單按鈕點擊
@@ -86,7 +87,7 @@ const Navbar = () => {
 
     // 轉到 result 頁面，並傳送 encodeURI 後的 trimmed value
     if (trimmedValue !== '') {
-      navigate(`/search?keyword=${encodeURI(trimmedValue)}`)
+      navigate(`/search/${encodeURI(trimmedValue)}`)
     }
   }
 

@@ -2,10 +2,9 @@ import PropTypes from 'prop-types'
 import { dummyNewsList } from '/data'
 import { Main, Header, StickyBar, Popup, Waterfall, InnerPageBanner } from '/layouts'
 import { ArticleCard, Button, Head, Loading, FormArea, RadioTabs, ResultsText, Search, NoResults } from '/components'
-import { useApp, useNews } from '/hooks'
+import { useNews } from '/hooks'
 import { useEffect, useRef, useState } from 'react'
-import { formatNumber, isArrayEmpty, isExisted, memoize } from '/utils'
-import { useParams } from 'react-router-dom'
+import { formatNumber, getTotalPage, isArrayEmpty, isExisted, memoize, scrollToCheckedRadio } from '/utils'
 
 /**
  * 文章瀑布流
@@ -43,22 +42,20 @@ const MemoizedArticlesWaterfall = memoize(ArticlesWaterfall)
  * @returns 
  */
 const WorldPage = () => {
-  const { getTotalPage, scrollToCheckedRadio } = useApp()
   const { keywordMaxLength, categoryList, continentList, countryList, continentMap, countryMap } = useNews()
-  const { id } = useParams()
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
   const [keyword, setKeyword] = useState('')
   const [category, setCategory] = useState('general')
-  const [countryId, setCountryId] = useState('')
-  const [continentId, setContinentId] = useState('')
+  const [countryId, setCountryId] = useState('tw')
+  const [continentId, setContinentId] = useState('asia')
   const [articleList, setArticleList] = useState(dummyNewsList.articles)
   const [totalResults, setTotalResults] = useState(0)
   const [popupMenuOpen, setPopupMenuOpen] = useState(false)
   const [addingArticles, setAddingArticles] = useState(false)
   const [noResultsMessage, setNoResultsMessage] = useState('')
   const [popupContentType, setPopupContentType] = useState('upper')
-  const [searchCountryResult, setSearchCountryResult] = useState(countryList)
+  const [countrySearchList, setCountrySearchList] = useState(countryList)
   const popupBodyRef = useRef()
   const showStickyBarRef = useRef()
   const countryRadioTabsRef = useRef()
@@ -67,50 +64,33 @@ const WorldPage = () => {
   const categoryRadioTabsOnStickyBarRef = useRef()
   const pageSize = 12
   const totalPage = getTotalPage(totalResults, pageSize)
-  const filterPopupMenuId = 'filterPopupMenu'
   const country = (countryId !== '' && isExisted(countryMap.get(countryId))) ? countryMap.get(countryId) : {}
   const continent = (continentId !== '' && isExisted(continentMap.get(continentId))) ? continentMap.get(continentId) : {}
+  const isDisabled = (loading || addingArticles)
+  const filterPopupMenuId = 'filterPopupMenu'
+  const isUpperContentInPopup = (popupContentType === 'upper') 
   let Result = <></>
-  let popupHeaderHasLeftArrowButton = false
-  let popupTitle = ''
-  let PopupBodyTop = <></>
-  let PopupContent = <></>
-  let countryListInContent = []
+  let CategoryTabs = <></>
+  let CountryItemsInPopup = <></>
+  let CategoryTabsInPopup = <></>
+  let ContinentTabsInBanner = <></>
+  let CountryInContinentTabsInBanner = <></>
+  let countryListInContinent = []
 
   // 取得選到的洲包含的所有國家資料
   if (continent?.countryValueList && !isArrayEmpty(continent.countryValueList)) {
     continent.countryValueList.map((item) => {
       const tempCountry = countryMap.get(item)
       if (isExisted(tempCountry)) {
-        countryListInContent.push(tempCountry)
+        countryListInContinent.push(tempCountry)
       }
     })
   }
   
-
+  // 載入（預設國家+預設分類）的第一頁文章
   useEffect(() => {
-    if (isExisted(id)) {
-      // 路徑上是否有傳入國家代碼
-      const tempId = id.toLowerCase()
-      if (isExisted(countryMap.get(tempId))) {
-        console.log('has id')
-        const tempCountry = countryMap.get(tempId)
-        setCountryId(tempId)
-        setContinentId((tempCountry?.continentValue) ? tempCountry?.continentValue : '')
-        
-      } else {
-        setCountryId('')
-        setContinentId('asia')
-        setArticleList([])
-        setNoResultsMessage('There is currently no news for this country.')
-      }
-
-    } else {
-      // 預設給台灣
-      setCountryId('tw')
-      setContinentId('asia')
-    }
-  }, [id, countryMap, continentMap])
+    // setLoading(true)
+  }, [])
   
   // 當洲 (continentId) / 國家 (countryId) 改變
   useEffect(() => {
@@ -124,7 +104,7 @@ const WorldPage = () => {
       radiosWrap: countryRadioTabsRef,
       value: countryId
     })
-  },[continentId, countryId, scrollToCheckedRadio])
+  },[continentId, countryId])
 
   // 當國家 (countryId) 改變
   useEffect(() => {
@@ -141,7 +121,7 @@ const WorldPage = () => {
       radiosWrap: popupBodyRef,
       value: countryId
     })
-  },[countryId, scrollToCheckedRadio, countryMap])
+  },[countryId, countryMap])
 
   // 當類型 (category) 改變
   useEffect(() => {
@@ -154,27 +134,45 @@ const WorldPage = () => {
       radiosWrap: categoryRadioTabsRef,
       value: category
     })
-  },[category, scrollToCheckedRadio])
+  },[category])
 
-  // 當類型 (category) 或國家 (countryId) 改變
-  // 出現 loading 效果，並把 page 改成第一頁
+  // 當彈跳視窗內容 (popupContentType) 改變
   useEffect(() => {
+    if (popupContentType === 'country') {
+      // 彈跳視窗國家列表自動滾動到選到的國家
+      scrollToCheckedRadio({
+        direction: 'top',
+        radiosWrap: popupBodyRef,
+        value: countryId
+      })
+    }
+  }, [popupContentType, countryId])
+
+  
+  const handleCountryIdChange = (inputValue) => {
+    setCountryId(inputValue)
     // setLoading(true)
     setPage(1)
-  }, [category, countryId])
+    // 載入（此國家）的第一頁文章
+  }
 
+  const handleCategoryChange = (inputValue) => {
+    setCategory(inputValue)
+    // setLoading(true)
+    setPage(1)
+    // 載入（當前國家+此分類）的第一頁文章
+  }
 
-  // 處理搜尋框 change 事件，處理第一個字不能為空白
   const handleSearchChange = (inputValue) => {
+    // 處理第一個字不能為空白
     const trimmedValue = inputValue.trimStart()
-
     // 不能超過限制字元數量
     if (encodeURI(trimmedValue).length <= keywordMaxLength) {
       setKeyword(trimmedValue)
     }
     
     if (inputValue === '') {
-      // 當 input 的值為空時，載入此分類的第一頁文章
+      // 當 input 的值為空時，載入（當前國家＋當前分類）的第一頁文章
       setKeyword(inputValue)
     }
   }
@@ -183,8 +181,9 @@ const WorldPage = () => {
   const handleSearchEnter = (inputValue) => {
     const trimmedValue = inputValue.trim()
     setKeyword(trimmedValue)
-
-    // 載入此分類+搜尋結果的第一頁文章
+    // setLoading(true)
+    setPage(1)
+    // 載入（當前國家+當前分類+此搜尋結果）的第一篇文章
   }
 
   // 處理搜尋框 blur 事件，keyword 要去掉前後空白
@@ -192,18 +191,10 @@ const WorldPage = () => {
     setKeyword(keyword.trim())
   }
 
-  // 處理 load more click 事件
   const handleLoadMoreClick = () => {
     setPage(page + 1)
     setAddingArticles(true)
-
-    // 載入此分類+搜尋結果的下一頁文章
-  }
-
-  // 處理 category change 事件
-  const handleCategoryRadioChange = (inputValue) => {
-    setCategory(inputValue)
-    // 載入此分類的第一頁文章
+    // 載入（當前國家+當前分類+當前搜尋結果）的下一頁文章
   }
 
   // 處理搜尋國家 change 事件
@@ -211,15 +202,102 @@ const WorldPage = () => {
     const trimmedValue = inputValue.trim().toLowerCase()
 
     if (inputValue === '') {
-      setSearchCountryResult(countryList)
+      setCountrySearchList(countryList)
 
     } else {
       const tempCountryResult = countryList.filter((item) => {
         const tempItemDisplayName = item.displayName.toLowerCase()
         return tempItemDisplayName.includes(trimmedValue)
       })
-      setSearchCountryResult(tempCountryResult)
+      setCountrySearchList(tempCountryResult)
     }
+  }
+
+  // 產生(包含彈跳視窗中)所有分類的標籤
+  if (!isArrayEmpty(categoryList)) {
+    CategoryTabs = categoryList.map((categoryItem) => {
+      return (
+        <RadioTabs.Tab
+          key={categoryItem.value}
+          name='category'
+          radio={categoryItem}
+          checkedValue={category}
+          onChange={(inputValue) => {
+            handleCategoryChange(inputValue)
+          }}
+          disabled={isDisabled}
+        />
+      )
+    })
+    CategoryTabsInPopup = categoryList.map((categoryItem) => {
+      return (
+        <Popup.RadioTabInBody
+          key={categoryItem.value}
+          name='category'
+          radio={categoryItem}
+          checkedValue={category}
+          onChange={(inputValue) => {
+            handleCategoryChange(inputValue)
+          }}
+          disabled={isDisabled}
+        />
+      )
+    })
+  }
+
+  // 產生 Banner 上所有洲的標籤
+  if (!isArrayEmpty(continentList)) {
+    ContinentTabsInBanner = continentList.map((continentItem) => {
+      return (
+        <InnerPageBanner.RadioTab
+          key={continentItem.value}
+          mode='light'
+          name='continent'
+          radio={continentItem}
+          checkedValue={continentId}
+          onChange={(inputValue) => {
+            setContinentId(inputValue)
+          }}
+        />
+      )
+    })
+  }
+
+  // 產生 Banner 上當前洲所有國家的標籤
+  if (!isArrayEmpty(countryListInContinent)) {
+    CountryInContinentTabsInBanner = countryListInContinent.map((countryItem) => {
+      return (
+        <InnerPageBanner.RadioTab
+          key={countryItem.value}
+          mode='dark'
+          name='country'
+          radio={countryItem}
+          checkedValue={countryId}
+          onChange={(inputValue) => {
+            handleCountryIdChange(inputValue)
+          }}
+          disabled={isDisabled}
+        />
+      )
+    })
+  }
+
+  // 產生彈跳視窗中所有搜尋國家結果的標籤
+  if (!isArrayEmpty(countrySearchList)) {
+    CountryItemsInPopup = countrySearchList.map((countrySearchItem) => {
+      return (
+        <Popup.RadioItemInBody
+          key={countrySearchItem.value}
+          name='country'
+          radio={countrySearchItem}
+          checkedValue={countryId}
+          onChange={(inputValue) => {
+            handleCountryIdChange(inputValue)
+          }}
+          disabled={isDisabled}
+        />
+      )
+    })
   }
 
   // 處理文章區塊要顯示的內容
@@ -258,62 +336,6 @@ const WorldPage = () => {
     }
   }
 
-  // 處理彈跳視窗要顯示的內容
-  switch (popupContentType) {
-    case 'country':
-      popupHeaderHasLeftArrowButton = true
-      popupTitle = 'Country'
-      PopupBodyTop = (
-        <div className='w-full px-3 pt-1 pb-3'>
-          <Search
-            placeholder='Search country'
-            onChange={(inputValue) => {
-              handleSearchCountryChange(inputValue)
-            }}
-          />
-        </div>
-      )
-      PopupContent = (
-        <FormArea className='h-full max-h-full'>
-          <Popup.RadioListInBody
-            radios={searchCountryResult}
-            name='category'
-            checkedValue={countryId}
-            onChange={(inputValue) => {
-              setCountryId(inputValue)
-            }}
-          />
-        </FormArea>
-      )
-      break
-
-    default:
-      popupTitle = 'Filter'
-      PopupContent = (
-        <FormArea className='h-full max-h-full'>
-          <Popup.ChangeContentButtonInBody
-            title='Go to select country'
-            note={(country?.displayName) ? country?.displayName : ''}
-            contentType='country'
-          >
-            Country
-          </Popup.ChangeContentButtonInBody>
-          <hr className='mb-1'/>
-          <Popup.TitleInBody>
-            Category
-          </Popup.TitleInBody>
-          <Popup.RadioTabsInBody
-            radios={categoryList}
-            name='category'
-            checkedValue={category}
-            onChange={(inputValue) => {
-              handleCategoryRadioChange(inputValue)
-            }}
-          />
-        </FormArea>
-      )
-  }
-
   return (
     <>
       <Head title='World' />
@@ -326,21 +348,15 @@ const WorldPage = () => {
               total={totalResults}
               className={`
                 'my-3 lg:my-0'
-                ${(totalResults === 0) && 'invisible'}
+                ${(totalResults === 0) ? 'invisible' : ''}
               `}
             />
           </div>
           <div className='col w-1/2 md:w-9/12 flex flex-wrap justify-end'>
             <FormArea className='hidden md:block md:max-w-[calc(100%-44px)]'>
-              <RadioTabs
-                selfRef={categoryRadioTabsOnStickyBarRef}
-                name='category'
-                radios={categoryList}
-                checkedValue={category}
-                onChange={(inputValue) => {
-                  handleCategoryRadioChange(inputValue)
-                }}
-              />
+              <RadioTabs selfRef={categoryRadioTabsOnStickyBarRef}>
+                { CategoryTabs }
+              </RadioTabs>
             </FormArea>
             <StickyBar.IconButton
               title='Open filter popup menu'
@@ -361,22 +377,60 @@ const WorldPage = () => {
         open={popupMenuOpen}
         popupId={filterPopupMenuId}
         setOpen={setPopupMenuOpen}
-        setContentType={setPopupContentType}
         overScreenHeight={false}
         dialogFullInMobile={true}
         backdropVisibleInMobile={true}
       >
         <Popup.Dialog>
           <Popup.Header
-            hasLeftArrowButton={popupHeaderHasLeftArrowButton}
+            hasLeftArrowButton={!isUpperContentInPopup}
+            onLeftArrowButtonClick={() => {
+              setPopupContentType('upper')
+            }}
           >
             <Popup.Title>
-              { popupTitle }
+              {(isUpperContentInPopup) ? 'Filter' : 'Country'}
             </Popup.Title>
           </Popup.Header>
-          { PopupBodyTop }
+          <div
+            className={`
+              w-full px-3 pt-1 pb-3
+              ${(isUpperContentInPopup) ? 'hidden' : ''}
+            `}
+          >
+            <Search
+              placeholder='Search country'
+              onChange={(inputValue) => {
+                handleSearchCountryChange(inputValue)
+              }}
+            />
+          </div>
           <Popup.Body selfRef={popupBodyRef}>
-            { PopupContent }
+            {/* Upper content */}
+            <FormArea className={(!isUpperContentInPopup) ? 'hidden' : ''}>
+              <Popup.ChangeContentButtonInBody
+                title='Go to select country'
+                note={(country?.displayName) ? country?.displayName : ''}
+                onClick={() => {
+                  setPopupContentType('country')
+                }}
+              >
+                Country
+              </Popup.ChangeContentButtonInBody>
+              <hr className='mb-1'/>
+              <Popup.TitleInBody>
+                Category
+              </Popup.TitleInBody>
+              <Popup.RadioTabsInBody>
+                { CategoryTabsInPopup }
+              </Popup.RadioTabsInBody>
+            </FormArea>
+            {/* Country content */}
+            <FormArea className={(isUpperContentInPopup)  ? 'hidden' : ''}>
+              <Popup.RadioListInBody>
+                { CountryItemsInPopup }
+              </Popup.RadioListInBody>
+            </FormArea>
           </Popup.Body>
           <Popup.Footer>
             <Button
@@ -398,26 +452,12 @@ const WorldPage = () => {
           World
         </InnerPageBanner.Title>
         <InnerPageBanner.RadioTabsWrap>
-          <InnerPageBanner.RadioTabs
-            selfRef={continentRadioTabsRef}
-            radios={continentList}
-            mode='light'
-            name='continent'
-            checkedValue={continentId}
-            onChange={(inputValue) => {
-              setContinentId(inputValue)
-            }}
-          />
-          <InnerPageBanner.RadioTabs
-            selfRef={countryRadioTabsRef}
-            radios={countryListInContent}
-            mode='dark'
-            name='country'
-            checkedValue={countryId}
-            onChange={(inputValue) => {
-              setCountryId(inputValue)
-            }}
-          />
+          <InnerPageBanner.RadioTabs selfRef={continentRadioTabsRef}>
+            { ContinentTabsInBanner }
+          </InnerPageBanner.RadioTabs>
+          <InnerPageBanner.RadioTabs selfRef={countryRadioTabsRef}>
+            { CountryInContinentTabsInBanner }
+          </InnerPageBanner.RadioTabs>
         </InnerPageBanner.RadioTabsWrap>
       </InnerPageBanner>
 
@@ -425,18 +465,17 @@ const WorldPage = () => {
         <Main.LeftSide>
           <FormArea>
              <article>
-              <Header
-                title={(country?.displayName) ? country?.displayName : `Don't Miss`}
-              >
-                <RadioTabs
-                  selfRef={categoryRadioTabsRef}
-                  name='category'
-                  radios={categoryList}
-                  checkedValue={category}
-                  onChange={(inputValue) => {
-                    handleCategoryRadioChange(inputValue)
-                  }}
-                />
+              <Header>
+                <Header.ShortContainer>
+                  <Header.Title>
+                    {(country?.displayName) ? country?.displayName : `Don't Miss`}
+                  </Header.Title>
+                </Header.ShortContainer>
+                <Header.LongContainer isContentRight={true}>
+                  <RadioTabs selfRef={categoryRadioTabsRef}>
+                    { CategoryTabs }
+                  </RadioTabs>
+                </Header.LongContainer>
               </Header>
               <div>
                 <div className='row mt-3 items-center'>
@@ -455,6 +494,7 @@ const WorldPage = () => {
                         placeholder={`Max length: ${keywordMaxLength} chars`}
                         value={keyword}
                         className='ml-auto md:max-w-[320px]'
+                        disabled={isDisabled}
                       />
                     </div>
                   </div>
@@ -465,7 +505,7 @@ const WorldPage = () => {
                       total={totalResults}
                       className={`
                         px-3 text-center md:text-left
-                        ${(totalResults === 0) && 'invisible'}
+                        ${(totalResults === 0) ? 'invisible' : ''}
                       `}
                     />
                   </div>

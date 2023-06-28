@@ -38,7 +38,7 @@ import {
   srcWebpWorldBannerMd1x,
   srcWebpWorldBannerMd2x
 } from '/assets/images'
-import { isArrayEmpty, isExisted } from '/utils'
+import { isExisted } from '/utils'
 import { FormArea } from '/components'
 
 /**
@@ -255,69 +255,74 @@ RadioTabsWrap.propTypes = {
 }
 
 /**
- * 單選標籤
+ * 多個單選標籤外層
  * @param {object} props - 屬性
  * @param {object} props.selfRef - ref
- * @param {array} props.radios - 資料
- * @param {string} props.mode - 模式 (預設：'')
- * @param {string} props.name - 單選 name 屬性值
- * @param {string} props.checkedValue - 被選到的值
- * @param {func} props.onChange - 處理 change 事件
- * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
+ * @param {node} props.children - 內容
  */
-const RadioTabs = ({ selfRef, radios, mode='', name, checkedValue, onChange, disabled=false }) => {
-
-  if (isArrayEmpty(radios) || !isExisted(name)) {
-    return <></>
-  }
-  
-  let RadioTab = <></>
-  RadioTab = radios.map((radio) => {
-    if (radio?.value && radio?.displayName) {
-      return (
-        <li
-          key={`radio-${radio.value}`}
-          className={styles['radio-tabs']['item']}
-        >
-          <input 
-            type='radio'
-            name={name}
-            value={radio.value}
-            id={radio.value}
-            checked={checkedValue === radio.value}
-            onChange={(event) => {
-              onChange?.(event.target.value)
-            }}
-            className={styles['radio-tabs']['input']}
-            disabled={disabled}
-          />
-          <label
-            htmlFor={radio.value}
-            className={`
-              ${styles['radio-tabs']['label']}
-              ${(mode === 'light') ? styles['radio-tabs']['label--light'] : styles['radio-tabs']['label--dark']}
-            `}
-          >
-            <span className={styles['radio-tabs']['label-text']}>
-              {radio.displayName}
-            </span>
-          </label>
-        </li>
-      )
-    }
-  })
-  
+const RadioTabs = ({ selfRef, children }) => {  
   return (
     <ul ref={selfRef} className={styles['radio-tabs']['self']}>
-      { RadioTab }
+      { children }
     </ul>
   )
 }
 RadioTabs.propTypes = {
   selfRef: PropTypes.object,
-  radios: PropTypes.array.isRequired,
+  children: PropTypes.node
+}
+
+/**
+ * 單選標籤
+ * @param {object} props - 屬性
+ * @param {string} props.mode - 模式
+ * @param {string} props.name - name 屬性值
+ * @param {object} props.radio - 資料
+ * @param {string} props.checkedValue - 被選到的值
+ * @param {func} props.onChange - 處理 change 事件
+ * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
+ * @returns
+ */
+const RadioTab = ({ mode='', name, radio, checkedValue, onChange, disabled=false }) => {
+  if (!isExisted(name) && !isExisted(radio.value) && !isExisted(radio.displayName)) {
+    return <></>
+  }
+
+  return (
+    <li
+      key={`radio-${radio.value}`}
+      className={styles['radio-tab']['self']}
+    >
+      <input 
+        type='radio'
+        name={name}
+        value={radio.value}
+        id={radio.value}
+        checked={checkedValue === radio.value}
+        onChange={(event) => {
+          onChange?.(event.target.value)
+        }}
+        className={styles['radio-tab']['input']}
+        disabled={disabled}
+      />
+      <label
+        htmlFor={radio.value}
+        className={`
+          ${styles['radio-tab']['label']}
+          ${(mode === 'light') ? styles['radio-tab']['label--light'] : styles['radio-tab']['label--dark']}
+        `}
+      >
+        <span className={styles['radio-tab']['label-text']}>
+          {radio.displayName}
+        </span>
+      </label>
+    </li>
+  )
+}
+RadioTab.propTypes = {
   mode: PropTypes.string,
   name: PropTypes.string.isRequired,
+  radio: PropTypes.object.isRequired,
   checkedValue: PropTypes.string,
   onChange: PropTypes.func,
   disabled: PropTypes.bool
@@ -326,4 +331,5 @@ RadioTabs.propTypes = {
 InnerPageBanner.Title = Title
 InnerPageBanner.RadioTabsWrap = RadioTabsWrap
 InnerPageBanner.RadioTabs = RadioTabs
+InnerPageBanner.RadioTab = RadioTab
 export default InnerPageBanner

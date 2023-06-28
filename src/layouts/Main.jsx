@@ -138,7 +138,11 @@ const RightSideSection = ({contentType, title, children}) => {
   if (isExisted(title) && isExisted(children)) {
     return (
       <section>
-        <Header title={title}/>
+        <Header>
+          <Header.Title>
+            {title}
+          </Header.Title>
+        </Header>
         <div className="px-3 py-4">
           { children }
         </div>
