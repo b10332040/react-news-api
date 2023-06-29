@@ -9,9 +9,9 @@ import styles from '/styles/header.styles'
  */
 const Header = ({ children }) => {  
   return (
-    <header className={styles['header']['self']}>
+    <div className={styles['header']['self']}>
       { children }
-    </header>
+    </div>
   )
 }
 Header.propTypes = {

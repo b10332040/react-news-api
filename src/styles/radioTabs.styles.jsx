@@ -6,11 +6,7 @@ import clsx from 'clsx'
 const styles = {
   'radio-tabs': {
     'self': clsx(
-      'whitespace-nowrap',
-      'overflow-x-auto',
-      'overflow-y-hidden',
-      'text-[0rem]',
-      'has-scrollbar'
+      'w-full'
     )
   },
   'tab': {
@@ -18,6 +14,9 @@ const styles = {
       'relative',
       'z-[1]',
       'inline-block',
+      'ml-2',
+      'first:ml-0',
+      'my-1',
       'text-sm'
     ),
     'input': clsx(
@@ -28,34 +27,21 @@ const styles = {
       'peer'
     ),
     'label': clsx(
-      'relative',
-      'p-3',
-      'font-bold',
-      'text-[--theme-gray-400]',
+      'block',
+      'px-3',
+      'py-1',
+      'rounded-full',
+      'text-[--theme-black]',
+      'bg-[--theme-gray-200]',
       'cursor-pointer',
       'transition-colors',
       'duration-300',
-      'peer-enabled:hover:text-[--theme-black]',
-      'peer-checked:text-[--theme-black]',
-      'peer-checked:[&>span]:after:border-[--theme-black]',
+      'peer-enabled:hover:text-white',
+      'peer-enabled:hover:bg-[--theme-black]',
+      'peer-checked:text-white',
+      'peer-checked:bg-[--theme-black]',
       'peer-disabled:cursor-default',
-      'peer-disabled:opacity-50',
-      'peer-checked:peer-disabled:[&>span]:after:opacity-50'
-    ),
-    'label-text': clsx(
-      'relative',
-      'inline-block',
-      'py-3',
-      'after:content-[""]',
-      'after:block',
-      'after:absolute',
-      'after:left-0',
-      'after:bottom-0',
-      'after:w-full',
-      'after:border-b-2',
-      'after:border-transparent',
-      'after:transition-color',
-      'after:duration-300'
+      'peer-disabled:opacity-50'
     )
   }
 }

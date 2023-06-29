@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import styles from '/styles/navbar.styles'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useApp, useNews } from '/hooks'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { srcSvgLogo } from '/assets/images'
@@ -50,10 +50,11 @@ const Navbar = () => {
   const [navbarMenuOpen, setNavbarMenuOpen] = useState(false)
   const [searchInputOpen, setSearchInputOpen] = useState(false)
   const [keyword, setKeyword] = useState('')
-  const { pageTop } = useApp()
   const { keywordMaxLength } = useNews()
+  const { pageTop } = useApp()
   const { pathname } = useLocation()
   const navigate = useNavigate()
+  const searchRef = useRef(null)
 
   // 當 path name 改變
   useEffect(() => {
@@ -95,6 +96,19 @@ const Navbar = () => {
   const handleSearchBlur = () => {
     setKeyword(keyword.trim())
   }
+
+  // 當點擊非 search bar 的地方，收起 drop down
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setSearchInputOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [])
 
   return (
     <header
@@ -161,6 +175,7 @@ const Navbar = () => {
             </NavbarPageNavLink>
           </ul>
           <div
+            ref={searchRef}
             className={`
               ${styles['search']}
               ${(searchInputOpen) ? styles['search--open'] : styles['search--close']}

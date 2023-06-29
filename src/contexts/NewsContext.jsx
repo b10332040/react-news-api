@@ -1,15 +1,17 @@
 import PropTypes from 'prop-types'
 import { createContext } from 'react'
-import { categories, continents, countries } from '/data'
+import { categories, continents, countries, sortByOptions } from '/data'
 
 const defaultContext = {
   keywordMaxLength: 0,
   categoryList: [],
   continentList: [],
+  sortByList: [],
   countryList: [],
   categoryMap: {},
   continentMap: {},
-  countryMap: {}
+  countryMap: {},
+  sortByMap: {}
 }
 const NewsContext = createContext(defaultContext)
 
@@ -26,9 +28,11 @@ const NewsProvider = ({ children }) => {
   const categoryList = categories
   const continentList = continents
   const countryList = countries
+  const sortByList = sortByOptions
   const categoryMap = new Map(categoryList.map((item) => [item.value, item]))
   const continentMap = new Map(continentList.map((item) => [item.value, item]))
   const countryMap = new Map(countryList.map((item) => [item.value, item]))
+  const sortByMap = new Map(sortByList.map((item) => [item.value, item]))
 
   return (
     <NewsContext.Provider
@@ -37,9 +41,11 @@ const NewsProvider = ({ children }) => {
         categoryList,
         continentList,
         countryList,
+        sortByList,
         categoryMap,
         continentMap,
-        countryMap
+        countryMap,
+        sortByMap
       }}
     >
       { children }

@@ -18,8 +18,7 @@ const styles = {
     'hover:shadow-sm',
     'hover:shadow-[rgba(0,0,0,0.2)]'
   ),
-  'linkMask': clsx(
-    'peer',
+  'link-cover': clsx(
     'absolute',
     'z-[3]',
     'top-0',

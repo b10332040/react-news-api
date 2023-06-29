@@ -30,7 +30,7 @@ function App() {
         <Route path='/' element={<BasicLayout />}>
           <Route index element={<HomePage />} />
           <Route path='search' element={<SearchPage />} />
-          <Route path='search/:keyword' element={<SearchPage />} />
+          <Route path='search/:encodeKeyword' element={<SearchPage />} />
           <Route path='sources/:id' element={<SourcesPage />} />
           <Route path='country' element={<WorldPage />} />
         </Route>

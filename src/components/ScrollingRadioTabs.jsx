@@ -1,21 +1,23 @@
 import PropTypes from 'prop-types'
-import styles from '/styles/radioTabs.styles'
+import styles from '/styles/scrollingRadioTabs.styles'
 import { isExisted } from '/utils'
 
 /**
- * 多個單選標籤外層
+ * 滾動式外層
  * @param {object} props - 屬性
+ * @param {object} props.selfRef - ref
  * @param {node} props.children - 內容
  * @returns
  */
-const RadioTabs = ({ children }) => {
+const ScrollingRadioTabs = ({ selfRef, children }) => {
   return (
-    <ul className={styles['radio-tabs']['self']}>
+    <ul ref={selfRef} className={styles['scrolling-radio-tabs']['self']}>
       { children }
     </ul>
   )
 }
-RadioTabs.propTypes = {
+ScrollingRadioTabs.propTypes = {
+  selfRef: PropTypes.object,
   children: PropTypes.node
 }
 
@@ -52,7 +54,9 @@ const Tab = ({ name, radio, checkedValue, onChange, disabled=false }) => {
         htmlFor={radio.value}
         className={styles['tab']['label']}
       >
-        {radio.displayName}
+        <span className={styles['tab']['label-text']}>
+          {radio.displayName}
+        </span>
       </label>
     </li>
   )
@@ -65,5 +69,5 @@ Tab.propTypes = {
   disabled: PropTypes.bool
 }
 
-RadioTabs.Tab = Tab
-export default RadioTabs
+ScrollingRadioTabs.Tab = Tab
+export default ScrollingRadioTabs

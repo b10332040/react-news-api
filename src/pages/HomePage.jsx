@@ -21,7 +21,7 @@ import 'slick-carousel/slick/slick-theme.css'
 import { dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
-import { ArticleCard, Button, Head, Loading, FormArea, RadioTabs, ResultsText, Search, NoResults } from '/components'
+import { ArticleCard, Button, Head, Loading, FormArea, ResultsText, Search, NoResults, ScrollingRadioTabs, RadioTabs } from '/components'
 import { useNews } from '/hooks'
 import { useEffect, useRef, useState } from 'react'
 import { formatNumber, getTotalPage, isArrayEmpty, memoize, scrollToCheckedRadio } from '/utils'
@@ -210,15 +210,15 @@ MainBanner.propTypes = {
 /**
  * 文章瀑布流
  * @param {object} props - 屬性
- * @param {array} props.articles - 文章資料
+ * @param {array} props.articleList - 文章資料
  * @returns 
  */
-const ArticlesWaterfall = ({ articles }) => {
-  if (isArrayEmpty(articles)) {
+const ArticlesWaterfall = ({ articleList }) => {
+  if (isArrayEmpty(articleList)) {
     return <></>
   }
 
-  const Articles = articles.map((article, index) => {
+  const Articles = articleList.map((article, index) => {
     return (
       <ArticleCard 
         key={`article-${index}`}
@@ -234,7 +234,7 @@ const ArticlesWaterfall = ({ articles }) => {
   )
 }
 ArticlesWaterfall.propTypes = {
-  articles: PropTypes.array
+  articleList: PropTypes.array
 }
 
 const MemoizedMainBanner = memoize(MainBanner)
@@ -254,9 +254,9 @@ const HomePage = () => {
   const [totalResults, setTotalResults] = useState(0)
   const [popupMenuOpen, setPopupMenuOpen] = useState(false)
   const [addingArticles, setAddingArticles] = useState(false)
-  const showStickyBarRef = useRef()
-  const categoryRadioTabsRef = useRef()
-  const categoryRadioTabsOnStickyBarRef = useRef()
+  const showStickyBarRef = useRef(null)
+  const categoryRadioTabsRef = useRef(null)
+  const categoryRadioTabsOnStickyBarRef = useRef(null)
   const pageSize = 12
   const totalPage = getTotalPage(totalResults, pageSize)
   const isDisabled = (loading || addingArticles)
@@ -340,7 +340,7 @@ const HomePage = () => {
     } else {
       Result = (
         <>
-          <MemoizedArticlesWaterfall articles={articleList} />
+          <MemoizedArticlesWaterfall articleList={articleList} />
           <Button
             title='Load More'
             styled='outlined'
@@ -364,7 +364,7 @@ const HomePage = () => {
   if (!isArrayEmpty(categoryList)) {
     CategoryTabs = categoryList.map((categoryItem) => {
       return (
-        <RadioTabs.Tab
+        <ScrollingRadioTabs.Tab
           key={categoryItem.value}
           name='category'
           radio={categoryItem}
@@ -378,7 +378,7 @@ const HomePage = () => {
     })
     CategoryTabsInPopup = categoryList.map((categoryItem) => {
       return (
-        <Popup.RadioTabInBody
+        <RadioTabs.Tab
           key={categoryItem.value}
           name='category'
           radio={categoryItem}
@@ -410,19 +410,9 @@ const HomePage = () => {
           </div>
           <div className='col w-1/2 md:w-9/12 flex flex-wrap justify-end'>
             <FormArea className='hidden md:block md:max-w-[calc(100%-44px)]'>
-              <RadioTabs
-                selfRef={categoryRadioTabsOnStickyBarRef}
-                name='category'
-                radios={categoryList}
-                checkedValue={category}
-                onChange={(inputValue) => {
-                  handleCategoryChange(inputValue)
-                }}
-                disabled={isDisabled}
-              />
-              <RadioTabs selfRef={categoryRadioTabsOnStickyBarRef}>
+              <ScrollingRadioTabs selfRef={categoryRadioTabsOnStickyBarRef}>
                 { CategoryTabs }
-              </RadioTabs>
+              </ScrollingRadioTabs>
             </FormArea>
             <StickyBar.IconButton
               title='Open filter popup menu'
@@ -457,9 +447,9 @@ const HomePage = () => {
               <Popup.TitleInBody>
                 Category
               </Popup.TitleInBody>
-              <Popup.RadioTabsInBody>
+              <RadioTabs>
                 { CategoryTabsInPopup }
-              </Popup.RadioTabsInBody>
+              </RadioTabs>
             </FormArea>
           </Popup.Body>
           <Popup.Footer>
@@ -490,9 +480,9 @@ const HomePage = () => {
                   </Header.Title>
                 </Header.ShortContainer>
                 <Header.LongContainer isContentRight={true}>
-                  <RadioTabs selfRef={categoryRadioTabsRef}>
+                  <ScrollingRadioTabs selfRef={categoryRadioTabsRef}>
                     { CategoryTabs }
-                  </RadioTabs>
+                  </ScrollingRadioTabs>
                 </Header.LongContainer>
               </Header>
               <div>

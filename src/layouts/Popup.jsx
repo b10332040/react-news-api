@@ -4,7 +4,7 @@ import { useEffect, createContext, useContext } from 'react'
 import { useApp } from '/hooks'
 import { RxCross1 } from 'react-icons/rx'
 import { AiOutlineLeft } from 'react-icons/ai'
-import { isArrayEmpty, isExisted } from '/utils'
+import { isExisted } from '/utils'
 
 const defaultContext = {
   open: false,
@@ -311,131 +311,6 @@ TitleInBody.propTypes = {
 }
 
 /**
- * 多個單選標籤外層 (in body)
- * @param {object} props - 屬性
- * @param {node} props.children - 內容
- * @returns
- */
-const RadioTabsInBody = ({ children }) => {
-  return (
-    <ul className={styles['radio-tabs-in-body']['self']}>
-      { children }
-    </ul>
-  )
-}
-RadioTabsInBody.propTypes = {
-  children: PropTypes.node
-}
-
-/**
- * 單選標籤 (in body)
- * @param {object} props - 屬性
- * @param {string} props.name - name 屬性值
- * @param {object} props.radio - 資料
- * @param {string} props.checkedValue - 被選到的值
- * @param {func} props.onChange - 處理 change 事件
- * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
- * @returns
- */
-const RadioTabInBody = ({ name, radio, checkedValue, onChange, disabled=false }) => {
-  if (!isExisted(name) && !isExisted(radio.value) && !isExisted(radio.displayName)) {
-    return <></>
-  }
-
-  return (
-    <li className={styles['radio-tab-in-body']['self']}>
-      <input 
-        type='radio'
-        name={name}
-        value={radio.value}
-        id={radio.value}
-        checked={checkedValue === radio.value}
-        onChange={(event) => {
-          onChange?.(event.target.value)
-        }}
-        className={styles['radio-tab-in-body']['radio']}
-        disabled={disabled}
-      />
-      <label
-        htmlFor={radio.value}
-        className={styles['radio-tab-in-body']['label']}
-      >
-        {radio.displayName}
-      </label>
-    </li>
-  )
-}
-RadioTabInBody.propTypes = {
-  name: PropTypes.string.isRequired,
-  radio: PropTypes.object.isRequired,
-  checkedValue: PropTypes.string,
-  onChange: PropTypes.func,
-  disabled: PropTypes.bool
-}
-
-/**
- * 單選列表 (in body)
- * @param {object} props - 屬性
- * @param {node} props.children - 內容
- */
-const RadioListInBody = ({ children }) => {
-  return (
-    <ul className={styles['radio-list-in-body']['self']}>
-      { children }
-    </ul>
-  )
-}
-RadioListInBody.propTypes = {
-  children: PropTypes.node
-}
-
-/**
- * 單選項目 (in body)
- * @param {object} props - 屬性
- * @param {string} props.name - name 屬性值
- * @param {object} props.radio - 資料
- * @param {string} props.checkedValue - 被選到的值
- * @param {func} props.onChange - 處理 change 事件
- * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
- * @returns
- */
-const RadioItemInBody = ({ name, radio, checkedValue, onChange, disabled=false }) => {
-  if (!isExisted(name) && !isExisted(radio.value) && !isExisted(radio.displayName)) {
-    return <></>
-  }
-
-  return (
-    <li className={styles['radio-item-in-body']['self']}>
-      <input 
-        type='radio'
-        name={name}
-        value={radio.value}
-        id={radio.value}
-        checked={checkedValue === radio.value}
-        onChange={(event) => {
-          onChange?.(event.target.value)
-        }}
-        className={styles['radio-item-in-body']['radio']}
-        disabled={disabled}
-      />
-      <label
-        htmlFor={radio.value}
-        className={styles['radio-item-in-body']['label']}
-      >
-        {radio.displayName}
-      </label>
-    </li>
-  )
-}
-RadioItemInBody.propTypes = {
-  name: PropTypes.string.isRequired,
-  radio: PropTypes.object.isRequired,
-  checkedValue: PropTypes.string,
-  onChange: PropTypes.func,
-  disabled: PropTypes.bool
-}
-
-/**
  * 換其他內容按鈕
  * @param {object} props - 屬性
  * @param {string} props.title - title 屬性值
@@ -500,10 +375,6 @@ Popup.Header = Header
 Popup.Title = Title
 Popup.Body = Body
 Popup.TitleInBody = TitleInBody
-Popup.RadioTabsInBody = RadioTabsInBody
-Popup.RadioTabInBody = RadioTabInBody
-Popup.RadioListInBody = RadioListInBody
-Popup.RadioItemInBody = RadioItemInBody
 Popup.ChangeContentButtonInBody = ChangeContentButtonInBody
 Popup.Footer = Footer
 export default Popup

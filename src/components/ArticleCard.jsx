@@ -18,7 +18,7 @@ const ArticleCard = ({ type, article, className='' }) => {
   const dateDiff = (article?.publishedAt) ? formateDateDiff(article.publishedAt) : ''
   const sourceName = (article.source?.name) ? article.source.name : ''
   const randomType = !(isExisted(type))
-  let urlToImage = (article?.urlToImage) ? article.urlToImage : srcDefaultImage // 沒有圖片給預設圖片
+  const urlToImage = (article?.urlToImage) ? article.urlToImage : srcDefaultImage // 沒有圖片給預設圖片
   let LinkCover = <></>
   let TopImage = <></>
 
@@ -32,7 +32,7 @@ const ArticleCard = ({ type, article, className='' }) => {
         href={article.url}
         target='_blank'
         rel='noreferrer noopener'
-        className={styles['linkMask']}
+        className={styles['link-cover']}
       ></a>
     )
   }
@@ -73,7 +73,7 @@ const ArticleCard = ({ type, article, className='' }) => {
             ${(type === 'cover') ? styles['title--cover'] : styles['title--no-cover']}
           `}
         >
-          {title}
+          { title }
         </h3>
 
         <p 
