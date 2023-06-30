@@ -4,7 +4,7 @@ import { Main, Header, StickyBar, Popup, Waterfall, InnerPageBanner } from '/lay
 import { ArticleCard, Button, Head, Loading, FormArea, RadioTabs, ResultsText, Search, NoResults, RadioList, ScrollingRadioTabs } from '/components'
 import { useNews } from '/hooks'
 import { useEffect, useRef, useState } from 'react'
-import { formatNumber, getTotalPage, isArrayEmpty, isExisted, memoize, scrollToCheckedRadio } from '/utils'
+import { createRadios, formatNumber, getTotalPage, isArrayEmpty, isExisted, memoize, scrollToCheckedRadio } from '/utils'
 
 /**
  * 文章瀑布流
@@ -70,9 +70,9 @@ const WorldPage = () => {
   const filterPopupMenuId = 'filterPopupMenu'
   const isUpperContentInPopup = (popupContentType === 'upper') 
   let Result = <></>
-  let CategoryTabs = <></>
   let CountryItemsInPopup = <></>
   let CategoryTabsInPopup = <></>
+  let CategoryScrollingTabs = <></>
   let ContinentTabsInBanner = <></>
   let CountryInContinentTabsInBanner = <></>
   let countryListInContinent = []
@@ -213,90 +213,68 @@ const WorldPage = () => {
     }
   }
 
+
   // 產生(包含彈跳視窗中)所有分類的標籤
   if (!isArrayEmpty(categoryList)) {
-    CategoryTabs = categoryList.map((categoryItem) => {
-      return (
-        <ScrollingRadioTabs.Tab
-          key={categoryItem.value}
-          name='category'
-          radio={categoryItem}
-          checkedValue={category}
-          onChange={(inputValue) => {
-            handleCategoryChange(inputValue)
-          }}
-          disabled={isDisabled}
-        />
-      )
+    CategoryScrollingTabs = createRadios({
+      RadioComponent: ScrollingRadioTabs.Tab,
+      radios: categoryList,
+      name: 'category',
+      checkedValue: category,
+      onChange: (inputValue) => {
+        handleCategoryChange(inputValue)
+      },
+      disabled: isDisabled
     })
-    CategoryTabsInPopup = categoryList.map((categoryItem) => {
-      return (
-        <RadioTabs.Tab
-          key={categoryItem.value}
-          name='category'
-          radio={categoryItem}
-          checkedValue={category}
-          onChange={(inputValue) => {
-            handleCategoryChange(inputValue)
-          }}
-          disabled={isDisabled}
-        />
-      )
+    CategoryTabsInPopup = createRadios({
+      RadioComponent: RadioTabs.Tab,
+      radios: categoryList,
+      name: 'category',
+      checkedValue: category,
+      onChange: (inputValue) => {
+        handleCategoryChange(inputValue)
+      },
+      disabled: isDisabled
     })
   }
-
   // 產生 Banner 上所有洲的標籤
   if (!isArrayEmpty(continentList)) {
-    ContinentTabsInBanner = continentList.map((continentItem) => {
-      return (
-        <InnerPageBanner.RadioTab
-          key={continentItem.value}
-          mode='light'
-          name='continent'
-          radio={continentItem}
-          checkedValue={continentId}
-          onChange={(inputValue) => {
-            setContinentId(inputValue)
-          }}
-        />
-      )
+    ContinentTabsInBanner = createRadios({
+      RadioComponent: InnerPageBanner.RadioTab,
+      radios: continentList,
+      mode: 'light',
+      name: 'continent',
+      checkedValue: continentId,
+      onChange: (inputValue) => {
+        setContinentId(inputValue)
+      },
     })
   }
-
   // 產生 Banner 上當前洲所有國家的標籤
   if (!isArrayEmpty(countryListInContinent)) {
-    CountryInContinentTabsInBanner = countryListInContinent.map((countryItem) => {
-      return (
-        <InnerPageBanner.RadioTab
-          key={countryItem.value}
-          mode='dark'
-          name='country'
-          radio={countryItem}
-          checkedValue={countryId}
-          onChange={(inputValue) => {
-            handleCountryIdChange(inputValue)
-          }}
-          disabled={isDisabled}
-        />
-      )
+    CountryInContinentTabsInBanner = createRadios({
+      RadioComponent: InnerPageBanner.RadioTab,
+      radios: countryListInContinent,
+      mode: 'dark',
+      name: 'country',
+      checkedValue: countryId,
+      onChange: (inputValue) => {
+        handleCountryIdChange(inputValue)
+      },
+      disabled: isDisabled
     })
   }
-
   // 產生彈跳視窗中所有搜尋國家結果的標籤
   if (!isArrayEmpty(countrySearchList)) {
-    CountryItemsInPopup = countrySearchList.map((countrySearchItem) => {
-      return (
-        <RadioList.Item
-          key={countrySearchItem.value}
-          name='country'
-          radio={countrySearchItem}
-          checkedValue={countryId}
-          onChange={(inputValue) => {
-            handleCountryIdChange(inputValue)
-          }}
-          disabled={isDisabled}
-        />
-      )
+    CountryItemsInPopup = createRadios({
+      RadioComponent: RadioList.Item,
+      radios: countrySearchList,
+      name: 'country',
+      checkedValue: countryId,
+      onChange: (inputValue) => {
+        handleCountryIdChange(inputValue)
+      },
+      disabled: isDisabled
     })
   }
 
@@ -355,7 +333,7 @@ const WorldPage = () => {
           <div className='col w-1/2 md:w-9/12 flex flex-wrap justify-end'>
             <FormArea className='hidden md:block md:max-w-[calc(100%-44px)]'>
               <ScrollingRadioTabs selfRef={categoryRadioTabsOnStickyBarRef}>
-                { CategoryTabs }
+                { CategoryScrollingTabs }
               </ScrollingRadioTabs>
             </FormArea>
             <StickyBar.IconButton
@@ -473,7 +451,7 @@ const WorldPage = () => {
                 </Header.ShortContainer>
                 <Header.LongContainer isContentRight={true}>
                   <ScrollingRadioTabs selfRef={categoryRadioTabsRef}>
-                    { CategoryTabs }
+                    { CategoryScrollingTabs }
                   </ScrollingRadioTabs>
                 </Header.LongContainer>
               </Header>

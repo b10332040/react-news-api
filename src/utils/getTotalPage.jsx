@@ -5,11 +5,7 @@
  * @returns 
  */
 const getTotalPage = (totalResults, pageSize) => {
-  if (totalResults / pageSize > 0 && totalResults % pageSize === 0) {
-    return totalResults / pageSize
-  } else {
-    return Math.floor(totalResults / pageSize) + 1
-  }
+  return Math.ceil(totalResults / pageSize)
 }
 
 export default getTotalPage

@@ -1,3 +1,5 @@
+import createDropDownMenu from './createDropDownMenu'
+import createRadios from './createRadios'
 import formateDateDiff from './formateDateDiff'
 import formatNumber from './formateNumber'
 import getRandomNum from './getRandomNum'
@@ -9,6 +11,8 @@ import memoize from './memoize'
 import scrollToCheckedRadio from './scrollToCheckedRadio'
 
 export {
+  createDropDownMenu,
+  createRadios,
   formateDateDiff,
   formatNumber,
   getRandomNum,

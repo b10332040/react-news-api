@@ -24,7 +24,7 @@ import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
 import { ArticleCard, Button, Head, Loading, FormArea, ResultsText, Search, NoResults, ScrollingRadioTabs, RadioTabs } from '/components'
 import { useNews } from '/hooks'
 import { useEffect, useRef, useState } from 'react'
-import { formatNumber, getTotalPage, isArrayEmpty, memoize, scrollToCheckedRadio } from '/utils'
+import { createRadios, formatNumber, getTotalPage, isArrayEmpty, memoize, scrollToCheckedRadio } from '/utils'
 
 /**
  * 主 Banner 輪播前後箭頭按鈕
@@ -262,8 +262,8 @@ const HomePage = () => {
   const isDisabled = (loading || addingArticles)
   const filterPopupMenuId = 'filterPopupMenu'
   let Result = <></>
-  let CategoryTabs = <></>
   let CategoryTabsInPopup = <></>
+  let CategoryScrollingTabs = <></>
 
   // 載入（預設國家+預設分類）的第一頁文章
   useEffect(() => {
@@ -360,35 +360,28 @@ const HomePage = () => {
     }
   }
 
-  // 產生所有分類的標籤
+
+  // 產生(包含彈跳視窗中)所有分類的標籤
   if (!isArrayEmpty(categoryList)) {
-    CategoryTabs = categoryList.map((categoryItem) => {
-      return (
-        <ScrollingRadioTabs.Tab
-          key={categoryItem.value}
-          name='category'
-          radio={categoryItem}
-          checkedValue={category}
-          onChange={(inputValue) => {
-            handleCategoryChange(inputValue)
-          }}
-          disabled={isDisabled}
-        />
-      )
+    CategoryScrollingTabs = createRadios({
+      RadioComponent: ScrollingRadioTabs.Tab,
+      radios: categoryList,
+      name: 'category',
+      checkedValue: category,
+      onChange: (inputValue) => {
+        handleCategoryChange(inputValue)
+      },
+      disabled: isDisabled
     })
-    CategoryTabsInPopup = categoryList.map((categoryItem) => {
-      return (
-        <RadioTabs.Tab
-          key={categoryItem.value}
-          name='category'
-          radio={categoryItem}
-          checkedValue={category}
-          onChange={(inputValue) => {
-            handleCategoryChange(inputValue)
-          }}
-          disabled={isDisabled}
-        />
-      )
+    CategoryTabsInPopup = createRadios({
+      RadioComponent: RadioTabs.Tab,
+      radios: categoryList,
+      name: 'category',
+      checkedValue: category,
+      onChange: (inputValue) => {
+        handleCategoryChange(inputValue)
+      },
+      disabled: isDisabled
     })
   }
 
@@ -411,7 +404,7 @@ const HomePage = () => {
           <div className='col w-1/2 md:w-9/12 flex flex-wrap justify-end'>
             <FormArea className='hidden md:block md:max-w-[calc(100%-44px)]'>
               <ScrollingRadioTabs selfRef={categoryRadioTabsOnStickyBarRef}>
-                { CategoryTabs }
+                { CategoryScrollingTabs }
               </ScrollingRadioTabs>
             </FormArea>
             <StickyBar.IconButton
@@ -481,7 +474,7 @@ const HomePage = () => {
                 </Header.ShortContainer>
                 <Header.LongContainer isContentRight={true}>
                   <ScrollingRadioTabs selfRef={categoryRadioTabsRef}>
-                    { CategoryTabs }
+                    { CategoryScrollingTabs }
                   </ScrollingRadioTabs>
                 </Header.LongContainer>
               </Header>

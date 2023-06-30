@@ -6,7 +6,7 @@ import { Main, Header, StickyBar, Popup } from '/layouts'
 import { ArticleCard, Button, Head, Loading, FormArea, ResultsText, Search, NoResults, ScrollingRadioTabs, DropDownMenu, RadioList, ArticleCardListMode, RadioTabs } from '/components'
 import { useNews } from '/hooks'
 import { useEffect, useRef, useState } from 'react'
-import { formatNumber, getTotalPage, isArrayEmpty, isEncodedUrl, isExisted, memoize, scrollToCheckedRadio } from '/utils'
+import { createDropDownMenu, createRadios, formatNumber, getTotalPage, isArrayEmpty, isEncodedUrl, isExisted, memoize, scrollToCheckedRadio } from '/utils'
 import { CiSearch } from 'react-icons/ci'
 
 /**
@@ -76,7 +76,7 @@ const SearchPage = () => {
   let SortByItemsInPopup = <></>
   let CategoryTabsInPopup = <></>
   let CategoryDropDownMenu = <></>
-  let CategoryTabsInStickyBar = <></>
+  let CategoryScrollingTabs = <></>
 
   useEffect(() => {
     if (isExisted(encodeKeyword)) {
@@ -152,6 +152,90 @@ const SearchPage = () => {
     }
   }
 
+  // 產生排序所有項目
+  if (!isArrayEmpty(sortByList) && isExisted(sortByObj.displayName)) {
+    const SortByRadioItems = createRadios({
+      RadioComponent: RadioList.Item,
+      radios: sortByList,
+      name: 'sortBy',
+      checkedValue: sortBy,
+      onChange: (inputValue) => {
+        handleSortByChange(inputValue)
+      },
+      disabled: isDisabled
+    })
+    SortByDropDownMenu = createDropDownMenu({
+      menuId: 'sortByDropDownMenu',
+      open: sortByDropDownMenuOpen,
+      setOpen: setSortByDropDownMenuOpen,
+      openButtonTitle: 'Sort by',
+      openButtonDisabled: isDisabled,
+      openButtonChildren: `Sort by ${sortByObj.displayName}`,
+      menuChildren: (
+        <RadioList>
+          { SortByRadioItems }
+        </RadioList>
+      )
+    })
+    SortByItemsInPopup = SortByRadioItems
+  }
+
+  if (
+    !isArrayEmpty(categoryList) &&
+    (isExisted(categoryObj.displayName) || (!isExisted(categoryObj.displayName) && category === 'all'))
+  ) {
+    const tempCategoryList = [
+      { value: 'all', displayName: 'All' },
+      ...categoryList
+    ]
+
+    CategoryDropDownMenu = createDropDownMenu({
+      menuId: 'categoryDropDownMenu',
+      open: categoryDropDownMenuOpen,
+      setOpen: setCategoryDropDownMenuOpen,
+      openButtonTitle: 'Choose category',
+      openButtonDisabled: isDisabled,
+      openButtonChildren: (categoryObj?.displayName) ? categoryObj.displayName : 'All',
+      menuChildren: (
+        <RadioList>
+          { 
+            createRadios({
+              RadioComponent: RadioList.Item,
+              radios: tempCategoryList,
+              name: 'category',
+              checkedValue: category,
+              onChange: (inputValue) => {
+                handleCategoryChange(inputValue)
+              },
+              disabled: isDisabled
+            }) 
+          }
+        </RadioList>
+      )
+    })
+    
+    CategoryScrollingTabs = createRadios({
+      RadioComponent: ScrollingRadioTabs.Tab,
+      radios: tempCategoryList,
+      name: 'category',
+      checkedValue: category,
+      onChange: (inputValue) => {
+        handleCategoryChange(inputValue)
+      },
+      disabled: isDisabled
+    })
+    CategoryTabsInPopup = createRadios({
+      RadioComponent: RadioTabs.Tab,
+      radios: tempCategoryList,
+      name: 'category',
+      checkedValue: category,
+      onChange: (inputValue) => {
+        handleCategoryChange(inputValue)
+      },
+      disabled: isDisabled
+    })
+  }
+
   if (loading) {
     Result = (
       <div className='w-full h-[120px]'>
@@ -170,118 +254,6 @@ const SearchPage = () => {
         </>
       )
     }
-  }
-
-  if (!isArrayEmpty(sortByList) && isExisted(sortByObj.displayName)) {
-    const SortByRadioItems = sortByList.map((item) => {
-      return (
-        <RadioList.Item
-          key={item.value}
-          name='sortBy'
-          radio={item}
-          checkedValue={sortBy}
-          onChange={(inputValue) => {
-            handleSortByChange(inputValue)
-          }}
-          disabled={isDisabled}
-        />
-      )
-    })
-    SortByDropDownMenu = (
-      <DropDownMenu
-        menuId='sortByDropDownMenu'
-        open={sortByDropDownMenuOpen}
-        setOpen={setSortByDropDownMenuOpen}
-      >
-        <DropDownMenu.OpenButton
-          mode='light'
-          title='Chose Sort by'
-          disabled={isDisabled}
-        >
-          Sort by {sortByObj.displayName}
-        </DropDownMenu.OpenButton>
-        <DropDownMenu.Menu>
-          <RadioList>
-            { SortByRadioItems }
-          </RadioList>
-        </DropDownMenu.Menu>
-      </DropDownMenu>
-    )
-
-    SortByItemsInPopup = SortByRadioItems
-  }
-
-  if (
-    !isArrayEmpty(categoryList) &&
-    (isExisted(categoryObj.displayName) || (!isExisted(categoryObj.displayName) && category === 'all'))
-  ) {
-    const tempCategoryList = [
-      { value: 'all', displayName: 'All' },
-      ...categoryList
-    ]
-    const CategoryRadioItems = tempCategoryList.map((item) => {
-      return (
-        <RadioList.Item
-          key={item.value}
-          name='category'
-          radio={item}
-          checkedValue={category}
-          onChange={(inputValue) => {
-            handleCategoryChange(inputValue)
-          }}
-          disabled={isDisabled}
-        />
-      )
-    })
-    CategoryDropDownMenu = (
-      <DropDownMenu
-        menuId='categoryDropDownMenu'
-        open={categoryDropDownMenuOpen}
-        setOpen={setCategoryDropDownMenuOpen}
-      >
-        <DropDownMenu.OpenButton
-          mode='light'
-          title='Chose Category'
-          disabled={isDisabled}
-        >
-          {(categoryObj?.displayName) ? categoryObj.displayName : 'All'}
-        </DropDownMenu.OpenButton>
-        <DropDownMenu.Menu>
-          <RadioList>
-            { CategoryRadioItems }
-          </RadioList>
-        </DropDownMenu.Menu>
-      </DropDownMenu>
-    )
-
-    CategoryTabsInStickyBar = tempCategoryList.map((categoryItem) => {
-      return (
-        <ScrollingRadioTabs.Tab
-          key={categoryItem.value}
-          name='category'
-          radio={categoryItem}
-          checkedValue={category}
-          onChange={(inputValue) => {
-            handleCategoryChange(inputValue)
-          }}
-          disabled={isDisabled}
-        />
-      )
-    })
-    CategoryTabsInPopup = tempCategoryList.map((categoryItem) => {
-      return (
-        <RadioTabs.Tab
-          key={categoryItem.value}
-          name='category'
-          radio={categoryItem}
-          checkedValue={category}
-          onChange={(inputValue) => {
-            handleCategoryChange(inputValue)
-          }}
-          disabled={isDisabled}
-        />
-      )
-    })
   }
 
   return (
@@ -303,7 +275,7 @@ const SearchPage = () => {
           <div className='col w-1/2 md:w-9/12 flex flex-wrap justify-end'>
             <FormArea className='hidden md:block md:max-w-[calc(100%-44px)]'>
               <ScrollingRadioTabs selfRef={categoryRadioTabsOnStickyBarRef}>
-                { CategoryTabsInStickyBar }
+                { CategoryScrollingTabs }
               </ScrollingRadioTabs>
             </FormArea>
             <StickyBar.IconButton
