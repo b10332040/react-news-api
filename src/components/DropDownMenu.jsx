@@ -47,7 +47,10 @@ const DropDownMenu = ({ menuId, open=false, setOpen, children }) => {
     >
       <div
         ref={selfRef}
-        className={styles['drop-down-menu']['self']}
+        className={`
+          ${styles['drop-down-menu']['self']}
+          ${(open) ? 'z-30' : 'z-[1]'}
+        `}
       >
         { children }
       </div>
@@ -87,6 +90,7 @@ const OpenButton = ({ mode='dark', title, disabled, children }) => {
       className={`
         ${styles['open-button']['self']}
         ${(mode === 'light') ? styles['open-button']['self--light'] : styles['open-button']['self--dark']}
+        ${(open) ? 'focus:border-transparent' : ''}
       `}
       disabled={disabled}
     >

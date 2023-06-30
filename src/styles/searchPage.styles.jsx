@@ -51,6 +51,7 @@ const styles = {
     'self': clsx(
       'peer',
       'block',
+      'rounded-none',
       'w-full',
       'pr-[56px]',
       'py-2',

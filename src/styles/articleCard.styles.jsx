@@ -40,6 +40,7 @@ const styles = {
     'after:content-[""]',
     'after:block',
     'after:absolute',
+    'after:z-[1]',
     'after:top-0',
     'after:left-0',
     'after:w-full',

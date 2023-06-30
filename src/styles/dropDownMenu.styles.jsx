@@ -6,8 +6,7 @@ import clsx from 'clsx'
 const styles = {
   'drop-down-menu': {
     'self': clsx(
-      'relative',
-      'z-[1]'
+      'relative'
     )
   },
   'open-button': {
@@ -34,6 +33,7 @@ const styles = {
     ),
     'icon-wrap': clsx(
       'absolute',
+      'z-[1]',
       'top-1/2',
       'right-1',
       '-translate-y-1/2'

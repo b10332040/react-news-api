@@ -451,7 +451,7 @@ const SearchPage = () => {
               total={totalResults}
               className={`
                 px-3 mb-3
-                ${(totalResults === 0) ? 'invisible' : ''}
+                ${(totalResults === 0) ? 'hidden' : ''}
               `}
             />
           </div>
