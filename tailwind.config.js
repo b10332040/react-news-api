@@ -32,6 +32,15 @@ export default {
         loadingRotation: {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' }
+        },
+        ufo: {
+          '0%': {top: '0px', left: '0px', transform: 'rotate(-30deg)'},
+          '15%': {transform: 'rotate(-15deg)'},
+          '45%': {top: '-8px',left: '15px', transform: 'rotate(-15deg)'},
+          '50%': {top: '-12px'},
+          '55%': {top: '-8px',left: '217px', transform: 'rotate(15deg)'},
+          '85%': {transform: 'rotate(15deg)'},
+          '100%': {top: '0px', left: '220px', transform: 'rotate(30deg)'}
         }
       }
     },

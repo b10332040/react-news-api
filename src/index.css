@@ -15,8 +15,11 @@
     @apply focus:outline-none;
   }
 
+  html {
+    @apply h-full;
+  }
   body {
-    @apply overflow-x-hidden bg-[--theme-gray-50];
+    @apply overflow-x-hidden bg-[--theme-gray-50] h-full;
   }
 
   a, 
