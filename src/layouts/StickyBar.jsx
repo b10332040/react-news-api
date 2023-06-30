@@ -12,7 +12,10 @@ import { isExisted } from '/utils'
  * @param {node} props.children - 內容
  * @returns 
  */
-const StickyBar = ({ showStickyBarRef, children }) => {
+const StickyBar = ({
+  showStickyBarRef,
+  children
+}) => {
   const [showBar, setShowBar] = useState(false)
 
   useEffect(() => {
@@ -67,7 +70,14 @@ StickyBar.propTypes = {
  * @param {string} props.className - 樣式（預設：''）
  * @returns
  */
-const IconButton = ({ icon, title='', popupId, popupOpen=false, onClick, className='' }) => {
+const IconButton = ({
+  icon,
+  title='',
+  popupId,
+  popupOpen=false,
+  onClick,
+  className=''
+}) => {
   const selfClassName = styles['icon-button']['self']
   const iconClassName = styles['icon-button']['icon']
   let Icon = <BsFilter className={iconClassName} />

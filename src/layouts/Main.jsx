@@ -50,7 +50,10 @@ LeftSide.propTypes = {
  * @param {bool} props.isContentSticky - 內容是否 sticky（預設：false）
  * @returns 
  */
-const RightSide = ({ children, isContentSticky=false }) => {
+const RightSide = ({
+  children,
+  isContentSticky=false
+}) => {
   return (
     <div className={styles['right-side']['self']}>
       <div className={styles['right-side']['container']}>
@@ -78,7 +81,11 @@ RightSide.propTypes = {
  * @param {title} props.title - 標題
  * @param {node} props.children - 內容
  */
-const RightSideSection = ({contentType, title, children}) => {
+const RightSideSection = ({
+  contentType,
+  title,
+  children
+}) => {
   const isTitleExisted = isExisted(title)
 
   if (isExisted(contentType)) {

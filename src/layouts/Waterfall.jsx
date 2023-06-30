@@ -10,7 +10,11 @@ import { isExisted } from '/utils'
  * @param {node} props.children - 內容
  * @returns
  */
-const Waterfall = ({ breakpointCols, className='', children }) => {
+const Waterfall = ({
+  breakpointCols,
+  className='',
+  children
+}) => {
   if (!isExisted(breakpointCols)) {
     breakpointCols={
       default: 3,

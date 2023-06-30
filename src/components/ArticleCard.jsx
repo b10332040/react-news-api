@@ -11,7 +11,11 @@ import { srcDefaultImage } from '/assets/images'
  * @param {string} props.className - 樣式（預設：''）
  * @returns
  */
-const ArticleCard = ({ type, article, className='' }) => {
+const ArticleCard = ({
+  type,
+  article,
+  className=''
+}) => {
   const typeList = ['base', 'cover', 'text'] // （base：圖＋文 / cover：文壓圖 / text：純文字)
   const hasLink = (article?.url) ? true : false
   const title = (article?.title) ? article.title : ''

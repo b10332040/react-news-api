@@ -25,7 +25,10 @@ Header.propTypes = {
  * @param {node} props.children - 內容
  * @returns
  */
-const LongContainer = ({ isContentRight=false ,children }) => {
+const LongContainer = ({
+  isContentRight=false,
+  children
+}) => {
   return (
     <div
       className={`
@@ -49,7 +52,10 @@ LongContainer.propTypes = {
  * @param {node} props.children - 內容
  * @returns
  */
-const ShortContainer = ({ isContentRight=false ,children }) => {
+const ShortContainer = ({
+  isContentRight=false,
+  children
+}) => {
   return (
     <div
       className={`

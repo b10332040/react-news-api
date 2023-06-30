@@ -2,7 +2,7 @@ import { DropDownMenu } from "/components"
 
 /**
  * 產生下拉選單
- * @param {obj} obj - 物件
+ * @param {object} obj - 物件
  * @param {string} obj.menuId - menu ID
  * @param {bool} obj.open - menu 是否打開
  * @param {func} obj.setOpen - 設定 menu 是否打開
@@ -13,7 +13,16 @@ import { DropDownMenu } from "/components"
  * @param {node} obj.menuChildren - 選單的內容
  * @returns 
  */
-const createDropDownMenu = ({ menuId, open, setOpen, openButtonMode='light', openButtonTitle='', openButtonDisabled=false, openButtonChildren, menuChildren}) => {
+const createDropDownMenu = ({
+  menuId,
+  open,
+  setOpen,
+  openButtonMode='light',
+  openButtonTitle='', 
+  openButtonDisabled=false,
+  openButtonChildren,
+  menuChildren
+}) => {
     return (
       <DropDownMenu
         menuId={menuId}

@@ -2,11 +2,16 @@ import { isExisted } from "."
 
 /**
  * <input value = {value} ...> 該選項在容器中自動滾到指定方向
- * @param {string} direction - 滾動的指定方向（預設：'left'）
- * @param {object} radiosWrap - 有滾動卷軸的容器
- * @param {string} value - 值
+ * @param {object} obj
+ * @param {string} obj.direction - 滾動的指定方向（預設：'left'）
+ * @param {object} obj.radiosWrap - 有滾動卷軸的容器
+ * @param {string} obj.value - 值
  */
-const scrollToCheckedRadio = ({ direction='left' , radiosWrap, value }) => {
+const scrollToCheckedRadio = ({
+  direction='left',
+  radiosWrap,
+  value
+}) => {
   if (isExisted(value) && value !== '' && isExisted(radiosWrap.current)) {
     const selectedRadio = radiosWrap.current.querySelector(`input[value="${value}"]`)
     let radiosWrapDirection = 0

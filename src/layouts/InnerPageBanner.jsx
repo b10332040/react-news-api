@@ -48,7 +48,10 @@ import { FormArea } from '/components'
  * @param {node} props.children - 內容
  * @returns 
  */
-const InnerPageBanner = ({ bannerType='source', children }) => {
+const InnerPageBanner = ({
+  bannerType='source',
+  children
+}) => {
   const srcBannerTypesMap = {
     'source': {
       'lg': {
@@ -260,7 +263,10 @@ RadioTabsWrap.propTypes = {
  * @param {object} props.selfRef - ref
  * @param {node} props.children - 內容
  */
-const RadioTabs = ({ selfRef, children }) => {  
+const RadioTabs = ({
+  selfRef,
+  children
+}) => {  
   return (
     <ul ref={selfRef} className={styles['radio-tabs']['self']}>
       { children }
@@ -283,7 +289,14 @@ RadioTabs.propTypes = {
  * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
  * @returns
  */
-const RadioTab = ({ mode='', name, radio, checkedValue, onChange, disabled=false }) => {
+const RadioTab = ({
+  mode='',
+  name,
+  radio,
+  checkedValue,
+  onChange,
+  disabled=false
+}) => {
   if (!isExisted(name) && !isExisted(radio.value) && !isExisted(radio.displayName)) {
     return <></>
   }

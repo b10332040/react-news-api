@@ -10,7 +10,15 @@
  * @param {bool} obj.disabled - disabled 屬性值
  * @returns 
  */
-const createRadios = ({RadioComponent, radios, mode='', name, checkedValue, onChange, disabled=false}) => {
+const createRadios = ({
+  RadioComponent,
+  radios,
+  mode='',
+  name,
+  checkedValue,
+  onChange,
+  disabled=false
+}) => {
   return radios.map((radio) => {
     return (
       <RadioComponent

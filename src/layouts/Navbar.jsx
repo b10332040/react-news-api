@@ -15,7 +15,11 @@ import { FormArea } from '/components'
  * @param {node} props.children - 內容
  * @returns 
  */
-const NavbarPageNavLink = ({ to, title, children }) => {
+const NavbarPageNavLink = ({
+  to,
+  title,
+  children
+}) => {
   return (
     <li
      key={`nav-page-link-${title}`}

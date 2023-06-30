@@ -14,7 +14,15 @@ import { CiSearch } from 'react-icons/ci'
  * @param {bool} props.disabled - disabled 屬性值，選項是否不可輸入 (預設：false)
  * @returns
  */
-const Search = ({ onChange, onBlur, handleEnter, value, placeholder='', className='', disabled=false }) => {
+const Search = ({
+  onChange,
+  onBlur,
+  handleEnter,
+  value,
+  placeholder='',
+  className='',
+  disabled=false
+}) => {
   return (
     <div
       className={`

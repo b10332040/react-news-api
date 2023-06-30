@@ -16,7 +16,18 @@ import styles from '/styles/button.styles'
  * @param {node} props.children - 內容
  * @returns
  */
-const Button = ({type='button', display='inline-block', size='base', styled='filled', disabled=false, processing=false, onClick, title='', className='', children}) => {
+const Button = ({
+  type='button',
+  display='inline-block',
+  size='base',
+  styled='filled',
+  disabled=false,
+  processing=false,
+  onClick,
+  title='',
+  className='',
+  children
+}) => {
   return (
     <button
       type={type}

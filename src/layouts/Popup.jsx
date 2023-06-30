@@ -28,7 +28,15 @@ const usePopup = () => useContext(PopupContext)
  * @param {node} props.children - 內容
  * @returns
  */
-const Popup = ({ popupId, open=false, setOpen, overScreenHeight=true, dialogFullInMobile=false, backdropVisibleInMobile=false, children }) => {
+const Popup = ({
+  popupId,
+  open=false,
+  setOpen,
+  overScreenHeight=true,
+  dialogFullInMobile=false,
+  backdropVisibleInMobile=false,
+  children
+}) => {
   const { setBodyScroll } = useApp()
 
   useEffect(() => {
@@ -82,7 +90,10 @@ Popup.propTypes = {
  * @param {node} props.children - 內容
  * @returns
  */
-const Dialog = ({ size='base', children }) => {
+const Dialog = ({
+  size='base',
+  children
+}) => {
   const { open, overScreenHeight, dialogFullInMobile, backdropVisibleInMobile } = usePopup()
   let animationClassName = ''
   let maxWidthClassName = ''
@@ -141,7 +152,11 @@ Dialog.propTypes = {
  * @param {node} props.children - 內容
  * @returns 
  */
-const Content = ({ innerContentId, innerContentOpen=false, children }) => {
+const Content = ({
+  innerContentId,
+  innerContentOpen=false,
+  children
+}) => {
   if (isExisted(innerContentId)) {
     return (
       <div
@@ -177,7 +192,12 @@ Content.propTypes = {
  * @param {node} props.children - 內容
  * @returns 
  */
-const Header = ({ hasCloseButton=true, hasLeftArrowButton=false, onLeftArrowButtonClick, children }) => {
+const Header = ({
+  hasCloseButton=true,
+  hasLeftArrowButton=false,
+  onLeftArrowButtonClick,
+  children
+}) => {
   const { setOpen } = usePopup()
   let childrenWrapWidthClassName = 'w-full'
   let selfPaddingCLassName = ''
@@ -269,7 +289,11 @@ Title.propTypes = {
  * @param {node} props.children - 內容
  * @returns 
  */
-const Body = ({ selfRef, className='', children }) => {
+const Body = ({
+  selfRef,
+  className='',
+  children
+}) => {
   return (
     <div
       ref={selfRef}
@@ -295,7 +319,10 @@ Body.propTypes = {
  * @param {node} props.children - 內容
  * @returns 
  */
-const TitleInBody = ({ className='', children }) => {
+const TitleInBody = ({
+  className='',
+  children
+}) => {
   return (
     <h3 className={`
       ${styles['title-in-body']['self']}
@@ -320,7 +347,13 @@ TitleInBody.propTypes = {
  * @param {node} props.children - 內容
  * @returns 
  */
-const ChangeContentButtonInBody = ({ title, note, disabled=false, onClick, children }) => {
+const ChangeContentButtonInBody = ({
+  title,
+  note,
+  disabled=false,
+  onClick,
+  children
+}) => {
 
   return (
     <button

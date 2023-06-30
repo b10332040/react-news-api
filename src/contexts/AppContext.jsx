@@ -55,5 +55,5 @@ AppProvider.propTypes = {
 
 export {
   AppContext,
-  AppProvider
+  AppProvider,
 }

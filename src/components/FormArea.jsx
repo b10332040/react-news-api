@@ -8,7 +8,11 @@ import PropTypes from 'prop-types'
  * @param {node} props.children - 內容
  * @returns 
  */
-const FormArea = ({ onSubmit, className='', children }) => {
+const FormArea = ({
+  onSubmit,
+  className='',
+  children
+}) => {
   const handleSubmit = (event) => {
     event.preventDefault()
     onSubmit?.()

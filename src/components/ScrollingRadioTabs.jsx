@@ -9,7 +9,10 @@ import { isExisted } from '/utils'
  * @param {node} props.children - 內容
  * @returns
  */
-const ScrollingRadioTabs = ({ selfRef, children }) => {
+const ScrollingRadioTabs = ({
+  selfRef,
+  children
+}) => {
   return (
     <ul ref={selfRef} className={styles['scrolling-radio-tabs']['self']}>
       { children }
@@ -31,7 +34,13 @@ ScrollingRadioTabs.propTypes = {
  * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
  * @returns
  */
-const Tab = ({ name, radio, checkedValue, onChange, disabled=false }) => {
+const Tab = ({
+  name,
+  radio,
+  checkedValue,
+  onChange,
+  disabled=false
+}) => {
   if (!isExisted(name) && !isExisted(radio.value) && !isExisted(radio.displayName)) {
     return <></>
   }

@@ -3,7 +3,7 @@ import styles from '/styles/searchPage.styles'
 import { useParams } from 'react-router-dom'
 import { dummyNewsList } from '/data'
 import { Main, Header, StickyBar, Popup } from '/layouts'
-import { ArticleCard, Button, Head, Loading, FormArea, ResultsText, Search, NoResults, ScrollingRadioTabs, DropDownMenu, RadioList, ArticleCardListMode, RadioTabs } from '/components'
+import { ArticleCard, Button, Head, Loading, FormArea, ResultsText, Search, NoResults, ScrollingRadioTabs, DropDownMenu, RadioList, ArticleCardListMode, RadioTabs, Pagination } from '/components'
 import { useNews } from '/hooks'
 import { useEffect, useRef, useState } from 'react'
 import { createDropDownMenu, createRadios, formatNumber, getTotalPage, isArrayEmpty, isEncodedUrl, isExisted, memoize, scrollToCheckedRadio } from '/utils'
@@ -55,7 +55,7 @@ const SearchPage = () => {
   const [keyword, setKeyword] = useState('')
   const [category, setCategory] = useState('all')
   const [articleList, setArticleList] = useState(dummyNewsList.articles)
-  const [totalResults, setTotalResults] = useState(0)
+  const [totalResults, setTotalResults] = useState(100)
   const [popupMenuOpen, setPopupMenuOpen] = useState(false)
   const [noResultsMessage, setNoResultsMessage] = useState('')
   const [popupContentType, setPopupContentType] = useState('upper')
@@ -142,6 +142,7 @@ const SearchPage = () => {
     }
   }
 
+  // 處理類型改變
   const handleCategoryChange = (inputValue) => {
     setCategory(inputValue)
 
@@ -150,6 +151,12 @@ const SearchPage = () => {
       // setLoading(true)
       setPage(1)
     }
+  }
+
+  // 處理頁碼改變
+  const handlePageClick = (page) => {
+    console.log(page)
+    setPage(page)
   }
 
   // 產生排序所有項目
@@ -181,8 +188,8 @@ const SearchPage = () => {
   }
 
   if (
-    !isArrayEmpty(categoryList) &&
-    (isExisted(categoryObj.displayName) || (!isExisted(categoryObj.displayName) && category === 'all'))
+    !isArrayEmpty(categoryList)
+    && (isExisted(categoryObj.displayName) || (!isExisted(categoryObj.displayName) && category === 'all'))
   ) {
     const tempCategoryList = [
       { value: 'all', displayName: 'All' },
@@ -263,6 +270,7 @@ const SearchPage = () => {
         <div className='row items-center h-full'>
           <div className='col w-1/2 md:w-3/12'>
             <ResultsText
+              startWith='page'
               page={page}
               pageSize={pageSize}
               total={totalResults}
@@ -429,6 +437,15 @@ const SearchPage = () => {
           </div>
           <div ref={showStickyBarRef}>
             { Result }
+          </div>
+          <div> 
+            <Pagination
+              withEllipsis={true}
+              page={page}
+              pageSize={pageSize}
+              total={totalResults}
+              handlePageClick={handlePageClick}
+            />
           </div>
         </div>
       </Main>

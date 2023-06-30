@@ -10,7 +10,11 @@ import { AiFillBehanceCircle, AiFillGithub, AiOutlineLink, AiTwotoneMail } from 
  * @param {string} props.icon - 連結 icon
  * @returns
  */
-const SocialCircleLink = ({to, title, icon}) => {
+const SocialCircleLink = ({
+  to,
+  title,
+  icon
+}) => {
   const iconClassName = styles['icon']
   let Icon = <AiOutlineLink className={iconClassName} />
 

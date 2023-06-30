@@ -29,7 +29,13 @@ RadioTabs.propTypes = {
  * @param {bool} props.disabled - disabled 屬性值，選項是否不可點擊 (預設：false)
  * @returns
  */
-const Tab = ({ name, radio, checkedValue, onChange, disabled=false }) => {
+const Tab = ({
+  name,
+  radio,
+  checkedValue,
+  onChange,
+  disabled=false
+}) => {
   if (!isExisted(name) && !isExisted(radio.value) && !isExisted(radio.displayName)) {
     return <></>
   }

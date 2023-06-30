@@ -6,6 +6,7 @@ import FormArea from './FormArea'
 import Head from './Head'
 import Loading from './Loading'
 import NoResults from './NoResults'
+import Pagination from './Pagination'
 import RadioList from './RadioList'
 import RadioTabs from './RadioTabs'
 import ResultsText from './ResultsText'
@@ -23,6 +24,7 @@ export {
   Head,
   Loading,
   NoResults,
+  Pagination,
   RadioList,
   RadioTabs,
   ResultsText,

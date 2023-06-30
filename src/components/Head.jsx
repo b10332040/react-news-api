@@ -13,7 +13,11 @@ const baseUrl = `https://${import.meta.env.VITE_DOMAIN_NAME}`
  * @param {string} props.srcImage - 圖片 (預設：'')
  * @returns 
  */
-const Head = ({ title='', description='', srcImage='' }) => {
+const Head = ({
+  title='',
+  description='',
+  srcImage=''
+}) => {
   const location = useLocation()
   const seo = {
     title: `NEWS API ${(title !== '') && `- ${title}`}`,

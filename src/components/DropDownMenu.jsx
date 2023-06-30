@@ -21,7 +21,12 @@ const useDropDownMenu = () => useContext(DropDownMenuContext)
  * @param {node} props.children - 內容
  * @returns
  */
-const DropDownMenu = ({ menuId, open=false, setOpen, children }) => {
+const DropDownMenu = ({
+  menuId,
+  open=false,
+  setOpen,
+  children
+}) => {
   const selfRef = useRef(null)
 
   // 當點擊非 Drop down 的地方，收起 drop down
@@ -73,7 +78,12 @@ DropDownMenu.propTypes = {
  * @param {node} props.children - 內容
  * @returns
  */
-const OpenButton = ({ mode='dark', title, disabled, children }) => {
+const OpenButton = ({
+  mode='dark',
+  title,
+  disabled,
+  children
+}) => {
   const { open ,setOpen, menuId } = useDropDownMenu()
 
   return (

@@ -10,7 +10,10 @@ import { srcDefaultImage } from '/assets/images'
  * @param {string} props.className - 樣式（預設：''）
  * @returns
  */
-const ArticleCardListMode = ({ article, className='' }) => {
+const ArticleCardListMode = ({
+  article,
+  className=''
+}) => {
   const hasLink = (article?.url) ? true : false
   const title = (article?.title) ? article.title : ''
   const date = (article?.publishedAt) ? moment(article.publishedAt).format('ll') : ''

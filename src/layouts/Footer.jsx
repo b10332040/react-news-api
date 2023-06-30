@@ -13,7 +13,11 @@ import { contact } from '/data'
  * @param {node} props.children - 內容
  * @returns 
  */
-const FooterPageNavLink = ({ to, title, children }) => {
+const FooterPageNavLink = ({
+  to,
+  title,
+  children
+}) => {
   return (
     <li
       key={`footer-page-link-${title}`}
@@ -49,7 +53,12 @@ FooterPageNavLink.propTypes = {
  * @param {node} props.children - 內容
  * @returns 
  */
-const FooterContactLink = ({ to, title, icon='', children }) => {
+const FooterContactLink = ({
+  to,
+  title,
+  icon='',
+  children
+}) => {
   let Icon = <AiOutlineLink />
 
   switch (icon) {

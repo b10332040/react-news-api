@@ -11,7 +11,13 @@ import { formatNumber } from '/utils'
  * @param {string} props.className - 樣式（預設：''）
  * @returns
  */
-const ResultsText = ({ startWith='first', page, pageSize, total, className=''}) => {
+const ResultsText = ({
+  startWith='first',
+  page,
+  pageSize,
+  total,
+  className=''
+}) => {
   if (isNaN(total)) {
     return (
       <></>
