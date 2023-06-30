@@ -15,6 +15,10 @@ const styles = {
     'first:ml-0',
     'last:mr-0'
   ),
+  'ellipsis': clsx(
+    'w-[24px]',
+    'text-center'
+  ),
   'button': clsx(
     'group',
     'relative',

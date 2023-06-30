@@ -425,28 +425,10 @@ const SearchPage = () => {
       
       <Main>
         <div className={styles['container-inner']}>
-          <div className={(loading) ? 'hidden' : ''}>
-            <ResultsText
-              startWith='page'
-              page={page}
-              pageSize={pageSize}
-              total={totalResults}
-              className={`
-                px-3 mb-3
-                ${(totalResults === 0) ? 'hidden' : ''}
-              `}
-            />
-          </div>
           <div ref={showStickyBarRef}>
             { Result }
           </div>
-          <div
-            className={`
-              mt-6
-              ${(isArrayEmpty(articleList)) ? 'hidden' : ''}
-              ${(loading) ? 'opacity-50' : ''}
-            `}
-          > 
+          <div className='mt-6'> 
             <Pagination
               withEllipsis={true}
               page={page}

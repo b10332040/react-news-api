@@ -35,8 +35,17 @@ const Pagination = ({
     handlePageClick
   })
 
+  if (total === 0) {
+    return <></>
+  }
+
   return (
-    <ul className={styles['self']}>
+    <ul
+      className={`
+        ${styles['self']}
+        ${(disabled) ? 'opacity-50' : ''}
+      `}
+    >
       <li className={styles['item']}>
         <button
           type='button'
@@ -66,7 +75,9 @@ const Pagination = ({
                   key={item.page}
                   className={styles['item']}  
                 >
-                  ...
+                  <div className={styles['ellipsis']}>
+                    ...
+                  </div>
                 </li>
               )
             }
