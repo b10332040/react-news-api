@@ -2,11 +2,11 @@ import PropTypes from 'prop-types'
 import styles from '/styles/searchPage.styles'
 import { useParams } from 'react-router-dom'
 import { dummyNewsList } from '/data'
-import { Main, Header, StickyBar, Popup } from '/layouts'
-import { ArticleCard, Button, Head, Loading, FormArea, ResultsText, Search, NoResults, ScrollingRadioTabs, DropDownMenu, RadioList, ArticleCardListMode, RadioTabs, Pagination } from '/components'
+import { Main, StickyBar, Popup } from '/layouts'
+import { Button, Head, Loading, FormArea, ResultsText, NoResults, ScrollingRadioTabs, DropDownMenu, RadioList, ArticleCardListMode, RadioTabs, Pagination } from '/components'
 import { useNews } from '/hooks'
 import { useEffect, useRef, useState } from 'react'
-import { createDropDownMenu, createRadios, formatNumber, getTotalPage, isArrayEmpty, isEncodedUrl, isExisted, memoize, scrollToCheckedRadio } from '/utils'
+import { createRadios, formatNumber, getTotalPage, isArrayEmpty, isEncodedUrl, isExisted, memoize, scrollToCheckedRadio } from '/utils'
 import { CiSearch } from 'react-icons/ci'
 
 /**
@@ -67,6 +67,7 @@ const SearchPage = () => {
   const pageSize = 12
   const totalPage = getTotalPage(totalResults, pageSize)
   const isDisabled = loading
+  const isKeywordSubmit = (q !== '')
   const filterPopupMenuId = 'filterPopupMenu'
   const isUpperContentInPopup = (popupContentType === 'upper') 
   const sortByObj = (isExisted(sortByMap.get(sortBy))) ? sortByMap.get(sortBy) : {}
@@ -171,19 +172,20 @@ const SearchPage = () => {
       },
       disabled: isDisabled
     })
-    SortByDropDownMenu = createDropDownMenu({
-      menuId: 'sortByDropDownMenu',
-      open: sortByDropDownMenuOpen,
-      setOpen: setSortByDropDownMenuOpen,
-      openButtonTitle: 'Sort by',
-      openButtonDisabled: isDisabled,
-      openButtonChildren: `Sort by ${sortByObj.displayName}`,
-      menuChildren: (
+    SortByDropDownMenu = (
+      <DropDownMenu
+        menuId='sortByDropDownMenu'
+        open={sortByDropDownMenuOpen}
+        setOpen={setSortByDropDownMenuOpen}
+        openButtonTitle='Sort by'
+        openButtonDisabled={isDisabled}
+        openButtonChildren={`Sort by ${sortByObj.displayName}`}
+      >
         <RadioList>
           { SortByRadioItems }
         </RadioList>
-      )
-    })
+      </DropDownMenu>
+    )
     SortByItemsInPopup = SortByRadioItems
   }
 
@@ -195,15 +197,15 @@ const SearchPage = () => {
       { value: 'all', displayName: 'All' },
       ...categoryList
     ]
-
-    CategoryDropDownMenu = createDropDownMenu({
-      menuId: 'categoryDropDownMenu',
-      open: categoryDropDownMenuOpen,
-      setOpen: setCategoryDropDownMenuOpen,
-      openButtonTitle: 'Choose category',
-      openButtonDisabled: isDisabled,
-      openButtonChildren: (categoryObj?.displayName) ? categoryObj.displayName : 'All',
-      menuChildren: (
+    CategoryDropDownMenu = (
+      <DropDownMenu
+        menuId='categoryDropDownMenu'
+        open={categoryDropDownMenuOpen}
+        setOpen={setCategoryDropDownMenuOpen}
+        openButtonTitle='Choose category'
+        openButtonDisabled={isDisabled}
+        openButtonChildren={(categoryObj?.displayName) ? categoryObj.displayName : 'All'}
+      >
         <RadioList>
           { 
             createRadios({
@@ -218,8 +220,8 @@ const SearchPage = () => {
             }) 
           }
         </RadioList>
-      )
-    })
+      </DropDownMenu>
+    )
     
     CategoryScrollingTabs = createRadios({
       RadioComponent: ScrollingRadioTabs.Tab,
@@ -369,7 +371,7 @@ const SearchPage = () => {
               <div
                 className={`
                   ${styles['main-header']['result-text-wrap']}
-                  ${(q === '') ? 'invisible' : ''}
+                  ${(isKeywordSubmit) ? '' : 'invisible'}
                 `}
               >
                 <p className={styles['main-result-text']['self']}>
@@ -438,13 +440,20 @@ const SearchPage = () => {
           <div ref={showStickyBarRef}>
             { Result }
           </div>
-          <div> 
+          <div
+            className={`
+              mt-6
+              ${(isArrayEmpty(articleList)) ? 'hidden' : ''}
+              ${(loading) ? 'opacity-50' : ''}
+            `}
+          > 
             <Pagination
               withEllipsis={true}
               page={page}
               pageSize={pageSize}
               total={totalResults}
               handlePageClick={handlePageClick}
+              disabled={isDisabled}
             />
           </div>
         </div>

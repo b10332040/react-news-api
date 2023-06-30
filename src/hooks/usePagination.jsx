@@ -40,8 +40,8 @@ const usePagination = ({
       item.page === totalPage // 最後一頁
       || item.page === 1 // 第一頁
       || item.page === page // 當前頁
-      || item.page === page // 當前頁 + 1
-      || item.page === page // 當前頁 - 1
+      || item.page === page + 1 // 當前頁 + 1
+      || item.page === page - 1 // 當前頁 - 1
     ) {
       return item
     }

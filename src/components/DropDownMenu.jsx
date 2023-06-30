@@ -1,30 +1,29 @@
 import PropTypes from 'prop-types'
 import styles from '/styles/dropDownMenu.styles'
-import { createContext, useContext, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi'
-
-const defaultContext = {
-  open: false,
-  menuId: '',
-  setOpen: null
-}
-const DropDownMenuContext = createContext(defaultContext)
-const useDropDownMenu = () => useContext(DropDownMenuContext)
 
 /**
  * 下拉式
  * @param {object} props - 屬性
- * @param {object} props.selfRef - ref
- * @param {string} props.menuId - 選單 ID
- * @param {bool} props.open - 是否開啟 (預設：false)
- * @param {func} props.setOpen - 設定彈跳視窗是否關閉
- * @param {node} props.children - 內容
+ * @param {string} props.menuId - menu ID
+ * @param {bool} props.open - menu 是否打開
+ * @param {func} props.setOpen - 設定 menu 是否打開
+ * @param {string} props.openButtonMode - 打開按鈕模式
+ * @param {string} props.openButtonTitle - 打開按鈕 title 屬性值
+ * @param {bool} props.openButtonDisabled - 打開按鈕 disabled 屬性值
+ * @param {node} props.openButtonChildren - 打開按鈕的內容
+ * @param {node} props.children - 選單的內容
  * @returns
  */
 const DropDownMenu = ({
   menuId,
   open=false,
   setOpen,
+  openButtonMode='light',
+  openButtonTitle='', 
+  openButtonDisabled=false,
+  openButtonChildren,
   children
 }) => {
   const selfRef = useRef(null)
@@ -43,111 +42,67 @@ const DropDownMenu = ({
   }, [setOpen])
   
   return (
-    <DropDownMenuContext.Provider
-      value={{
-        open,
-        menuId,
-        setOpen
-      }}
+    <div
+      ref={selfRef}
+      className={`
+        ${styles['drop-down-menu']['self']}
+        ${(open) ? 'z-30' : 'z-[1]'}
+      `}
     >
-      <div
-        ref={selfRef}
+      <button
+        type='button'
+        title={openButtonTitle}
+        aria-label={openButtonTitle}
+        aria-controls={menuId}
+        aria-expanded={(open) ? 'true' : 'false'}
+        aria-haspopup='menu'
+        onClick={() => {
+          setOpen?.(!open)
+        }}
         className={`
-          ${styles['drop-down-menu']['self']}
-          ${(open) ? 'z-30' : 'z-[1]'}
+          ${styles['open-button']['self']}
+          ${(openButtonMode === 'light') ? styles['open-button']['self--light'] : styles['open-button']['self--dark']}
+          ${(open) ? 'focus:border-transparent' : ''}
+        `}
+        disabled={openButtonDisabled}
+      >
+        { openButtonChildren }
+        <div className={styles['open-button']['icon-wrap']}>
+          <BiChevronDown
+            className={`
+              ${styles['open-button']['icon']}
+              ${(open) ? 'hidden' : 'block'}
+            `}
+          />
+          <BiChevronUp
+            className={`
+              ${styles['open-button']['icon']}
+              ${(open) ? 'block' : 'hidden'}
+            `}
+          />
+        </div>
+      </button>
+      <div
+        id={menuId}
+        className={`
+          ${styles['menu']['self']}
+          ${(open) ? '' : 'invisible'}
         `}
       >
         { children }
       </div>
-    </DropDownMenuContext.Provider>
+    </div>
   )
 }
 DropDownMenu.propTypes = {
   menuId: PropTypes.string.isRequired,
   open: PropTypes.bool,
   setOpen: PropTypes.func,
+  openButtonMode: PropTypes.string,
+  openButtonTitle: PropTypes.string,
+  openButtonDisabled: PropTypes.bool,
+  openButtonChildren: PropTypes.node,
   children: PropTypes.node
 }
 
-/**
- * 開啟按鈕
- * @param {object} props - 屬性
- * @param {string} props.mode - 模式（預設：dark）
- * @param {string} props.title - title 屬性值
- * @param {bool} props.disabled - disabled 屬性值，按鈕是否不可點擊 (預設：false)
- * @param {node} props.children - 內容
- * @returns
- */
-const OpenButton = ({
-  mode='dark',
-  title,
-  disabled,
-  children
-}) => {
-  const { open ,setOpen, menuId } = useDropDownMenu()
-
-  return (
-    <button
-      type='button'
-      title={title}
-      aria-label={title}
-      aria-controls={menuId}
-      aria-expanded={(open) ? 'true' : 'false'}
-      aria-haspopup='menu'
-      onClick={() => {
-        setOpen?.(!open)
-      }}
-      className={`
-        ${styles['open-button']['self']}
-        ${(mode === 'light') ? styles['open-button']['self--light'] : styles['open-button']['self--dark']}
-        ${(open) ? 'focus:border-transparent' : ''}
-      `}
-      disabled={disabled}
-    >
-      { children }
-      <div className={styles['open-button']['icon-wrap']}>
-        <BiChevronDown
-          className={`
-            ${styles['open-button']['icon']}
-            ${(open) ? 'hidden' : 'block'}
-          `}
-        />
-        <BiChevronUp
-          className={`
-            ${styles['open-button']['icon']}
-            ${(open) ? 'block' : 'hidden'}
-          `}
-        />
-      </div>
-    </button>
-  )
-}
-OpenButton.propTypes = {
-  mode: PropTypes.string,
-  title: PropTypes.string,
-  disabled: PropTypes.bool,
-  children: PropTypes.node
-}
-
-const Menu = ({ children }) => {
-  const { menuId, open } = useDropDownMenu()
-  return (
-    <div
-      id={menuId}
-      className={`
-        ${styles['menu']['self']}
-        ${(open) ? '' : 'invisible' }
-      `}
-    >
-      { children }
-    </div>
-  )
-}
-Menu.propTypes = {
-  children: PropTypes.node
-}
-
-
-DropDownMenu.OpenButton = OpenButton
-DropDownMenu.Menu = Menu
 export default DropDownMenu
