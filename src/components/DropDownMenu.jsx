@@ -1,14 +1,12 @@
 import PropTypes from 'prop-types'
 import styles from '/styles/dropDownMenu.styles'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi'
 
 /**
  * 下拉式
  * @param {object} props - 屬性
  * @param {string} props.menuId - menu ID
- * @param {bool} props.open - menu 是否打開
- * @param {func} props.setOpen - 設定 menu 是否打開
  * @param {string} props.openButtonMode - 打開按鈕模式
  * @param {string} props.openButtonTitle - 打開按鈕 title 屬性值
  * @param {bool} props.openButtonDisabled - 打開按鈕 disabled 屬性值
@@ -18,20 +16,25 @@ import { BiChevronDown, BiChevronUp } from 'react-icons/bi'
  */
 const DropDownMenu = ({
   menuId,
-  open=false,
-  setOpen,
   openButtonMode='light',
   openButtonTitle='', 
   openButtonDisabled=false,
   openButtonChildren,
   children
 }) => {
+  const [open, setOpen] = useState(false)
   const selfRef = useRef(null)
+  const menuRef = useRef(null)
 
   // 當點擊非 Drop down 的地方，收起 drop down
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (selfRef.current && !selfRef.current.contains(event.target)) {
+      if (
+        selfRef.current
+        && menuRef.current
+        && !selfRef.current.contains(event.target)
+        && !menuRef.current.contains(event.target)
+      ) {
         setOpen?.(false);
       }
     };
@@ -62,7 +65,6 @@ const DropDownMenu = ({
         className={`
           ${styles['open-button']['self']}
           ${(openButtonMode === 'light') ? styles['open-button']['self--light'] : styles['open-button']['self--dark']}
-          ${(open) ? 'focus:border-transparent' : ''}
         `}
         disabled={openButtonDisabled}
       >
@@ -84,6 +86,7 @@ const DropDownMenu = ({
       </button>
       <div
         id={menuId}
+        ref={menuRef}
         className={`
           ${styles['menu']['self']}
           ${(open) ? '' : 'invisible'}
@@ -96,8 +99,6 @@ const DropDownMenu = ({
 }
 DropDownMenu.propTypes = {
   menuId: PropTypes.string.isRequired,
-  open: PropTypes.bool,
-  setOpen: PropTypes.func,
   openButtonMode: PropTypes.string,
   openButtonTitle: PropTypes.string,
   openButtonDisabled: PropTypes.bool,

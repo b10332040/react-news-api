@@ -54,13 +54,15 @@ const SearchPage = () => {
   const [loading, setLoading] = useState(false)
   const [keyword, setKeyword] = useState('')
   const [category, setCategory] = useState('all')
+  const [keywordList, setKeywordList] = useState([])
   const [articleList, setArticleList] = useState(dummyNewsList.articles)
   const [totalResults, setTotalResults] = useState(100)
   const [popupMenuOpen, setPopupMenuOpen] = useState(false)
+  const [keywordListOpen, setKeywordListOpen] = useState(false)
   const [noResultsMessage, setNoResultsMessage] = useState('')
   const [popupContentType, setPopupContentType] = useState('upper')
-  const [sortByDropDownMenuOpen, setSortByDropDownMenuOpen] = useState(false)
-  const [categoryDropDownMenuOpen, setCategoryDropDownMenuOpen] = useState(false)
+  const searchRef = useRef(null)
+  const keywordListRef = useRef(null)
   const showStickyBarRef = useRef(null)
   const categoryRadioTabsOnStickyBarRef = useRef(null)
   const { encodeKeyword } = useParams()
@@ -69,7 +71,9 @@ const SearchPage = () => {
   const isDisabled = loading
   const isKeywordSubmit = (q !== '')
   const filterPopupMenuId = 'filterPopupMenu'
-  const isUpperContentInPopup = (popupContentType === 'upper') 
+  const keywordListMaxLength = 10
+  const isUpperContentInPopup = (popupContentType === 'upper')
+  const hasKeywordList = (!isArrayEmpty(keywordList))
   const sortByObj = (isExisted(sortByMap.get(sortBy))) ? sortByMap.get(sortBy) : {}
   const categoryObj = (isExisted(categoryMap.get(category))) ? categoryMap.get(category) : {}
   let Result = <></>
@@ -80,6 +84,11 @@ const SearchPage = () => {
   let CategoryScrollingTabs = <></>
 
   useEffect(() => {
+    const keywordList = localStorage.getItem('keywordList')
+    if (keywordList && !isArrayEmpty(JSON.parse(keywordList))) {
+      setKeywordList(JSON.parse(keywordList))
+    }
+
     if (isExisted(encodeKeyword)) {
       let tempKeyword = encodeKeyword
       let tempQ = encodeKeyword
@@ -103,6 +112,31 @@ const SearchPage = () => {
     })
   },[category])
 
+  // 當點擊非 search bar 的地方，收起 keyword list
+  useEffect(() => {
+    const handleClickSearchOutside = (event) => {
+      if (
+        searchRef.current
+        && keywordListRef.current
+        && !searchRef.current.contains(event.target)
+        && !keywordListRef.current.contains(event.target)
+      ) {
+        setKeywordListOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickSearchOutside);
+    return () => {
+      document.removeEventListener('click', handleClickSearchOutside);
+    };
+  }, [])
+
+  // 當搜尋關鍵字有變更時，記錄到 Local storage
+  useEffect(() => {
+    if (hasKeywordList) {
+      localStorage.setItem('keywordList', JSON.stringify(keywordList))
+    }
+  }, [hasKeywordList, keywordList])
+
 
   // 處理 search 提交 
   const handleSearchSubmit = (value) => {
@@ -110,6 +144,15 @@ const SearchPage = () => {
     setKeyword(trimmedValue)
 
     if (trimmedValue !== '') {
+      // 紀錄尚未紀錄的關鍵字
+      if (keywordList.findIndex((item) => item === trimmedValue) === -1) {
+        const tempKeywordList = keywordList.slice(0, (keywordListMaxLength - 1))
+        setKeywordList([
+          trimmedValue,
+          ...tempKeywordList
+        ])
+      }
+      
       setQ(encodeURI(trimmedValue))
       // setLoading(true)
       setPage(1)
@@ -131,6 +174,15 @@ const SearchPage = () => {
   // 處理搜尋框 blur 事件，keyword 要去掉前後空白
   const handleSearchBlur = () => {
     setKeyword(keyword.trim())
+  }
+
+  // 處理關鍵字紀錄 click 事件
+  const handleKeywordHistoryClick = (keywordHistory) => {
+    setKeywordListOpen(false)
+    setKeyword(keywordHistory)
+    setQ(encodeURI(keywordHistory))
+    // setLoading(true)
+    setPage(1)
   }
 
   const handleSortByChange = (inputValue) => {
@@ -175,8 +227,6 @@ const SearchPage = () => {
     SortByDropDownMenu = (
       <DropDownMenu
         menuId='sortByDropDownMenu'
-        open={sortByDropDownMenuOpen}
-        setOpen={setSortByDropDownMenuOpen}
         openButtonTitle='Sort by'
         openButtonDisabled={isDisabled}
         openButtonChildren={`Sort by ${sortByObj.displayName}`}
@@ -200,8 +250,6 @@ const SearchPage = () => {
     CategoryDropDownMenu = (
       <DropDownMenu
         menuId='categoryDropDownMenu'
-        open={categoryDropDownMenuOpen}
-        setOpen={setCategoryDropDownMenuOpen}
         openButtonTitle='Choose category'
         openButtonDisabled={isDisabled}
         openButtonChildren={(categoryObj?.displayName) ? categoryObj.displayName : 'All'}
@@ -384,8 +432,14 @@ const SearchPage = () => {
                   handleSearchSubmit(keyword)
                 }}
               >
-                <div className={styles['main-search']['self-wrap']}>
+                <div
+                  className={`
+                    ${styles['main-search']['self-wrap']}
+                    ${(keywordListOpen) ? 'z-40' : 'z-[1]'}
+                  `}
+                >
                   <input
+                    ref={searchRef}
                     type='text'
                     name='keyword'
                     placeholder={`Search NEWS API`}
@@ -394,6 +448,11 @@ const SearchPage = () => {
                     }}
                     onBlur={() => {
                       handleSearchBlur()
+                    }}
+                    onFocus={() => {
+                      if (hasKeywordList) {
+                        setKeywordListOpen(true)
+                      }
                     }}
                     value={keyword}
                     autoComplete='off'
@@ -410,6 +469,35 @@ const SearchPage = () => {
                   >
                     <CiSearch className={styles['main-search']['submit-button-icon']} />
                   </button>
+                  <div
+                    ref={keywordListRef}
+                    className={`
+                      ${styles['main-search']['keyword-list']}
+                      ${(hasKeywordList && keywordListOpen) ? 'block' : 'hidden'}
+                    `}
+                  >
+                    <RadioTabs>
+                      { 
+                        keywordList.map((item) => {
+                          return (
+                            <button
+                              key={item}
+                              type='button'
+                              title={`history: ${item}`}
+                              aria-label={`history: ${item}`}
+                              onClick={() => {
+                                handleKeywordHistoryClick(item)
+                              }}
+                              className={styles['main-search']['keyword-tab']}
+                              disabled={isDisabled}
+                            >
+                              { item }
+                            </button>
+                          )
+                        })
+                      }
+                    </RadioTabs>
+                  </div>
                 </div>
               </FormArea>
               <FormArea className={styles['main-header']['drop-down-menu-wrap']}>

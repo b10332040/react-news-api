@@ -101,7 +101,7 @@ const Navbar = () => {
     setKeyword(keyword.trim())
   }
 
-  // 當點擊非 search bar 的地方，收起 drop down
+  // 當點擊非 search bar 的地方，收起 search bar
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {

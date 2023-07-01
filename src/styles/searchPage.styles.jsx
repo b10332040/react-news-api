@@ -45,7 +45,6 @@ const styles = {
   'main-search': {
     'self-wrap': clsx(
       'relative',
-      'z-[1]',
       'w-full',
     ),
     'self': clsx(
@@ -84,6 +83,37 @@ const styles = {
       'ml-auto',
       'text-white',
       'text-3xl',
+    ),
+    'keyword-list': clsx(
+      'absolute',
+      'z-[1]',
+      'top-full',
+      'left-0',
+      'min-w-full',
+      'max-h-[360px]',
+      'p-3',
+      'rounded-b',
+      'bg-white',
+      'overflow-y-auto',
+      'overflow-x-hidden',
+      'has-scrollbar',
+      'shadow-md'
+    ),
+    'keyword-tab': clsx(
+      'inline-block',
+      'mr-1',
+      'my-1',
+      'px-3',
+      'py-1',
+      'rounded-full',
+      'text-sm',
+      'text-[--theme-black]',
+      'bg-[--theme-gray-200]',
+      'enabled:hover:text-white',
+      'enabled:hover:bg-[--theme-black]',
+      'enabled:focus:text-white',
+      'enabled:focus:bg-[--theme-black]',
+      'disabled:opacity-50'
     )
   }
 }
