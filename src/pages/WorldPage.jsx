@@ -2,9 +2,9 @@ import PropTypes from 'prop-types'
 import { dummyNewsList } from '/data'
 import { Main, Header, StickyBar, Popup, Waterfall, InnerPageBanner } from '/layouts'
 import { ArticleCard, Button, Head, Loading, FormArea, RadioTabs, ResultsText, Search, NoResults, RadioList, ScrollingRadioTabs } from '/components'
-import { useNews } from '/hooks'
+import { useNews, usePagination } from '/hooks'
 import { useEffect, useRef, useState } from 'react'
-import { createRadios, formatNumber, getTotalPage, isArrayEmpty, isExisted, memoize, scrollToCheckedRadio } from '/utils'
+import { createRadios, formatNumber, isArrayEmpty, isExisted, memoize, scrollToCheckedRadio } from '/utils'
 
 /**
  * 文章瀑布流
@@ -63,7 +63,7 @@ const WorldPage = () => {
   const continentRadioTabsRef = useRef(null)
   const categoryRadioTabsOnStickyBarRef = useRef(null)
   const pageSize = 12
-  const totalPage = getTotalPage(totalResults, pageSize)
+  const { totalPage } = usePagination({ pageSize: pageSize, total: totalResults })
   const country = (countryId !== '' && isExisted(countryMap.get(countryId))) ? countryMap.get(countryId) : {}
   const continent = (continentId !== '' && isExisted(continentMap.get(continentId))) ? continentMap.get(continentId) : {}
   const isDisabled = (loading || addingArticles)

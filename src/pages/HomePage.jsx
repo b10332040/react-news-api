@@ -22,9 +22,9 @@ import { dummyNewsList } from '/data'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
 import { ArticleCard, Button, Head, Loading, FormArea, ResultsText, Search, NoResults, ScrollingRadioTabs, RadioTabs } from '/components'
-import { useNews } from '/hooks'
+import { useNews, usePagination } from '/hooks'
 import { useEffect, useRef, useState } from 'react'
-import { createRadios, formatNumber, getTotalPage, isArrayEmpty, memoize, scrollToCheckedRadio } from '/utils'
+import { createRadios, formatNumber, isArrayEmpty, memoize, scrollToCheckedRadio } from '/utils'
 
 /**
  * 主 Banner 輪播前後箭頭按鈕
@@ -258,7 +258,7 @@ const HomePage = () => {
   const categoryRadioTabsRef = useRef(null)
   const categoryRadioTabsOnStickyBarRef = useRef(null)
   const pageSize = 12
-  const totalPage = getTotalPage(totalResults, pageSize)
+  const { totalPage } = usePagination({ pageSize: pageSize, total: totalResults })
   const isDisabled = (loading || addingArticles)
   const filterPopupMenuId = 'filterPopupMenu'
   let Result = <></>

@@ -1,24 +1,22 @@
-import { getTotalPage } from '/utils'
-
 /**
  * 使用頁碼相關邏輯
  * @param {object} obj - 物件
- * @param {bool} obj.page - 目前第幾頁
- * @param {number} obj.pageSize - 一頁顯示幾筆資料
- * @param {number} obj.total - 資料總筆數
- * @param {number} obj.withEllipsis - 是否顯示 ...
+ * @param {bool} obj.page - 目前第幾頁（預設：1）
+ * @param {number} obj.pageSize - 一頁顯示幾筆資料（預設：12）
+ * @param {number} obj.total - 資料總筆數（預設：0）
+ * @param {number} obj.withEllipsis - 是否顯示 ...（預設：true）
  * @param {func} obj.handlePageClick - 當點擊頁碼
  * @returns
  */
 const usePagination = ({
-  page,
-  pageSize,
-  total,
-  withEllipsis,
+  page=1,
+  pageSize=12,
+  total=0,
+  withEllipsis=true,
   handlePageClick,
 }) => {
   // 計算總頁數
-  const totalPage = getTotalPage(total, pageSize)
+  const totalPage = Math.ceil(total / pageSize)
 
   // 給 Pagination 的資料
   const items = [...Array(totalPage).keys()]
@@ -28,7 +26,7 @@ const usePagination = ({
       type: 'page',
       isCurrent: item === page,
       page: item,
-      handlePageClick: () => handlePageClick(item)
+      handlePageClick: () => handlePageClick?.(item)
     }
   })
 

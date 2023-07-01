@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types'
 import styles from '/styles/searchPage.styles'
 import { useParams } from 'react-router-dom'
-import { dummyNewsList } from '/data'
 import { Main, StickyBar, Popup } from '/layouts'
 import { Button, Head, Loading, FormArea, ResultsText, NoResults, ScrollingRadioTabs, DropDownMenu, RadioList, ArticleCardListMode, RadioTabs, Pagination } from '/components'
-import { useNews } from '/hooks'
+import { useNews, usePagination } from '/hooks'
 import { useEffect, useRef, useState } from 'react'
-import { createRadios, formatNumber, getTotalPage, isArrayEmpty, isEncodedUrl, isExisted, memoize, scrollToCheckedRadio } from '/utils'
+import { createRadios, formatNumber, isArrayEmpty, isEncodedUrl, isExisted, memoize, scrollToCheckedRadio } from '/utils'
 import { CiSearch } from 'react-icons/ci'
+import { apiNewsEverything } from '/api/newsApi'
 
 /**
  * 文章列表
@@ -51,12 +51,12 @@ const SearchPage = () => {
   const [q, setQ] = useState('')
   const [page, setPage] = useState(1)
   const [sortBy, setSortBy] = useState('publishedAt')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [keyword, setKeyword] = useState('')
   const [category, setCategory] = useState('all')
   const [keywordList, setKeywordList] = useState([])
-  const [articleList, setArticleList] = useState(dummyNewsList.articles)
-  const [totalResults, setTotalResults] = useState(100)
+  const [articleList, setArticleList] = useState([])
+  const [totalResults, setTotalResults] = useState(0)
   const [popupMenuOpen, setPopupMenuOpen] = useState(false)
   const [keywordListOpen, setKeywordListOpen] = useState(false)
   const [noResultsMessage, setNoResultsMessage] = useState('')
@@ -67,7 +67,7 @@ const SearchPage = () => {
   const categoryRadioTabsOnStickyBarRef = useRef(null)
   const { encodeKeyword } = useParams()
   const pageSize = 12
-  const totalPage = getTotalPage(totalResults, pageSize)
+  const { totalPage } = usePagination({ pageSize: pageSize, total: totalResults })
   const isDisabled = loading
   const isKeywordSubmit = (q !== '')
   const filterPopupMenuId = 'filterPopupMenu'
@@ -90,6 +90,17 @@ const SearchPage = () => {
     }
 
     if (isExisted(encodeKeyword)) {
+      // const getInitialArticleList = async (data) => {
+      //   try {
+      //     const response = await apiNewsEverything(data)
+      //     console.log('getInitialArticleList try')
+      //     console.log(response)
+      //   } catch (error) {
+      //     console.log('getInitialArticleList catch error')
+      //     console.log(error)
+      //   }
+      // }
+
       let tempKeyword = encodeKeyword
       let tempQ = encodeKeyword
       if (isEncodedUrl(tempKeyword)) {
@@ -99,7 +110,11 @@ const SearchPage = () => {
       }
       setKeyword(tempKeyword)
       setQ(tempQ)
-      // 載入（此關鍵字+預設排序依據）的第一頁文章
+
+      // getInitialArticleList({
+      //   q: tempQ,
+      //   pageSize: pageSize
+      // })
     }
   }, [encodeKeyword])
 
