@@ -435,7 +435,7 @@ const SearchPage = () => {
                 <div
                   className={`
                     ${styles['main-search']['self-wrap']}
-                    ${(keywordListOpen) ? 'z-40' : 'z-[1]'}
+                    ${(keywordListOpen) ? 'z-30' : 'z-[1]'}
                   `}
                 >
                   <input
