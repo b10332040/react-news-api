@@ -12,15 +12,8 @@ import { useEffect, useState } from 'react'
 const BasicLayout = () => {
   const [isLoading, setIsLoading]  = useState(true)
 
-  const handleLoading = () => {
-    setIsLoading(false)
-  }
-
   useEffect(() => {
-    window.addEventListener('load', handleLoading)
-    return () => {
-      window.removeEventListener('load', handleLoading)
-    }
+    setIsLoading(false)
   }, [])
 
   return (
