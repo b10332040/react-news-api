@@ -30,7 +30,7 @@ const styles = {
     'absolute',
     'z-[1]',
     '-top-[12px]',
-    'left-[90px]',
+    'left-[92px]',
     'block',
     'text-white',
     'text-[52px]',
@@ -54,7 +54,7 @@ const styles = {
     'absolute',
     'z-[2]',
     'bottom-[36px]',
-    'left-[36px]',
+    'left-[40px]',
     'my-1',
     'text-white',
     'font-black',
@@ -75,16 +75,18 @@ const styles = {
     'block',
     'rounded-full',
     'border-2',
-    'border-[--theme-gray-400]',
+    'border-[--theme-gray-300]',
     'mx-auto',
     'max-w-[200px]',
     'py-2',
     'px-3',
     'text-[--theme-gray-300]',
     'text-opacity-70',
+    'opacity-70',
     'hover:text-[--theme-black]',
     'hover:border-[--theme-gray-50]',
-    'hover:bg-[--theme-gray-50]'
+    'hover:bg-[--theme-gray-50]',
+    'hover:opacity-100'
   )
 }
 

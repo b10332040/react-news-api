@@ -34,11 +34,11 @@ export default {
           '100%': { transform: 'rotate(360deg)' }
         },
         ufo: {
-          '0%': {top: '4px', left: '89px', transform: 'rotate(0deg)'},
-          '20%': {top: '-2px', left: '87px', transform: 'rotate(-6deg)'},
-          '50%': {top: '-8px', left: '89px', transform: 'rotate(0deg)'},
-          '80%': {top: '-2px', left: '93px', transform: 'rotate(4deg)'},
-          '100%': {top: '4px', left: '89px', transform: 'rotate(0deg)'}
+          '0%': {top: '4px', left: '92px', transform: 'rotate(0deg)'},
+          '20%': {top: '-2px', left: '90px', transform: 'rotate(-6deg)'},
+          '50%': {top: '-8px', left: '92px', transform: 'rotate(0deg)'},
+          '80%': {top: '-2px', left: '94px', transform: 'rotate(4deg)'},
+          '100%': {top: '4px', left: '92px', transform: 'rotate(0deg)'}
         },
         float: {
           '0%': { bottom: '52px', transform: 'rotate(0deg)' },
