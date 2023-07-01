@@ -39,7 +39,7 @@ const styles = {
   'header': clsx(
     'relative',
     'z-[1]',
-    'max-w-[340px]',
+    'max-w-[335px]',
     'mx-auto'
   ),
   '404': clsx(
