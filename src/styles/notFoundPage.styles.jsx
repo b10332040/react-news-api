@@ -24,31 +24,43 @@ const styles = {
     'z-[1]',
     'mx-auto',
     'w-[240px]',
-    'h-[48px]'
+    'h-[52px]'
   ),
   'icon': clsx(
     'absolute',
     'z-[1]',
-    'top-0',
-    'left-0',
+    '-top-[12px]',
+    'left-[90px]',
     'block',
     'text-white',
-    'text-[48px]',
-    'animate-[ufo_1s_ease-in-out_infinite_alternate]'
+    'text-[52px]',
+    'animate-[ufo_1s_linear_infinite]'
+  ),
+  'header': clsx(
+    'relative',
+    'z-[1]',
+    'max-w-[340px]',
+    'mx-auto'
   ),
   '404': clsx(
     'text-white',
     'font-black',
-    'text-[92px]',
+    'text-[170px]',
     'tracking-widest',
-    'leading-none'
+    'leading-none',
+    'opacity-5'
   ),
   'title': clsx(
+    'absolute',
+    'z-[2]',
+    'bottom-[36px]',
+    'left-[36px]',
     'my-1',
     'text-white',
     'font-black',
-    'text-[24px]',
-    'tracking-wide'
+    'text-[32px]',
+    'tracking-wide',
+    'animate-[float_1s_linear_infinite]'
   ),
   'description': clsx(
     'mb-4',

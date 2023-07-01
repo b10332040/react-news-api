@@ -34,13 +34,18 @@ export default {
           '100%': { transform: 'rotate(360deg)' }
         },
         ufo: {
-          '0%': {top: '0px', left: '0px', transform: 'rotate(-30deg)'},
-          '15%': {transform: 'rotate(-15deg)'},
-          '45%': {top: '-8px',left: '15px', transform: 'rotate(-15deg)'},
-          '50%': {top: '-12px'},
-          '55%': {top: '-8px',left: '217px', transform: 'rotate(15deg)'},
-          '85%': {transform: 'rotate(15deg)'},
-          '100%': {top: '0px', left: '220px', transform: 'rotate(30deg)'}
+          '0%': {top: '4px', left: '89px', transform: 'rotate(0deg)'},
+          '20%': {top: '-2px', left: '87px', transform: 'rotate(-6deg)'},
+          '50%': {top: '-8px', left: '89px', transform: 'rotate(0deg)'},
+          '80%': {top: '-2px', left: '93px', transform: 'rotate(4deg)'},
+          '100%': {top: '4px', left: '89px', transform: 'rotate(0deg)'}
+        },
+        float: {
+          '0%': { bottom: '52px', transform: 'rotate(0deg)' },
+          '20%': { transform: 'rotate(3deg)' },
+          '50%': { bottom: '72px', transform: 'rotate(0deg)' },
+          '80%': { transform: 'rotate(-2deg)' },
+          '100%': { bottom: '52px', transform: 'rotate(0deg)' }
         }
       }
     },

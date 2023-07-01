@@ -11,12 +11,14 @@ const NotFoundPage = () => {
         <div className={styles['icon-wrap']}>
           <TbUfo className={styles['icon']}/>
         </div>
-        <h2 className={styles['404']}>
-          404
-        </h2>
-        <h3 className={styles['title']}>
-          Page Not Found
-        </h3>
+        <header className={styles['header']}>
+          <h2 className={styles['404']}>
+            404
+          </h2>
+          <h3 className={styles['title']}>
+            Page Not Found
+          </h3>
+        </header>
         <p className={styles['description']}>
           This page was not found. You may have mistyped the address or the page may have moved.
         </p>
