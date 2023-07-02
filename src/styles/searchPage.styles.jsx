@@ -19,6 +19,10 @@ const styles = {
       'pt-36',
       'pb-20'
     ),
+    'row': clsx(
+      'row',
+      'items-end'
+    ),
     'result-text-wrap': clsx(
       'col',
       'mb-2',
@@ -27,12 +31,14 @@ const styles = {
     'search-bar-wrap': clsx(
       'col',
       'mb-6',
-      'w-full'
+      'w-full',
+      'md:w-2/3',
+      'md:mb-0'
     ),
     'drop-down-menu-wrap': clsx(
       'col',
       'w-full',
-      'md:w-1/2',
+      'md:w-1/3',
     )
   },
   'main-result-text': {
@@ -63,7 +69,8 @@ const styles = {
       'bg-transparent',
       'enabled:focus:border-opacity-50',
       'enabled:hover:border-opacity-50',
-      'disabled:opacity-50'
+      'disabled:opacity-50',
+      'md:text-lg'
     ),
     'submit-button': clsx(
       'absolute',
@@ -83,6 +90,7 @@ const styles = {
       'ml-auto',
       'text-white',
       'text-3xl',
+      'md:text-2xl'
     ),
     'keyword-list': clsx(
       'absolute',

@@ -2,12 +2,12 @@ import PropTypes from 'prop-types'
 import styles from '/styles/searchPage.styles'
 import { useParams } from 'react-router-dom'
 import { Main, StickyBar, Popup } from '/layouts'
-import { Button, Head, Loading, FormArea, ResultsText, NoResults, ScrollingRadioTabs, DropDownMenu, RadioList, ArticleCardListMode, RadioTabs, Pagination } from '/components'
-import { useNews, usePagination } from '/hooks'
-import { useEffect, useRef, useState } from 'react'
-import { createRadios, formatNumber, isArrayEmpty, isEncodedUrl, isExisted, memoize, scrollToCheckedRadio } from '/utils'
+import { Button, Head, Loading, FormArea, ResultsText, NoResults, DropDownMenu, RadioList, ArticleCardListMode, RadioTabs, Pagination } from '/components'
+import { useNews } from '/hooks'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { createRadios, formatNumber, isArrayEmpty, isExisted, memoize, isEncodedUrl } from '/utils'
 import { CiSearch } from 'react-icons/ci'
-import { apiNewsEverything } from '/api/newsApi'
+import { apiNewsEverything, getApiNewsResult } from '../api/apiNews'
 
 /**
  * 文章列表
@@ -47,96 +47,105 @@ const MemoizedArticleList = memoize(ArticleList)
  * @returns 
  */
 const SearchPage = () => {
-  const { keywordMaxLength, categoryList, categoryMap, sortByList, sortByMap } = useNews()
-  const [q, setQ] = useState('')
+  const { keywordMaxLength, sortByList, sortByMap } = useNews()
   const [page, setPage] = useState(1)
   const [sortBy, setSortBy] = useState('publishedAt')
   const [loading, setLoading] = useState(true)
   const [keyword, setKeyword] = useState('')
-  const [category, setCategory] = useState('all')
-  const [keywordList, setKeywordList] = useState([])
   const [articleList, setArticleList] = useState([])
   const [totalResults, setTotalResults] = useState(0)
   const [popupMenuOpen, setPopupMenuOpen] = useState(false)
-  const [keywordListOpen, setKeywordListOpen] = useState(false)
   const [noResultsMessage, setNoResultsMessage] = useState('')
   const [popupContentType, setPopupContentType] = useState('upper')
+  const [keywordHistoryList, setKeywordHistoryList] = useState([])
+  const [isKeywordSubmitted, setIsKeywordSubmitted] = useState(false)
+  const [keywordHistoryListMenuOpen, setKeywordHistoryListMenuOpen] = useState(false)
   const searchRef = useRef(null)
-  const keywordListRef = useRef(null)
   const showStickyBarRef = useRef(null)
-  const categoryRadioTabsOnStickyBarRef = useRef(null)
+  const keywordHistoryListRef = useRef(null)
   const { encodeKeyword } = useParams()
   const pageSize = 12
-  const { totalPage } = usePagination({ pageSize: pageSize, total: totalResults })
   const isDisabled = loading
-  const isKeywordSubmit = (q !== '')
-  const filterPopupMenuId = 'filterPopupMenu'
-  const keywordListMaxLength = 10
-  const isUpperContentInPopup = (popupContentType === 'upper')
-  const hasKeywordList = (!isArrayEmpty(keywordList))
   const sortByObj = (isExisted(sortByMap.get(sortBy))) ? sortByMap.get(sortBy) : {}
-  const categoryObj = (isExisted(categoryMap.get(category))) ? categoryMap.get(category) : {}
+  const filterPopupMenuId = 'filterPopupMenu'
+  const isUpperContentInPopup = (popupContentType === 'upper')
+  const hasKeywordHistoryList = (!isArrayEmpty(keywordHistoryList))
+  const keywordHistoryListMaxLength = 10
   let Result = <></>
   let SortByDropDownMenu = <></>
   let SortByItemsInPopup = <></>
-  let CategoryTabsInPopup = <></>
-  let CategoryDropDownMenu = <></>
-  let CategoryScrollingTabs = <></>
 
-  useEffect(() => {
-    const keywordList = localStorage.getItem('keywordList')
-    if (keywordList && !isArrayEmpty(JSON.parse(keywordList))) {
-      setKeywordList(JSON.parse(keywordList))
+  // 呼叫 API 取得文章
+  const getArticleListAsync = useCallback(async (data) => {
+    if (!isExisted(data.q)) {
+      setTotalResults(0)
+      setArticleList([])
+      setLoading(false)
+      setIsKeywordSubmitted(false)
+      return
     }
 
-    if (isExisted(encodeKeyword)) {
-      // const getInitialArticleList = async (data) => {
-      //   try {
-      //     const response = await apiNewsEverything(data)
-      //     console.log('getInitialArticleList try')
-      //     console.log(response)
-      //   } catch (error) {
-      //     console.log('getInitialArticleList catch error')
-      //     console.log(error)
-      //   }
-      // }
-
-      let tempKeyword = encodeKeyword
-      let tempQ = encodeKeyword
-      if (isEncodedUrl(tempKeyword)) {
-        tempKeyword = decodeURI(tempKeyword)
-      } else{
-        tempQ = encodeURI(tempQ)
-      }
-      setKeyword(tempKeyword)
-      setQ(tempQ)
-
-      // getInitialArticleList({
-      //   q: tempQ,
-      //   pageSize: pageSize
-      // })
+    // 修改狀態
+    setLoading(true)
+    setPage(data?.page ? data.page : 1)
+    setKeyword((isEncodedUrl(data.q)) ? decodeURI(data.q) : data.q)
+    if (data?.sortBy) {
+      setSortBy(data.sortBy)
     }
-  }, [encodeKeyword])
-
-  // 當類型 (category) 改變
-  useEffect(() => {
-    // 類型標籤列表（包含 sticky bar 上的）自動滾動到選到的類型
-    scrollToCheckedRadio({
-      radiosWrap: categoryRadioTabsOnStickyBarRef,
-      value: category
+    
+    // 呼叫 API
+    const response = await apiNewsEverything({
+      ...data,
+      pageSize: pageSize,
+      q: (isEncodedUrl(data.q)) ? data.q : encodeURI(data.q)
     })
-  },[category])
+    const result = getApiNewsResult(response)
+    if (result.status === 'ok') {
+      setTotalResults((result?.totalResults) ? result.totalResults : 0)
+      setArticleList(result.articles)
+      setNoResultsMessage('')
+    } else {
+      setTotalResults(0)
+      setArticleList([])
+      setNoResultsMessage((result?.message) ? result.message : '')
+    }
+    console.log(result)
 
-  // 當點擊非 search bar 的地方，收起 keyword list
+    setLoading(false)
+    setIsKeywordSubmitted(true)
+  }, [])
+
+  useEffect(() => {
+    // 把 Local storage 中曾送給 API 的關鍵字取出來
+    const keywordHistoryList = localStorage.getItem('keywordHistoryList')
+    if (keywordHistoryList && !isArrayEmpty(JSON.parse(keywordHistoryList))) {
+      setKeywordHistoryList(JSON.parse(keywordHistoryList))
+    }
+
+    // 網址路徑上是否有帶關鍵字
+    if (isExisted(encodeKeyword)) {
+      // 有 -> 取得（此關鍵字）文章
+      getArticleListAsync({
+        q: encodeKeyword
+      })
+
+    } else {
+      // 無
+      setLoading(false)
+      setNoResultsMessage('Please search something...')
+    }
+  }, [encodeKeyword, getArticleListAsync])
+
+  // 當點擊非 search bar 的地方，收起下拉選單（曾送給 API 的關鍵字列表）
   useEffect(() => {
     const handleClickSearchOutside = (event) => {
       if (
         searchRef.current
-        && keywordListRef.current
+        && keywordHistoryListRef.current
         && !searchRef.current.contains(event.target)
-        && !keywordListRef.current.contains(event.target)
+        && !keywordHistoryListRef.current.contains(event.target)
       ) {
-        setKeywordListOpen(false);
+        setKeywordHistoryListMenuOpen(false);
       }
     };
     document.addEventListener('click', handleClickSearchOutside);
@@ -145,44 +154,49 @@ const SearchPage = () => {
     };
   }, [])
 
-  // 當搜尋關鍵字有變更時，記錄到 Local storage
+  // 當送給 API 的關鍵字列表有變更時，記錄到 Local storage
   useEffect(() => {
-    if (hasKeywordList) {
-      localStorage.setItem('keywordList', JSON.stringify(keywordList))
+    if (hasKeywordHistoryList) {
+      localStorage.setItem('keywordHistoryList', JSON.stringify(keywordHistoryList))
     }
-  }, [hasKeywordList, keywordList])
+  }, [hasKeywordHistoryList, keywordHistoryList])
 
 
   // 處理 search 提交 
   const handleSearchSubmit = (value) => {
-    const trimmedValue = value.trim()
-    setKeyword(trimmedValue)
+    const tempKeyword = value.trim()
 
-    if (trimmedValue !== '') {
-      // 紀錄尚未紀錄的關鍵字
-      if (keywordList.findIndex((item) => item === trimmedValue) === -1) {
-        const tempKeywordList = keywordList.slice(0, (keywordListMaxLength - 1))
-        setKeywordList([
-          trimmedValue,
-          ...tempKeywordList
+    if (tempKeyword !== '') {
+      // 此送給 API 的關鍵字，尚未記錄進送給 API 的關鍵字列表中的話，紀錄進去
+      if (keywordHistoryList.findIndex((item) => item === tempKeyword) === -1) {
+        // 只記錄最近的幾筆
+        const tempKeywordHistoryList = keywordHistoryList.slice(0, (keywordHistoryListMaxLength - 1))
+        setKeywordHistoryList([
+          tempKeyword,
+          ...tempKeywordHistoryList
         ])
       }
-      
-      setQ(encodeURI(trimmedValue))
-      // setLoading(true)
-      setPage(1)
+      // 取得（此關鍵字 + 目前排序）第一篇文章
+      getArticleListAsync({
+        q: tempKeyword,
+        sortBy: sortBy
+      })
+
     } else {
-      setQ('')
+      // 清空
+      setPage(1)
+      setKeyword('')
+      setTotalResults(0)
       setArticleList([])
     }
   }
 
   const handleSearchChange = (inputValue) => {
     // 處理第一個字不能為空白
-    const trimmedValue = inputValue.trimStart()
+    const tempKeyword = inputValue.trimStart()
     // 不能超過限制字元數量
-    if (encodeURI(trimmedValue).length <= keywordMaxLength) {
-      setKeyword(trimmedValue)
+    if (encodeURI(tempKeyword).length <= keywordMaxLength) {
+      setKeyword(tempKeyword)
     }
   }
 
@@ -193,41 +207,51 @@ const SearchPage = () => {
 
   // 處理關鍵字紀錄 click 事件
   const handleKeywordHistoryClick = (keywordHistory) => {
-    setKeywordListOpen(false)
-    setKeyword(keywordHistory)
-    setQ(encodeURI(keywordHistory))
-    // setLoading(true)
-    setPage(1)
+    setKeywordHistoryListMenuOpen(false)
+
+    // 取得（此關鍵字 + 目前排序）第一篇文章
+    getArticleListAsync({
+      q: keywordHistory,
+      sortBy: sortBy
+    })
   }
 
+  // 處理當排序依據改變
   const handleSortByChange = (inputValue) => {
-    setSortBy(inputValue)
+    const tempKeyword = keyword.trim()
 
-    if (keyword !== '') {
-      // 載入（當前關鍵字+當前排序依據+此分類）的第一頁文章
-      // setLoading(true)
-      setPage(1)
-    }
-  }
+    // 檢查關鍵字是否有值
+    if (tempKeyword !== '') {
+      // 有 -> 載入（此排序依據 + 目前關鍵字）的第一頁文章
+      getArticleListAsync({
+        q: tempKeyword,
+        sortBy: inputValue
+      })
 
-  // 處理類型改變
-  const handleCategoryChange = (inputValue) => {
-    setCategory(inputValue)
-
-    if (keyword !== '') {
-      // 載入（當前關鍵字+當前排序依據+此分類）的第一頁文章
-      // setLoading(true)
-      setPage(1)
+    } else {
+      // 沒有 -> 只更新排序依據
+      setSortBy(inputValue)
     }
   }
 
   // 處理頁碼改變
   const handlePageClick = (page) => {
-    console.log(page)
-    setPage(page)
+    const tempKeyword = keyword.trim()
+
+    // 檢查關鍵字是否有值
+    if (tempKeyword !== '') {
+      // 取得（此頁碼 + 目前關鍵字 + 目前排序）第一篇文章
+      getArticleListAsync({
+        q: tempKeyword,
+        sortBy: sortBy,
+        page: page
+      })
+    } else {
+      setPage(page)
+    }
   }
 
-  // 產生排序所有項目
+  // 產生所有排序依據項目
   if (!isArrayEmpty(sortByList) && isExisted(sortByObj.displayName)) {
     const SortByRadioItems = createRadios({
       RadioComponent: RadioList.Item,
@@ -254,60 +278,7 @@ const SearchPage = () => {
     SortByItemsInPopup = SortByRadioItems
   }
 
-  if (
-    !isArrayEmpty(categoryList)
-    && (isExisted(categoryObj.displayName) || (!isExisted(categoryObj.displayName) && category === 'all'))
-  ) {
-    const tempCategoryList = [
-      { value: 'all', displayName: 'All' },
-      ...categoryList
-    ]
-    CategoryDropDownMenu = (
-      <DropDownMenu
-        menuId='categoryDropDownMenu'
-        openButtonTitle='Choose category'
-        openButtonDisabled={isDisabled}
-        openButtonChildren={(categoryObj?.displayName) ? categoryObj.displayName : 'All'}
-      >
-        <RadioList>
-          { 
-            createRadios({
-              RadioComponent: RadioList.Item,
-              radios: tempCategoryList,
-              name: 'category',
-              checkedValue: category,
-              onChange: (inputValue) => {
-                handleCategoryChange(inputValue)
-              },
-              disabled: isDisabled
-            }) 
-          }
-        </RadioList>
-      </DropDownMenu>
-    )
-    
-    CategoryScrollingTabs = createRadios({
-      RadioComponent: ScrollingRadioTabs.Tab,
-      radios: tempCategoryList,
-      name: 'category',
-      checkedValue: category,
-      onChange: (inputValue) => {
-        handleCategoryChange(inputValue)
-      },
-      disabled: isDisabled
-    })
-    CategoryTabsInPopup = createRadios({
-      RadioComponent: RadioTabs.Tab,
-      radios: tempCategoryList,
-      name: 'category',
-      checkedValue: category,
-      onChange: (inputValue) => {
-        handleCategoryChange(inputValue)
-      },
-      disabled: isDisabled
-    })
-  }
-
+  // 產生所有文章
   if (loading) {
     Result = (
       <div className='w-full h-[120px]'>
@@ -317,7 +288,7 @@ const SearchPage = () => {
   } else {
     if (isArrayEmpty(articleList)) {
       Result = (
-        <NoResults />
+        <NoResults message={noResultsMessage} />
       )
     } else {
       Result = (
@@ -346,11 +317,6 @@ const SearchPage = () => {
             />
           </div>
           <div className='col w-1/2 md:w-9/12 flex flex-wrap justify-end'>
-            <FormArea className='hidden md:block md:max-w-[calc(100%-44px)]'>
-              <ScrollingRadioTabs selfRef={categoryRadioTabsOnStickyBarRef}>
-                { CategoryScrollingTabs }
-              </ScrollingRadioTabs>
-            </FormArea>
             <StickyBar.IconButton
               title='Open filter popup menu'
               icon='filter'
@@ -397,13 +363,6 @@ const SearchPage = () => {
               >
                 Sort By
               </Popup.ChangeContentButtonInBody>
-              <hr className='mb-1'/>
-              <Popup.TitleInBody>
-                Category
-              </Popup.TitleInBody>
-              <RadioTabs>
-                { CategoryTabsInPopup }
-              </RadioTabs>
             </FormArea>
             {/* Sort By content */}
             <FormArea className={(isUpperContentInPopup)  ? 'hidden' : ''}>
@@ -430,11 +389,11 @@ const SearchPage = () => {
       <div className={styles['main-header']['self']}>
         <div className={styles['main-header']['container']}>
           <div className={styles['container-inner']}>
-            <div className='row items-center'>
+            <div className={styles['main-header']['row']}>
               <div
                 className={`
                   ${styles['main-header']['result-text-wrap']}
-                  ${(isKeywordSubmit) ? '' : 'invisible'}
+                  ${(isKeywordSubmitted) ? '' : 'invisible'}
                 `}
               >
                 <p className={styles['main-result-text']['self']}>
@@ -450,7 +409,7 @@ const SearchPage = () => {
                 <div
                   className={`
                     ${styles['main-search']['self-wrap']}
-                    ${(keywordListOpen) ? 'z-30' : 'z-[1]'}
+                    ${(keywordHistoryListMenuOpen) ? 'z-30' : 'z-[1]'}
                   `}
                 >
                   <input
@@ -465,8 +424,8 @@ const SearchPage = () => {
                       handleSearchBlur()
                     }}
                     onFocus={() => {
-                      if (hasKeywordList) {
-                        setKeywordListOpen(true)
+                      if (hasKeywordHistoryList) {
+                        setKeywordHistoryListMenuOpen(true)
                       }
                     }}
                     value={keyword}
@@ -485,15 +444,15 @@ const SearchPage = () => {
                     <CiSearch className={styles['main-search']['submit-button-icon']} />
                   </button>
                   <div
-                    ref={keywordListRef}
+                    ref={keywordHistoryListRef}
                     className={`
                       ${styles['main-search']['keyword-list']}
-                      ${(hasKeywordList && keywordListOpen) ? 'block' : 'hidden'}
+                      ${(hasKeywordHistoryList && keywordHistoryListMenuOpen) ? 'block' : 'hidden'}
                     `}
                   >
                     <RadioTabs>
                       { 
-                        keywordList.map((item) => {
+                        keywordHistoryList.map((item) => {
                           return (
                             <button
                               key={item}
@@ -517,9 +476,6 @@ const SearchPage = () => {
               </FormArea>
               <FormArea className={styles['main-header']['drop-down-menu-wrap']}>
                 { SortByDropDownMenu }
-              </FormArea>
-              <FormArea className={styles['main-header']['drop-down-menu-wrap']}>
-                { CategoryDropDownMenu }
               </FormArea>
             </div>
           </div>
