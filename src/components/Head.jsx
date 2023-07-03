@@ -3,7 +3,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { useLocation } from 'react-router-dom'
 import { srcFavicon, srcJpgHomeBanner1x } from '/assets/images'
 
-const baseUrl = `https://${process.env.DOMAIN_NAME}`
+const baseUrl = `https://${import.meta.env.VITE_DOMAIN_NAME}`
 
 /**
  * Head (meta/link...)
