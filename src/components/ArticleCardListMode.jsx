@@ -17,9 +17,9 @@ const ArticleCardListMode = ({
   const hasLink = (article?.url) ? true : false
   const title = (article?.title) ? article.title : ''
   const date = (article?.publishedAt) ? moment(article.publishedAt).format('ll') : ''
-  const description = (article?.description) ? article?.description : ''
   const sourceName = (article.source?.name) ? article.source.name : ''
   const urlToImage = (article?.urlToImage) ? article.urlToImage : srcDefaultImage // 沒有圖片給預設圖片
+  const description = (article?.description) ? article.description : ''
   let LinkCover = <></>
 
   if (hasLink) {
@@ -46,9 +46,10 @@ const ArticleCardListMode = ({
         <h3 className={styles['title']}>
           { title }
         </h3>
-        <p className={styles['description']}>
-          { description }
-        </p>
+        <div
+          dangerouslySetInnerHTML={{__html: description}}
+          className={styles['description']}
+        /> 
         <p className={styles['note']}>
           {`${sourceName}${(sourceName !== '' && date !== '') ? ' · ' : ''}${date}`}
         </p>

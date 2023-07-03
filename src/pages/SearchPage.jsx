@@ -41,13 +41,16 @@ ArticleList.propTypes = {
 }
 const MemoizedArticleList = memoize(ArticleList)
 
-
 /**
  * 搜尋結果頁
  * @returns 
  */
 const SearchPage = () => {
-  const { keywordMaxLength, sortByList, sortByMap } = useNews()
+  const {
+    keywordMaxLength,
+    sortByList,
+    sortByMap
+  } = useNews()
   const [page, setPage] = useState(1)
   const [sortBy, setSortBy] = useState('publishedAt')
   const [loading, setLoading] = useState(true)
@@ -109,8 +112,8 @@ const SearchPage = () => {
       setArticleList([])
       setNoResultsMessage((result?.message) ? result.message : '')
     }
-    console.log(result)
-
+    // console.log(result)
+    console.log('Search page: get article list')
     setLoading(false)
     setIsKeywordSubmitted(true)
   }, [])
@@ -162,8 +165,8 @@ const SearchPage = () => {
   }, [hasKeywordHistoryList, keywordHistoryList])
 
 
-  // 處理 search 提交 
-  const handleSearchSubmit = (value) => {
+  // 處理關鍵字提交
+  const handleKeywordSubmit = (value) => {
     const tempKeyword = value.trim()
 
     if (tempKeyword !== '') {
@@ -190,8 +193,8 @@ const SearchPage = () => {
       setArticleList([])
     }
   }
-
-  const handleSearchChange = (inputValue) => {
+  // 處理關鍵字改變
+  const handleKeywordChange = (inputValue) => {
     // 處理第一個字不能為空白
     const tempKeyword = inputValue.trimStart()
     // 不能超過限制字元數量
@@ -199,12 +202,10 @@ const SearchPage = () => {
       setKeyword(tempKeyword)
     }
   }
-
-  // 處理搜尋框 blur 事件，keyword 要去掉前後空白
-  const handleSearchBlur = () => {
+  // 處理關鍵字失去焦點，keyword 要去掉前後空白
+  const handleKeywordBlur = () => {
     setKeyword(keyword.trim())
   }
-
   // 處理關鍵字紀錄 click 事件
   const handleKeywordHistoryClick = (keywordHistory) => {
     setKeywordHistoryListMenuOpen(false)
@@ -278,7 +279,7 @@ const SearchPage = () => {
     SortByItemsInPopup = SortByRadioItems
   }
 
-  // 產生所有文章
+  // 處理文章區塊要顯示的內容
   if (loading) {
     Result = (
       <div className='w-full h-[120px]'>
@@ -403,7 +404,7 @@ const SearchPage = () => {
               <FormArea 
                 className={styles['main-header']['search-bar-wrap']}
                 onSubmit={() => {
-                  handleSearchSubmit(keyword)
+                  handleKeywordSubmit(keyword)
                 }}
               >
                 <div
@@ -418,10 +419,10 @@ const SearchPage = () => {
                     name='keyword'
                     placeholder={`Search NEWS API`}
                     onChange={(event) => {
-                      handleSearchChange(event.target.value)
+                      handleKeywordChange(event.target.value)
                     }}
                     onBlur={() => {
-                      handleSearchBlur()
+                      handleKeywordBlur()
                     }}
                     onFocus={() => {
                       if (hasKeywordHistoryList) {

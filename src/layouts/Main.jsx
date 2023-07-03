@@ -94,7 +94,7 @@ const RightSideSection = ({
         title = (isTitleExisted) ? title : 'About'
         children = (
           <p className='text-sm text-[--theme-gray-400] leading-loose'>
-            {/* 此新聞網站使用 React 框架以及串接
+            此新聞網站使用 React 框架建置以及串接
             <a
               target='_blank'
               rel='noreferrer noopener'
@@ -103,17 +103,7 @@ const RightSideSection = ({
             >
               News API
             </a>
-            製作而成，感謝您的閱覽。 */}
-            此新聞網站使用 React 框架建置，
-            待串接
-            <a
-              target='_blank'
-              rel='noreferrer noopener'
-              className='text-link'
-              href='https://newsapi.org/'
-            >
-              News API
-            </a>。
+            製作而成，感謝您的閱覽。
           </p>
         )
         break

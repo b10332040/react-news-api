@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
-import { dummyNewsList } from '/data'
 import { Main, Header, StickyBar, Popup, Waterfall, InnerPageBanner } from '/layouts'
 import { ArticleCard, Button, Head, Loading, FormArea, RadioTabs, ResultsText, Search, NoResults, RadioList, ScrollingRadioTabs } from '/components'
 import { useNews, usePagination } from '/hooks'
-import { useEffect, useRef, useState } from 'react'
-import { createRadios, formatNumber, isArrayEmpty, isExisted, memoize, scrollToCheckedRadio } from '/utils'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { createRadios, formatNumber, isArrayEmpty, isEncodedUrl, isExisted, memoize, scrollToCheckedRadio } from '/utils'
+import { apiNewsTopHeadlines, getApiNewsResult } from '/api/apiNews'
 
 /**
  * 文章瀑布流
@@ -37,25 +37,40 @@ ArticlesWaterfall.propTypes = {
 }
 const MemoizedArticlesWaterfall = memoize(ArticlesWaterfall)
 
+const defaultState = {
+  page: 1,
+  loading: true,
+  keyword: '',
+  category: 'general',
+  countryId: 'us',
+  continentId: 'northAmerica',
+  articleList: [],
+  totalResults: 0,
+  popupMenuOpen: false,
+  noResultsMessage: '',
+  popupContentType: 'upper',
+  addingArticleList: false
+}
+
 /**
  * 各國新聞
  * @returns 
  */
 const WorldPage = () => {
   const { keywordMaxLength, categoryList, continentList, countryList, continentMap, countryMap } = useNews()
-  const [page, setPage] = useState(1)
-  const [loading, setLoading] = useState(false)
-  const [keyword, setKeyword] = useState('')
-  const [category, setCategory] = useState('general')
-  const [countryId, setCountryId] = useState('tw')
-  const [continentId, setContinentId] = useState('asia')
-  const [articleList, setArticleList] = useState(dummyNewsList.articles)
-  const [totalResults, setTotalResults] = useState(0)
-  const [popupMenuOpen, setPopupMenuOpen] = useState(false)
-  const [addingArticles, setAddingArticles] = useState(false)
-  const [noResultsMessage, setNoResultsMessage] = useState('')
-  const [popupContentType, setPopupContentType] = useState('upper')
+  const [page, setPage] = useState(defaultState.page)
+  const [loading, setLoading] = useState(defaultState.loading)
+  const [keyword, setKeyword] = useState(defaultState.keyword)
+  const [category, setCategory] = useState(defaultState.category)
+  const [countryId, setCountryId] = useState(defaultState.countryId)
+  const [continentId, setContinentId] = useState(defaultState.continentId)
+  const [articleList, setArticleList] = useState(defaultState.articleList)
+  const [totalResults, setTotalResults] = useState(defaultState.totalResults)
+  const [popupMenuOpen, setPopupMenuOpen] = useState(defaultState.popupMenuOpen)
+  const [noResultsMessage, setNoResultsMessage] = useState(defaultState.noResultsMessage)
+  const [popupContentType, setPopupContentType] = useState(defaultState.popupContentType)
   const [countrySearchList, setCountrySearchList] = useState(countryList)
+  const [addingArticleList, setAddingArticleList] = useState(defaultState.addingArticleList)
   const popupBodyRef = useRef(null)
   const showStickyBarRef = useRef(null)
   const countryRadioTabsRef = useRef(null)
@@ -66,16 +81,16 @@ const WorldPage = () => {
   const { totalPage } = usePagination({ pageSize: pageSize, total: totalResults })
   const country = (countryId !== '' && isExisted(countryMap.get(countryId))) ? countryMap.get(countryId) : {}
   const continent = (continentId !== '' && isExisted(continentMap.get(continentId))) ? continentMap.get(continentId) : {}
-  const isDisabled = (loading || addingArticles)
+  const isDisabled = (loading || addingArticleList)
   const filterPopupMenuId = 'filterPopupMenu'
   const isUpperContentInPopup = (popupContentType === 'upper') 
+  let countryListInContinent = []
   let Result = <></>
   let CountryItemsInPopup = <></>
   let CategoryTabsInPopup = <></>
   let CategoryScrollingTabs = <></>
   let ContinentTabsInBanner = <></>
   let CountryInContinentTabsInBanner = <></>
-  let countryListInContinent = []
 
   // 取得選到的洲包含的所有國家資料
   if (continent?.countryValueList && !isArrayEmpty(continent.countryValueList)) {
@@ -86,11 +101,73 @@ const WorldPage = () => {
       }
     })
   }
-  
-  // 載入（預設國家+預設分類）的第一頁文章
-  useEffect(() => {
-    // setLoading(true)
+
+  // 呼叫 API 取得文章
+  const getArticleListAsync = useCallback(async (data) => {
+    let tempQ = ''
+
+    // 修改狀態
+    if (data?.page) {
+      setAddingArticleList(true)
+      setPage(data.page)
+    } else {
+      setLoading(true)
+      setPage(1)
+    }
+    if (data?.country) {
+      setCountryId(data.country)
+    }
+    if (data?.category) {
+      setCategory(data.category)
+    }
+    if (data?.q) {
+      setKeyword((isEncodedUrl(data.q)) ? decodeURI(data.q) : data.q)
+      tempQ = isEncodedUrl(data.q) ? data.q : encodeURI(data.q)
+    } else {
+      setKeyword('')
+    }
+    
+    // 呼叫 API
+    const response = await apiNewsTopHeadlines({
+      ...data,
+      pageSize: pageSize,
+      q: tempQ
+    })
+    const result = getApiNewsResult(response)
+    if (result.status === 'ok') {
+      setTotalResults((result?.totalResults) ? result.totalResults : 0)
+      // 判斷是否跟 API 要非第一頁資料
+      if (data?.page && data.page !== 1) {
+        // 是 -> 更新時保留舊的文章列表 + 新的文章列表
+        setArticleList((prevArticleList) => {
+          return [
+            ...prevArticleList,
+            ...result.articles
+          ]
+        })
+      } else {
+        // 否 -> 更新新的文章列表
+        setArticleList(result.articles)
+      }
+      setNoResultsMessage('')
+    } else {
+      setTotalResults(0)
+      setArticleList([])
+      setNoResultsMessage((result?.message) ? result.message : '')
+    }
+    // console.log(result)
+    console.log('World page: get article list')
+    setLoading(false)
+    setAddingArticleList(false)
   }, [])
+  
+  // 載入（預設國家 + 預設分類）的第一頁文章
+  useEffect(() => {
+    getArticleListAsync({
+      country: defaultState.countryId,
+      category: defaultState.category
+    })
+  }, [getArticleListAsync])
   
   // 當洲 (continentId) / 國家 (countryId) 改變
   useEffect(() => {
@@ -148,62 +225,63 @@ const WorldPage = () => {
     }
   }, [popupContentType, countryId])
 
-  
+
+  // 處理國家改變
   const handleCountryIdChange = (inputValue) => {
-    setCountryId(inputValue)
-    // setLoading(true)
-    setPage(1)
-    // 載入（此國家）的第一頁文章
+    // 載入（此國家 + 目前分類）的第一頁文章
+    getArticleListAsync({
+      country: inputValue,
+      category: category
+    })
   }
-
+  // 處理分類改變
   const handleCategoryChange = (inputValue) => {
-    setCategory(inputValue)
-    // setLoading(true)
-    setPage(1)
-    // 載入（當前國家+此分類）的第一頁文章
+    // 載入（此分類 + 當前國家）的第一頁文章
+    getArticleListAsync({
+      country: countryId,
+      category: inputValue
+    })
   }
-
-  const handleSearchChange = (inputValue) => {
+  
+  // 處理關鍵字改變
+  const handleKeywordChange = (inputValue) => {
     // 處理第一個字不能為空白
-    const trimmedValue = inputValue.trimStart()
+    const tempKeyword = inputValue.trimStart()
     // 不能超過限制字元數量
-    if (encodeURI(trimmedValue).length <= keywordMaxLength) {
-      setKeyword(trimmedValue)
-    }
-    
-    if (inputValue === '') {
-      // 當 input 的值為空時，載入（當前國家＋當前分類）的第一頁文章
-      setKeyword(inputValue)
+    if (encodeURI(tempKeyword).length <= keywordMaxLength) {
+      setKeyword(tempKeyword)
     }
   }
-
-  // 處理當搜尋框按下 Enter
-  const handleSearchEnter = (inputValue) => {
-    const trimmedValue = inputValue.trim()
-    setKeyword(trimmedValue)
-    // setLoading(true)
-    setPage(1)
-    // 載入（當前國家+當前分類+此搜尋結果）的第一篇文章
+  // 處理關鍵字提交
+  const handleKeywordSubmit = (inputValue) => {
+    // 載入（此搜尋結果 + 當前國家 + 當前分類）的第一篇文章
+    getArticleListAsync({
+      country: countryId,
+      category: category,
+      q: inputValue.trim()
+    })
   }
-
-  // 處理搜尋框 blur 事件，keyword 要去掉前後空白
-  const handleSearchBlur = () => {
+  // 處理關鍵字失去焦點，關鍵字要去掉前後空白
+  const handleKeywordBlur = () => {
     setKeyword(keyword.trim())
   }
 
+  // 處理載入更多文章
   const handleLoadMoreClick = () => {
-    setPage(page + 1)
-    setAddingArticles(true)
-    // 載入（當前國家+當前分類+當前搜尋結果）的下一頁文章
+    // 載入（當前國家 + 當前分類 + 當前搜尋結果）的下一頁文章
+    getArticleListAsync({
+      country: countryId,
+      category: category,
+      q: keyword,
+      page: page + 1
+    })
   }
 
-  // 處理搜尋國家 change 事件
+  // 處理搜尋國家列表
   const handleSearchCountryChange = (inputValue) => {
     const trimmedValue = inputValue.trim().toLowerCase()
-
     if (inputValue === '') {
       setCountrySearchList(countryList)
-
     } else {
       const tempCountryResult = countryList.filter((item) => {
         const tempItemDisplayName = item.displayName.toLowerCase()
@@ -303,8 +381,8 @@ const WorldPage = () => {
               mx-auto mt-6 max-w-[160px]
               ${!(totalPage > page) && 'invisible'}
             `}
-            disabled={addingArticles}
-            processing={addingArticles}
+            disabled={addingArticleList}
+            processing={addingArticleList}
             onClick={handleLoadMoreClick}
           >
             Load More
@@ -461,13 +539,13 @@ const WorldPage = () => {
                     <div className='px-3'>
                       <Search
                         onChange={(inputValue) => {
-                          handleSearchChange?.(inputValue)
+                          handleKeywordChange?.(inputValue)
                         }}
                         onBlur={(inputValue) => {
-                          handleSearchBlur?.(inputValue)
+                          handleKeywordBlur?.(inputValue)
                         }}
                         handleEnter={(inputValue) => {
-                          handleSearchEnter?.(inputValue)
+                          handleKeywordSubmit?.(inputValue)
                         }}
                         placeholder={`Max length: ${keywordMaxLength} chars`}
                         value={keyword}

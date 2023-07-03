@@ -1,6 +1,9 @@
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import styles from '/styles/homePage.styles'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
 import { 
   srcJpgHomeBanner1x,
   srcJpgHomeBanner2x,
@@ -15,16 +18,14 @@ import {
   srcWebpHomeBannerMd1x,
   srcWebpHomeBannerMd2x
 } from '/assets/images'
-import Slider from 'react-slick'
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
-import { dummyNewsList } from '/data'
+
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
 import { ArticleCard, Button, Head, Loading, FormArea, ResultsText, Search, NoResults, ScrollingRadioTabs, RadioTabs } from '/components'
 import { useNews, usePagination } from '/hooks'
-import { useEffect, useRef, useState } from 'react'
-import { createRadios, formatNumber, isArrayEmpty, memoize, scrollToCheckedRadio } from '/utils'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { createRadios, formatNumber, isArrayEmpty, isEncodedUrl, memoize, scrollToCheckedRadio } from '/utils'
+import { apiNewsTopHeadlines, getApiNewsResult } from '/api/apiNews'
 
 /**
  * 主 Banner 輪播前後箭頭按鈕
@@ -240,35 +241,106 @@ ArticlesWaterfall.propTypes = {
 const MemoizedMainBanner = memoize(MainBanner)
 const MemoizedArticlesWaterfall = memoize(ArticlesWaterfall)
 
+const defaultState = {
+  page: 1,
+  loading: true,
+  keyword: '',
+  category: 'general',
+  articleList: [],
+  totalResults: 0,
+  popupMenuOpen: false,
+  noResultsMessage: '',
+  addingArticleList: false
+}
+
 /**
  * 首頁
  * @returns 
  */
 const HomePage = () => {
-  const { keywordMaxLength, categoryList } = useNews()
-  const [page, setPage] = useState(1)
-  const [keyword, setKeyword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [category, setCategory] = useState('general')
-  const [articleList, setArticleList] = useState(dummyNewsList.articles)
-  const [totalResults, setTotalResults] = useState(0)
-  const [popupMenuOpen, setPopupMenuOpen] = useState(false)
-  const [addingArticles, setAddingArticles] = useState(false)
+  const { keywordMaxLength, categoryList} = useNews()
+  const [page, setPage] = useState(defaultState.page)
+  const [loading, setLoading] = useState(defaultState.loading)
+  const [keyword, setKeyword] = useState(defaultState.keyword)
+  const [category, setCategory] = useState(defaultState.category)
+  const [articleList, setArticleList] = useState(defaultState.articleList)
+  const [totalResults, setTotalResults] = useState(defaultState.totalResults)
+  const [popupMenuOpen, setPopupMenuOpen] = useState(defaultState.popupMenuOpen)
+  const [noResultsMessage, setNoResultsMessage] = useState(defaultState.noResultsMessage)
+  const [addingArticleList, setAddingArticleList] = useState(defaultState.addingArticleList)
   const showStickyBarRef = useRef(null)
   const categoryRadioTabsRef = useRef(null)
   const categoryRadioTabsOnStickyBarRef = useRef(null)
   const pageSize = 12
   const { totalPage } = usePagination({ pageSize: pageSize, total: totalResults })
-  const isDisabled = (loading || addingArticles)
+  const isDisabled = (loading || addingArticleList)
   const filterPopupMenuId = 'filterPopupMenu'
   let Result = <></>
   let CategoryTabsInPopup = <></>
   let CategoryScrollingTabs = <></>
 
-  // 載入（預設國家+預設分類）的第一頁文章
-  useEffect(() => {
-    // setLoading(true)
+  // 呼叫 API 取得文章
+  const getArticleListAsync = useCallback(async (data) => {
+    let tempQ = ''
+
+    // 修改狀態
+    if (data?.page) {
+      setAddingArticleList(true)
+      setPage(data.page)
+    } else {
+      setLoading(true)
+      setPage(1)
+    }
+    if (data?.category) {
+      setCategory(data.category)
+    }
+    if (data?.q) {
+      setKeyword((isEncodedUrl(data.q)) ? decodeURI(data.q) : data.q)
+      tempQ = isEncodedUrl(data.q) ? data.q : encodeURI(data.q)
+    } else {
+      setKeyword('')
+    }
+    
+    // 呼叫 API
+    const response = await apiNewsTopHeadlines({
+      ...data,
+      pageSize: pageSize,
+      q: tempQ
+    })
+    const result = getApiNewsResult(response)
+    if (result.status === 'ok') {
+      setTotalResults((result?.totalResults) ? result.totalResults : 0)
+      // 判斷是否跟 API 要非第一頁資料
+      if (data?.page && data.page !== 1) {
+        // 是 -> 更新時保留舊的文章列表 + 新的文章列表
+        setArticleList((prevArticleList) => {
+          return [
+            ...prevArticleList,
+            ...result.articles
+          ]
+        })
+      } else {
+        // 否 -> 更新新的文章列表
+        setArticleList(result.articles)
+      }
+      setNoResultsMessage('')
+    } else {
+      setTotalResults(0)
+      setArticleList([])
+      setNoResultsMessage((result?.message) ? result.message : '')
+    }
+    // console.log(result)
+    console.log('World page: get article list')
+    setLoading(false)
+    setAddingArticleList(false)
   }, [])
+
+  // 載入（預設分類）的第一頁文章
+  useEffect(() => {
+    getArticleListAsync({
+      category: defaultState.category
+    })
+  }, [getArticleListAsync])
   
   // 當類型 (category) 改變
   useEffect(() => {
@@ -283,46 +355,42 @@ const HomePage = () => {
     })    
   },[category])
 
-
+  // 處理分類改變
   const handleCategoryChange = (inputValue) => {
-    setCategory(inputValue)
-    // setLoading(true)
-    setPage(1)
     // 載入（此分類）的第一頁文章
+    getArticleListAsync({
+      category: inputValue
+    })
   }
-
-  const handleSearchChange = (inputValue) => {
-    const trimmedValue = inputValue.trimStart()
+  // 處理關鍵字改變
+  const handleKeywordChange = (inputValue) => {
+    const tempKeyword = inputValue.trimStart()
     // 不能超過限制字元數量
-    if (encodeURI(trimmedValue).length <= keywordMaxLength) {
-      setKeyword(trimmedValue)
-    }
-    
-    if (inputValue === '') {
-      // 當 input 的值為空時，載入（當前分類）的第一頁文章
-      setKeyword(inputValue)
+    if (encodeURI(tempKeyword).length <= keywordMaxLength) {
+      setKeyword(tempKeyword)
     }
   }
-
-  // 處理當搜尋框按下 Enter
-  const handleSearchEnter = (inputValue) => {
-    const trimmedValue = inputValue.trim()
-    setKeyword(trimmedValue)
-    // setLoading(true)
-    setPage(1)
-    // 載入（當前分類+此搜尋結果）的第一頁文章
+  // 處理關鍵字提交
+  const handleKeywordSubmit = (inputValue) => {
+    // 載入（此搜尋結果 + 當前分類）的第一篇文章
+    getArticleListAsync({
+      category: category,
+      q: inputValue.trim()
+    })
   }
-
-  // 處理搜尋框 blur 事件，keyword 要去掉前後空白
-  const handleSearchBlur = () => {
+  // 處理關鍵字失去焦點，關鍵字要去掉前後空白
+  const handleKeywordBlur = () => {
     setKeyword(keyword.trim())
   }
 
-  // 處理 load more click 事件
+  // 處理載入更多文章
   const handleLoadMoreClick = () => {
-    setPage(page + 1)
-    setAddingArticles(true)
-    // 載入（當前分類+當前搜尋結果）的下一頁文章
+    // 載入（當前分類 + 當前搜尋結果）的下一頁文章
+    getArticleListAsync({
+      category: category,
+      q: keyword,
+      page: page + 1
+    })
   }
   
 
@@ -335,7 +403,7 @@ const HomePage = () => {
   } else {
     if (isArrayEmpty(articleList)) {
       Result = (
-        <NoResults />
+        <NoResults message={noResultsMessage} />
       )
     } else {
       Result = (
@@ -349,8 +417,8 @@ const HomePage = () => {
               mx-auto mt-6 max-w-[160px]
               ${!(totalPage > page) && 'invisible'}
             `}
-            disabled={addingArticles}
-            processing={addingArticles}
+            disabled={addingArticleList}
+            processing={addingArticleList}
             onClick={handleLoadMoreClick}
           >
             Load More
@@ -484,13 +552,13 @@ const HomePage = () => {
                     <div className='px-3'>
                       <Search
                         onChange={(inputValue) => {
-                          handleSearchChange?.(inputValue)
+                          handleKeywordChange?.(inputValue)
                         }}
                         onBlur={(inputValue) => {
-                          handleSearchBlur?.(inputValue)
+                          handleKeywordBlur?.(inputValue)
                         }}
                         handleEnter={(inputValue) => {
-                          handleSearchEnter?.(inputValue)
+                          handleKeywordSubmit?.(inputValue)
                         }}
                         placeholder={`Max length: ${keywordMaxLength} chars`}
                         value={keyword}
