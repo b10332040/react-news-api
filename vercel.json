@@ -7,7 +7,7 @@
   ],
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/newsapi.org/(.*)",
       "headers": [
         { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
