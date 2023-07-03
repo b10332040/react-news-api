@@ -1,6 +1,6 @@
 import { createRequest } from "./api"
 
-const { request } = createRequest({ baseUrl: 'https://cors-anywhere.herokuapp.com/https://newsapi.org/' })
+const { request } = createRequest({ baseUrl: 'https://newsapi.org/' })
 const config = {
   headers: {
     'Authorization': `Bearer ${import.meta.env.VITE_NEWS_API_KEY}`
