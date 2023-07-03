@@ -41,11 +41,11 @@ export default {
           '100%': {top: '4px', left: '92px', transform: 'rotate(0deg)'}
         },
         float: {
-          '0%': { bottom: '52px', transform: 'rotate(0deg)' },
+          '0%': { bottom: '72px', transform: 'rotate(0deg)' },
           '20%': { transform: 'rotate(3deg)' },
-          '50%': { bottom: '72px', transform: 'rotate(0deg)' },
+          '50%': { bottom: '52px', transform: 'rotate(0deg)' },
           '80%': { transform: 'rotate(-2deg)' },
-          '100%': { bottom: '52px', transform: 'rotate(0deg)' }
+          '100%': { bottom: '72px', transform: 'rotate(0deg)' }
         }
       }
     },

@@ -34,7 +34,7 @@ const styles = {
     'block',
     'text-white',
     'text-[52px]',
-    'animate-[ufo_1s_linear_infinite]'
+    'animate-[ufo_1.4s_linear_infinite]'
   ),
   'header': clsx(
     'relative',
@@ -60,7 +60,7 @@ const styles = {
     'font-black',
     'text-[32px]',
     'tracking-wide',
-    'animate-[float_1s_linear_infinite]'
+    'animate-[float_1.4s_ease-in-out_infinite]'
   ),
   'description': clsx(
     'mb-4',

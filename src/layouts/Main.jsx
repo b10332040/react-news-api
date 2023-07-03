@@ -93,18 +93,50 @@ const RightSideSection = ({
       case 'about':
         title = (isTitleExisted) ? title : 'About'
         children = (
-          <p className='text-sm text-[--theme-gray-400] leading-loose'>
-            此新聞網站使用 React 框架建置以及串接
-            <a
-              target='_blank'
-              rel='noreferrer noopener'
-              className='text-link'
-              href='https://newsapi.org/'
-            >
-              News API
-            </a>
-            製作而成，感謝您的閱覽。
-          </p>
+          <div className='text-sm text-[--theme-gray-400] leading-loose'>
+            <p>
+              此新聞網站使用 React 框架建置以及串接
+              <a
+                target='_blank'
+                rel='noreferrer noopener'
+                className='text-link mx-1'
+                title='News API'
+                aria-label='News API'
+                href='https://newsapi.org/'
+              >
+                News API
+              </a>
+              製作而成，感謝您的閱覽。
+            </p>
+            <p className='mt-3'>版型參考：</p>
+            <ul>
+              <li className='inline-block'>
+                <a
+                  target='_blank'
+                  rel='noreferrer noopener'
+                  className='text-link'
+                  title='Colorlib/ WORLD'
+                  aria-label='Colorlib/ WORLD'
+                  href='https://preview.colorlib.com/#world'
+                >
+                  WORLD
+                </a>
+              </li>
+              <span className='mx-2'>/</span>
+              <li className='inline-block'>
+                <a
+                  target='_blank'
+                  rel='noreferrer noopener'
+                  className='text-link'
+                  title='Colorlib/ AVISION'
+                  aria-label='Colorlib/ AVISION'
+                  href='https://preview.colorlib.com/#avision'
+                >
+                  AVISION
+                </a>
+              </li>
+            </ul>
+          </div>
         )
         break
 
