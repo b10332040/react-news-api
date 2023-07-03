@@ -3,7 +3,7 @@ import { createRequest } from "./api"
 const { request } = createRequest({ baseUrl: 'https://newsapi.org/' })
 const config = {
   headers: {
-    'Authorization': 'Bearer 06039f9f95e94a01a9f3871f0eb46700'
+    'Authorization': `Bearer ${import.meta.env.VITE_NEWS_API_KEY}`
   }
 }
 
