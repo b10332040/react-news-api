@@ -496,8 +496,10 @@ const WorldPage = () => {
               onClick={() => {
                 setPopupMenuOpen(false)
               }}
+              processing={isDisabled}
+              disabled={isDisabled}
             >
-              {formatNumber(totalResults)} results
+              {(isDisabled) ? 'loading' : `${formatNumber(totalResults)} results`}
             </Button>
           </Popup.Footer>
         </Popup.Dialog>

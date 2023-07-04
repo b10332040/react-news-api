@@ -28,20 +28,20 @@ const styles = {
   ),
   'self--outlined': clsx(
     'text-[--theme-gray-400]',
-    'hover:enabled:bg-[--theme-gray-200]',
-    'hover:enabled:text-[--theme-black]',
-    'focus:enabled:bg-[--theme-gray-200]',
-    'focus:enabled:text-[--theme-black]'
+    'enabled:hover:bg-[--theme-gray-200]',
+    'enabled:hover:text-[--theme-black]',
+    'enabled:focus:bg-[--theme-gray-200]',
+    'enabled:focus:text-[--theme-black]'
   ),
   'self--filled': clsx(
     'text-[--theme-black]',
     'bg-[--theme-gray-200]',
-    'hover:enabled:bg-[--theme-black]',
-    'hover:enabled:border-[--theme-black]',
-    'hover:enabled:text-white',
-    'focus:enabled:bg-[--theme-black]',
-    'focus:enabled:border-[--theme-black]',
-    'focus:enabled:text-white'
+    'enabled:hover:bg-[--theme-black]',
+    'enabled:hover:border-[--theme-black]',
+    'enabled:hover:text-white',
+    'enabled:focus:bg-[--theme-black]',
+    'enabled:focus:border-[--theme-black]',
+    'enabled:focus:text-white'
   ),
   'self--processing': clsx(
     '[&>span]:relative',
