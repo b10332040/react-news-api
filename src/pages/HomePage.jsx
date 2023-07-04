@@ -329,7 +329,7 @@ const HomePage = () => {
       setArticleList([])
       setNoResultsMessage((result?.message) ? result.message : '')
     }
-    // console.log(result)
+    console.log(result)
     console.log('World page: get article list')
     setLoading(false)
     setAddingArticleList(false)
