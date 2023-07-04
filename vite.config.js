@@ -23,10 +23,7 @@ export default defineConfig({
       '/api': {
         target: 'https://newsapi.org',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-        headers: {
-          'Authorization': 'Bearer 06039f9f95e94a01a9f3871f0eb46700'
-        }
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   }

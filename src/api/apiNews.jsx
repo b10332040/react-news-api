@@ -2,11 +2,17 @@ import { createRequest } from "./api"
 
 const { request } = createRequest({ baseUrl: '/api/' })
 
+const config = {
+  headers: {
+    Authorization: 'Bearer 06039f9f95e94a01a9f3871f0eb46700',
+  },
+}
+
 const apiNewsEverything = (data=null) => {
-  return request('get', 'v2/everything', data)
+  return request('get', 'v2/everything', data, config)
 }
 const apiNewsTopHeadlines = (data=null) => {
-  return request('get', 'v2/top-headlines', data)
+  return request('get', 'v2/top-headlines', data, config)
 }
 const getApiNewsResult = (response) => {
   if (Object.keys(response.result) !== 0) {
