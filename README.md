@@ -45,7 +45,7 @@ npm install
 
 4.去 [News API](https://newsapi.org/) 申請 Api key。
 
-5.在更目錄下建立 .env 檔，並設定 VITE_NEWS_API_KEY
+5.在根目錄下建立 .env 檔，並設定 VITE_NEWS_API_KEY
 ```
 VITE_NEWS_API_KEY= {貼上在 News API 申請到的 api key}
 ```
