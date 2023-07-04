@@ -26,11 +26,6 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ''),
         headers: {
           'Authorization': 'Bearer 06039f9f95e94a01a9f3871f0eb46700'
-        },
-        ws: true,
-        onProxyReqWs: (proxyReq) => {
-          proxyReq.setHeader('Connection', 'Upgrade')
-          proxyReq.setHeader('Upgrade', 'websocket')
         }
       }
     }
