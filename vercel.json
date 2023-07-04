@@ -1,12 +1,12 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/api/(.*)",
+      "destination": "https://newsapi.org/$1"
     },
     {
-      "source": "/api/:path(.*)",
-      "destination": "https://newsapi.org/:path"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
