@@ -139,7 +139,7 @@ const MainBanner = ({ articles }) => {
       <div>
         <div className={styles['main-banner']['content']}>
           <h2 className={styles['main-banner']['title']}>
-            Welcome to the World !
+            Search worldwide news !
           </h2>
         </div>
       </div>
@@ -250,7 +250,8 @@ const defaultState = {
   totalResults: 0,
   popupMenuOpen: false,
   noResultsMessage: '',
-  addingArticleList: false
+  addingArticleList: false,
+  hasBannerArticleList: false
 }
 
 /**
@@ -268,6 +269,8 @@ const HomePage = () => {
   const [popupMenuOpen, setPopupMenuOpen] = useState(defaultState.popupMenuOpen)
   const [noResultsMessage, setNoResultsMessage] = useState(defaultState.noResultsMessage)
   const [addingArticleList, setAddingArticleList] = useState(defaultState.addingArticleList)
+  const [bannerArticleList, setBannerArticleList] = useState(defaultState.articleList)
+  const [hasBannerArticleList, setHasBannerArticleList] = useState(defaultState.hasBannerArticleList)
   const showStickyBarRef = useRef(null)
   const categoryRadioTabsRef = useRef(null)
   const categoryRadioTabsOnStickyBarRef = useRef(null)
@@ -322,6 +325,11 @@ const HomePage = () => {
       } else {
         // 否 -> 更新新的文章列表
         setArticleList(result.articles)
+        // banner 上的文章只需抓取一次
+        if (!hasBannerArticleList && !isArrayEmpty(result.articles)) {
+          setBannerArticleList(result.articles)
+          setHasBannerArticleList(true)
+        }
       }
       setNoResultsMessage('')
     } else {
@@ -333,7 +341,7 @@ const HomePage = () => {
     console.log('World page: get article list')
     setLoading(false)
     setAddingArticleList(false)
-  }, [])
+  }, [hasBannerArticleList])
 
   // 載入（預設分類）的第一頁文章
   useEffect(() => {
@@ -530,7 +538,7 @@ const HomePage = () => {
         </Popup.Dialog>
       </Popup>
 
-      <MemoizedMainBanner articles={articleList} />
+      <MemoizedMainBanner articles={bannerArticleList} />
 
       <Main>
         <Main.LeftSide>

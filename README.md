@@ -1,10 +1,12 @@
 # react-news-api
 專案：https://react-news-api-puce.vercel.app/
 
+此新聞網站使用 React 框架建置以及串接 [News API](https://newsapi.org/) 製作而成，感謝您的閱覽。
 
-目前只是靜態網站，屆時會串接 [News API](https://newsapi.org/)，UI 有參考以下網址：
+版型參考：
 - https://preview.colorlib.com/#world
 - https://preview.colorlib.com/#avision
+
 
 ---
 ### Environment - 環境建置
@@ -41,7 +43,14 @@ cd [專案資料夾]
 npm install
 ```
 
-4.啟動專案
+4.去 [News API](https://newsapi.org/) 申請 Api key。
+
+5.在更目錄下建立 .env 檔，並設定 VITE_NEWS_API_KEY
+```
+VITE_NEWS_API_KEY= {貼上在 News API 申請到的 api key}
+```
+
+6.啟動專案
 ```
 npm run dev
 ```

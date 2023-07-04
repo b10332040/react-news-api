@@ -10,7 +10,9 @@ const styles = {
     'items-center',
     'w-full',
     'h-screen',
-    'bg-[--theme-black]'
+    'bg-gradient-to-t',
+    'from-cyan-900',
+    'to-slate-900'
   ),
   'container': clsx(
     'mx-auto',
