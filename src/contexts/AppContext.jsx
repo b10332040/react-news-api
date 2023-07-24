@@ -68,7 +68,7 @@ const AppProvider = ({ children }) => {
     if (popupAlertOpen) {
       const timer = setTimeout(() => {
         setPopupAlertOpen(false)
-      }, 1500)
+      }, 2500)
       return () => clearTimeout(timer)
     }
   }, [popupAlertOpen])
