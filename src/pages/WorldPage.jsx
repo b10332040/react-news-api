@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import { Main, Header, StickyBar, Popup, Waterfall, InnerPageBanner } from '/layouts'
 import { ArticleCard, Button, Head, Loading, FormArea, RadioTabs, ResultsText, Search, NoResults, RadioList, ScrollingRadioTabs } from '/components'
-import { useNews, usePagination } from '/hooks'
+import { useApp, useNews, usePagination } from '/hooks'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createRadios, formatNumber, isArrayEmpty, isEncodedUrl, isExisted, memoize, scrollToCheckedRadio } from '/utils'
 import { apiNewsTopHeadlines, getApiNewsResult } from '/api/apiNews'
@@ -57,6 +57,7 @@ const defaultState = {
  * @returns 
  */
 const WorldPage = () => {
+  const { setPopupAlertOpen, setPopupAlertMessage } = useApp()
   const { keywordMaxLength, categoryList, continentList, countryList, continentMap, countryMap } = useNews()
   const [page, setPage] = useState(defaultState.page)
   const [loading, setLoading] = useState(defaultState.loading)
@@ -104,10 +105,11 @@ const WorldPage = () => {
 
   // 呼叫 API 取得文章
   const getArticleListAsync = useCallback(async (data) => {
+    const isAdding = (data?.page && data.page !== 1)
     let tempQ = ''
 
     // 修改狀態
-    if (data?.page) {
+    if (isAdding) {
       setAddingArticleList(true)
     } else {
       setLoading(true)
@@ -147,18 +149,29 @@ const WorldPage = () => {
         // 否 -> 更新新的文章列表
         setArticleList(result.articles)
       }
-      setPage(data?.page ? data.page : 1)
+      setPage((data?.page) ? data.page : 1)
       setNoResultsMessage('')
+
     } else {
+      const tempNoResultMessage = (result?.message) ? result.message : ''
       setTotalResults(0)
       setArticleList([])
-      setNoResultsMessage((result?.message) ? result.message : '')
+      setNoResultsMessage(tempNoResultMessage)
+
+      if (isAdding) {
+        setPopupAlertOpen(true)
+        setPopupAlertMessage({
+          icon: 'error',
+          title: 'OOPS!',
+          html: tempNoResultMessage
+        })
+      }
     }
     // console.log(result)
     console.log('World page: get article list')
     setLoading(false)
     setAddingArticleList(false)
-  }, [])
+  }, [setPopupAlertMessage, setPopupAlertOpen])
   
   // 載入（預設國家 + 預設分類）的第一頁文章
   useEffect(() => {

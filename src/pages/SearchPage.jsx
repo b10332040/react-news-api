@@ -105,7 +105,7 @@ const SearchPage = () => {
     if (result.status === 'ok') {
       setTotalResults((result?.totalResults) ? result.totalResults : 0)
       setArticleList(result.articles)
-      setPage(data?.page ? data.page : 1)
+      setPage((data?.page) ? data.page : 1)
       setNoResultsMessage('')
     } else {
       setTotalResults(0)

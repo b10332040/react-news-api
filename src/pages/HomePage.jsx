@@ -22,7 +22,7 @@ import {
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { Main, Header, StickyBar, Popup, Waterfall } from '/layouts'
 import { ArticleCard, Button, Head, Loading, FormArea, ResultsText, Search, NoResults, ScrollingRadioTabs, RadioTabs } from '/components'
-import { useNews, usePagination } from '/hooks'
+import { useApp, useNews, usePagination } from '/hooks'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createRadios, formatNumber, isArrayEmpty, isEncodedUrl, memoize, scrollToCheckedRadio } from '/utils'
 import { apiNewsTopHeadlines, getApiNewsResult } from '/api/apiNews'
@@ -259,6 +259,7 @@ const defaultState = {
  * @returns 
  */
 const HomePage = () => {
+  const { setPopupAlertOpen, setPopupAlertMessage } = useApp()
   const { keywordMaxLength, categoryList} = useNews()
   const [page, setPage] = useState(defaultState.page)
   const [loading, setLoading] = useState(defaultState.loading)
@@ -284,10 +285,11 @@ const HomePage = () => {
 
   // 呼叫 API 取得文章
   const getArticleListAsync = useCallback(async (data) => {
+    const isAdding = (data?.page && data.page !== 1)
     let tempQ = ''
 
     // 修改狀態
-    if (data?.page) {
+    if (isAdding) {
       setAddingArticleList(true)
     } else {
       setLoading(true)
@@ -331,16 +333,27 @@ const HomePage = () => {
       }
       setPage((data?.page) ? data.page : 1)
       setNoResultsMessage('')
+
     } else {
+      const tempNoResultMessage = (result?.message) ? result.message : ''
       setTotalResults(0)
       setArticleList([])
-      setNoResultsMessage((result?.message) ? result.message : '')
+      setNoResultsMessage(tempNoResultMessage)
+
+      if (isAdding) {
+        setPopupAlertOpen(true)
+        setPopupAlertMessage({
+          icon: 'error',
+          title: 'OOPS!',
+          html: tempNoResultMessage
+        })
+      }
     }
     // console.log(result)
     console.log('World page: get article list')
     setLoading(false)
     setAddingArticleList(false)
-  }, [hasBannerArticleList])
+  }, [hasBannerArticleList, setPopupAlertMessage, setPopupAlertOpen])
 
   // 載入（預設分類）的第一頁文章
   useEffect(() => {
