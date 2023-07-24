@@ -109,10 +109,8 @@ const WorldPage = () => {
     // 修改狀態
     if (data?.page) {
       setAddingArticleList(true)
-      setPage(data.page)
     } else {
       setLoading(true)
-      setPage(1)
     }
     if (data?.country) {
       setCountryId(data.country)
@@ -149,6 +147,7 @@ const WorldPage = () => {
         // 否 -> 更新新的文章列表
         setArticleList(result.articles)
       }
+      setPage(data?.page ? data.page : 1)
       setNoResultsMessage('')
     } else {
       setTotalResults(0)

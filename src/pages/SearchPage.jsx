@@ -90,7 +90,6 @@ const SearchPage = () => {
 
     // 修改狀態
     setLoading(true)
-    setPage(data?.page ? data.page : 1)
     setKeyword((isEncodedUrl(data.q)) ? decodeURI(data.q) : data.q)
     if (data?.sortBy) {
       setSortBy(data.sortBy)
@@ -106,6 +105,7 @@ const SearchPage = () => {
     if (result.status === 'ok') {
       setTotalResults((result?.totalResults) ? result.totalResults : 0)
       setArticleList(result.articles)
+      setPage(data?.page ? data.page : 1)
       setNoResultsMessage('')
     } else {
       setTotalResults(0)

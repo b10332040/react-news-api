@@ -289,10 +289,8 @@ const HomePage = () => {
     // 修改狀態
     if (data?.page) {
       setAddingArticleList(true)
-      setPage(data.page)
     } else {
       setLoading(true)
-      setPage(1)
     }
     if (data?.category) {
       setCategory(data.category)
@@ -331,6 +329,7 @@ const HomePage = () => {
           setHasBannerArticleList(true)
         }
       }
+      setPage((data?.page) ? data.page : 1)
       setNoResultsMessage('')
     } else {
       setTotalResults(0)
