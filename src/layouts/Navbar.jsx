@@ -59,6 +59,7 @@ const Navbar = () => {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const searchRef = useRef(null)
+  const searchInputRef = useRef(null)
 
   // 當 path name 改變
   useEffect(() => {
@@ -85,33 +86,30 @@ const Navbar = () => {
     }
   }
 
-  // 處理當搜尋框按下 Enter
-  const handleSearchEnter = (inputValue) => {
-    const trimmedValue = inputValue.trim()
-    setKeyword(trimmedValue)
+  // 處理送出搜尋
+  const handleKeywordSubmit = (keyword) => {
+    const trimmedKeyword = keyword.trim()
 
     // 轉到 result 頁面，並傳送 encodeURI 後的 trimmed value
-    if (trimmedValue !== '') {
-      navigate(`/search/${encodeURI(trimmedValue)}`)
+    if (trimmedKeyword !== '') {
+      navigate(`/search/${encodeURI(trimmedKeyword)}`)
+      setKeyword('')
+      setSearchInputOpen(false)
+      searchInputRef.current.blur()
     }
-  }
-
-  // 處理搜尋框 blur 事件，keyword 要去掉前後空白
-  const handleSearchBlur = () => {
-    setKeyword(keyword.trim())
   }
 
   // 當點擊非 search bar 的地方，收起 search bar
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setSearchInputOpen(false);
+        setSearchInputOpen(false)
       }
-    };
-    document.addEventListener('click', handleClickOutside);
+    }
+    document.addEventListener('click', handleClickOutside)
     return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
+      document.removeEventListener('click', handleClickOutside)
+    }
   }, [])
 
   return (
@@ -185,11 +183,18 @@ const Navbar = () => {
               ${(searchInputOpen) ? styles['search--open'] : styles['search--close']}
             `}
           >
-            <FormArea className='relative'>
+            <FormArea
+              className='relative'
+              onSubmit={() => {
+                handleKeywordSubmit(keyword)
+              }}
+            >
               <input
                 type='text'
                 placeholder={`Max length: ${keywordMaxLength} chars`}
+                name='keyword'
                 value={keyword}
+                ref={searchInputRef}
                 className={`
                   ${styles['search-input']}
                   ${(searchInputOpen) ? styles['search-input--open'] : styles['search-input--close']}
@@ -200,14 +205,6 @@ const Navbar = () => {
                 }}
                 onChange={(event) => {
                   handleSearchChange(event.target.value)
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') {
-                    handleSearchEnter(event.target.value);
-                  }
-                }}
-                onBlur={() => {
-                  handleSearchBlur()
                 }}
               />
               <button
@@ -222,9 +219,14 @@ const Navbar = () => {
                   setSearchInputOpen(false)
                 }}
               ></button>
-              <CiSearch
-                className={styles['search-icon']}
-              />
+              <button
+                type='submit'
+                title='Submit'
+                aria-label='Submit'
+                className={styles['search-submit-btn']}
+              >
+                <CiSearch className={styles['search-submit-btn-icon']} />
+              </button>
             </FormArea>
           </div>
         </div>

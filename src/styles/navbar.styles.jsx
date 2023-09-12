@@ -177,7 +177,7 @@ const styles = {
     'md:after:bg-[--theme-gray-400]',
     'md:after:rotate-45',
     'md:after:transition-all',
-    'md:after:duration-500',
+    'md:after:duration-300',
     'md:after:origin-[0_50%]'
   ),
   'search--open': clsx(
@@ -191,7 +191,8 @@ const styles = {
     'rounded-3xl',
     'border-2',
     'border-[--theme-gray-400]',
-    'px-4',
+    'pl-4',
+    'pr-10',
     'py-2',
     'w-full',
     'text-white',
@@ -200,7 +201,7 @@ const styles = {
     'placeholder:text-base',
     'transition-all',
     'duration-300',
-    'md:delay-500',
+    'md:delay-300',
     'focus-shadow-white',
     'md:placeholder:text-sm'
   ),
@@ -239,7 +240,7 @@ const styles = {
     'before:origin-center',
     'before:rotate-45',
     'before:transition-all',
-    'before:delay-500',
+    'before:delay-300',
     'after:content-[""]',
     'after:block',
     'after:absolute',
@@ -252,7 +253,7 @@ const styles = {
     'after:origin-center',
     'after:rotate-[315deg]',
     'after:transition-all',
-    'after:delay-500',
+    'after:delay-300',
   ),
   'search-close-btn--show': clsx(
     'md:visible',
@@ -263,6 +264,27 @@ const styles = {
     'md:invisible',
     'before:scale-0',
     'after:scale-0'
+  ),
+  'search-submit-btn': clsx(
+    'absolute',
+    'z-[1]',
+    'top-0',
+    'right-0',
+    'w-[48px]',
+    'h-full',
+    'opacity-70',
+    'enabled:hover:opacity-100',
+    'enabled:focus:opacity-100',
+    'md:hidden'
+  ),
+  'search-submit-btn-icon': clsx(
+    'absolute',
+    'z-[1]',
+    'top-[50%]',
+    'right-3',
+    '-translate-y-[50%]',
+    'fill-white',
+    'text-xl'
   ),
   'search-icon': clsx(
     'absolute',

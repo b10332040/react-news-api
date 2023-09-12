@@ -46,6 +46,7 @@ const MemoizedArticleList = memoize(ArticleList)
  * @returns 
  */
 const SearchPage = () => {
+  const keywordHistoryListMaxLength = 10
   const {
     keywordMaxLength,
     sortByList,
@@ -60,7 +61,11 @@ const SearchPage = () => {
   const [popupMenuOpen, setPopupMenuOpen] = useState(false)
   const [noResultsMessage, setNoResultsMessage] = useState('')
   const [popupContentType, setPopupContentType] = useState('upper')
-  const [keywordHistoryList, setKeywordHistoryList] = useState([])
+  const [keywordHistoryList, setKeywordHistoryList] = useState(() => {
+    // 把 Local storage 儲存的關鍵字列表取出來
+    const keywordHistoryList = localStorage.getItem('keywordHistoryList')
+    return (keywordHistoryList && !isArrayEmpty(JSON.parse(keywordHistoryList))) ? JSON.parse(keywordHistoryList) : []
+  })
   const [isKeywordSubmitted, setIsKeywordSubmitted] = useState(false)
   const [keywordHistoryListMenuOpen, setKeywordHistoryListMenuOpen] = useState(false)
   const searchRef = useRef(null)
@@ -73,7 +78,6 @@ const SearchPage = () => {
   const filterPopupMenuId = 'filterPopupMenu'
   const isUpperContentInPopup = (popupContentType === 'upper')
   const hasKeywordHistoryList = (!isArrayEmpty(keywordHistoryList))
-  const keywordHistoryListMaxLength = 10
   let Result = <></>
   let SortByDropDownMenu = <></>
   let SortByItemsInPopup = <></>
@@ -88,9 +92,27 @@ const SearchPage = () => {
       return
     }
 
+    const tempQ = (isEncodedUrl(data.q)) ? decodeURI(data.q) : data.q
+
     // 修改狀態
     setLoading(true)
-    setKeyword((isEncodedUrl(data.q)) ? decodeURI(data.q) : data.q)
+    setKeyword(tempQ)
+    setKeywordHistoryList((prevKeywordHistoryList) => {
+      const isKeywordExist = prevKeywordHistoryList.findIndex((item) => item === tempQ) === -1
+      if (isKeywordExist) {
+        const tempKeywordHistoryList = [
+          tempQ,
+          ...prevKeywordHistoryList
+        ].slice(0, keywordHistoryListMaxLength)
+
+        // 把尚未記錄的關鍵字紀錄進 Local storage 中關鍵字列表 
+        localStorage.setItem('keywordHistoryList', JSON.stringify(tempKeywordHistoryList))
+        return tempKeywordHistoryList
+
+      } else {
+        return prevKeywordHistoryList
+      }
+    })
     if (data?.sortBy) {
       setSortBy(data.sortBy)
     }
@@ -119,12 +141,6 @@ const SearchPage = () => {
   }, [])
 
   useEffect(() => {
-    // 把 Local storage 中曾送給 API 的關鍵字取出來
-    const keywordHistoryList = localStorage.getItem('keywordHistoryList')
-    if (keywordHistoryList && !isArrayEmpty(JSON.parse(keywordHistoryList))) {
-      setKeywordHistoryList(JSON.parse(keywordHistoryList))
-    }
-
     // 網址路徑上是否有帶關鍵字
     if (isExisted(encodeKeyword)) {
       // 有 -> 取得（此關鍵字）文章
@@ -157,28 +173,11 @@ const SearchPage = () => {
     };
   }, [])
 
-  // 當送給 API 的關鍵字列表有變更時，記錄到 Local storage
-  useEffect(() => {
-    if (hasKeywordHistoryList) {
-      localStorage.setItem('keywordHistoryList', JSON.stringify(keywordHistoryList))
-    }
-  }, [hasKeywordHistoryList, keywordHistoryList])
-
-
   // 處理關鍵字提交
   const handleKeywordSubmit = (value) => {
     const tempKeyword = value.trim()
 
     if (tempKeyword !== '') {
-      // 此送給 API 的關鍵字，尚未記錄進送給 API 的關鍵字列表中的話，紀錄進去
-      if (keywordHistoryList.findIndex((item) => item === tempKeyword) === -1) {
-        // 只記錄最近的幾筆
-        const tempKeywordHistoryList = keywordHistoryList.slice(0, (keywordHistoryListMaxLength - 1))
-        setKeywordHistoryList([
-          tempKeyword,
-          ...tempKeywordHistoryList
-        ])
-      }
       // 取得（此關鍵字 + 目前排序）第一篇文章
       getArticleListAsync({
         q: tempKeyword,
@@ -438,43 +437,46 @@ const SearchPage = () => {
                   />
                   <button
                     type='submit'
-                    title='Submit keyword'
-                    name='Submit keyword'
-                    aria-label='Submit keyword'
+                    title='Submit'
+                    name='Submit'
+                    aria-label='Submit'
                     className={styles['main-search']['submit-button']}
                     disabled={loading}
                   >
                     <CiSearch className={styles['main-search']['submit-button-icon']} />
                   </button>
-                  <div
-                    ref={keywordHistoryListRef}
-                    className={`
-                      ${styles['main-search']['keyword-list']}
-                      ${(hasKeywordHistoryList && keywordHistoryListMenuOpen) ? 'block' : 'hidden'}
-                    `}
-                  >
-                    <RadioTabs>
-                      { 
-                        keywordHistoryList.map((item) => {
-                          return (
-                            <button
-                              key={item}
-                              type='button'
-                              title={`history: ${item}`}
-                              aria-label={`history: ${item}`}
-                              onClick={() => {
-                                handleKeywordHistoryClick(item)
-                              }}
-                              className={styles['main-search']['keyword-tab']}
-                              disabled={isDisabled}
-                            >
-                              { item }
-                            </button>
-                          )
-                        })
-                      }
-                    </RadioTabs>
-                  </div>
+                  {
+                    (hasKeywordHistoryList) &&
+                    <div
+                      ref={keywordHistoryListRef}
+                      className={`
+                        ${styles['main-search']['keyword-list']}
+                        ${(keywordHistoryListMenuOpen) ? 'block' : 'hidden'}
+                      `}
+                    >
+                      <RadioTabs>
+                        { 
+                          keywordHistoryList.map((item) => {
+                            return (
+                              <button
+                                key={item}
+                                type='button'
+                                title={`history: ${item}`}
+                                aria-label={`history: ${item}`}
+                                onClick={() => {
+                                  handleKeywordHistoryClick(item)
+                                }}
+                                className={styles['main-search']['keyword-tab']}
+                                disabled={isDisabled}
+                              >
+                                { item }
+                              </button>
+                            )
+                          })
+                        }
+                      </RadioTabs>
+                    </div>
+                  }
                 </div>
               </FormArea>
               <FormArea className={styles['main-header']['drop-down-menu-wrap']}>
